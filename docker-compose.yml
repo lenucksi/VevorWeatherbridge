@@ -1,0 +1,11 @@
+services:
+  weatherstation:
+    build: .
+    container_name: weatherstation
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Berlin
+      HA_URL: http://xx.xx.xx.xx:8123/api/states/      # <-- SET YOUR HA URL
+      HA_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # <-- SET YOUR TOKEN
