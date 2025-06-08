@@ -21,7 +21,7 @@ No PHP or web server needed&mdash;just Python and Flask!
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/weatherstation-ha-relay.git
+git clone https://github.com/C9H13NO3-dev/weatherstation-ha-relay.git
 cd weatherstation-ha-relay
 ```
 
