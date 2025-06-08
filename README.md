@@ -152,6 +152,5 @@ This project is licensed under the [CC0 1.0 Universal](LICENSE).
 
 ## Acknowledgements
 
-- Original Weather Underground relay script inspiration by @vlovmx
-- Python rewrite and containerization by [Your Name]
-
+- Original Weather Underground relay script inspiration by [@vlovmx](https://github.com/vlovmx)
+- Python rewrite and containerization by C9H13NO3-dev
