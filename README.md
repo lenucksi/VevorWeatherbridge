@@ -72,6 +72,7 @@ Example DNS override:
 ```
 rtupdate.wunderground.com    <your-server-ip>
 ```
+**Note:** If your router has DNS rebind protection enabled, you must allow this domain in your router settings when overriding DNS with Pi-hole.
 
 On the weather station, enable Weather Underground uploads with any station ID/key.
 
