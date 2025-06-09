@@ -2,8 +2,6 @@
 
 This project provides a lightweight, **Dockerized Python microservice** for ingesting weather data from a VEVOR 7-in-1 Wi-Fi Solar Self-Charging Weather Station (Model YT60234, or any station sending data in Weather Underground format) and forwarding it directly to Home Assistant via its REST API.
 
-No PHP or web server needed&mdash;just Python and Flask!
-
 ---
 
 ## Features
@@ -52,17 +50,6 @@ docker-compose up --build -d
 
 The service now listens on port `80` for requests to `/weatherstation/updateweatherstation.php`.
 
----
-
-## Directory Structure
-
-```
-project-root/
-├── docker-compose.yml
-├── Dockerfile
-├── requirements.txt
-└── weatherstation.py
-```
 
 ---
 
@@ -124,14 +111,6 @@ The following sensors are created or updated:
 
 You can use these entities directly in your Home Assistant dashboards or automations.
 
----
-
-## Code Overview
-
-- **`weatherstation.py`** – Flask microservice listening on port 80. Parses GET parameters, converts units according to `UNITS`, posts to Home Assistant and responds with `success`.
-- **`requirements.txt`** – Python dependencies: Flask, requests, pytz.
-- **`Dockerfile`** – Uses `python:3.12-slim` as a base image, installs dependencies and runs the service.
-- **`docker-compose.yml`** – Simple build/run configuration that passes environment variables for Home Assistant and timezone.
 
 ---
 
