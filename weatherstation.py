@@ -8,6 +8,7 @@ import os
 HOME_ASSISTANT_URL_BASE = os.environ.get("HA_URL", "http://xx.xx.xx.xx:8123/api/states/")
 ACCESS_TOKEN = os.environ.get("HA_TOKEN", "YOUR_LONG_LIVED_ACCESS_TOKEN")
 TIMEZONE = os.environ.get("TZ", "Europe/Berlin")
+UNITS = os.environ.get("UNITS", "metric").lower()
 
 app = Flask(__name__)
 
@@ -22,60 +23,58 @@ def safe_get(key): return request.args.get(key, None)
 def update():
     attributes = {
         "Barometric Pressure": {
-            "value": inhg_to_hpa(safe_get('baromin')) if safe_get('baromin') else None,
-            "unit": "hPa",
-            "device_class": "atmospheric_pressure"
+            "value": (
+                inhg_to_hpa(safe_get("baromin")) if UNITS == "metric" else round(float(safe_get("baromin")), 1)
+            ) if safe_get("baromin") else None,
+            "unit": "hPa" if UNITS == "metric" else "inHg",
+            "device_class": "atmospheric_pressure",
         },
         "Temperature": {
-            "value": f_to_c(safe_get('tempf')) if safe_get('tempf') else None,
-            "unit": "°C",
-            "device_class": "temperature"
+            "value": (
+                f_to_c(safe_get("tempf")) if UNITS == "metric" else round(float(safe_get("tempf")), 1)
+            ) if safe_get("tempf") else None,
+            "unit": "°C" if UNITS == "metric" else "°F",
+            "device_class": "temperature",
         },
-        "Humidity": {
-            "value": safe_get('humidity'),
-            "unit": "%",
-            "device_class": "humidity"
-        },
+        "Humidity": {"value": safe_get("humidity"), "unit": "%", "device_class": "humidity"},
         "Dew Point": {
-            "value": f_to_c(safe_get('dewptf')) if safe_get('dewptf') else None,
-            "unit": "°C",
-            "device_class": "temperature"
+            "value": (
+                f_to_c(safe_get("dewptf")) if UNITS == "metric" else round(float(safe_get("dewptf")), 1)
+            ) if safe_get("dewptf") else None,
+            "unit": "°C" if UNITS == "metric" else "°F",
+            "device_class": "temperature",
         },
         "Rainfall": {
-            "value": inch_to_mm(safe_get('rainin')) if safe_get('rainin') else None,
-            "unit": "mm",
-            "device_class": "precipitation"
+            "value": (
+                inch_to_mm(safe_get("rainin")) if UNITS == "metric" else round(float(safe_get("rainin")), 2)
+            ) if safe_get("rainin") else None,
+            "unit": "mm" if UNITS == "metric" else "in",
+            "device_class": "precipitation",
         },
         "Daily Rainfall": {
-            "value": inch_to_mm(safe_get('dailyrainin')) if safe_get('dailyrainin') else None,
-            "unit": "mm",
-            "device_class": "precipitation"
+            "value": (
+                inch_to_mm(safe_get("dailyrainin")) if UNITS == "metric" else round(float(safe_get("dailyrainin")), 2)
+            ) if safe_get("dailyrainin") else None,
+            "unit": "mm" if UNITS == "metric" else "in",
+            "device_class": "precipitation",
         },
-        "Wind Direction": {
-            "value": safe_get('winddir'),
-            "unit": "°",
-            "device_class": None
-        },
+        "Wind Direction": {"value": safe_get("winddir"), "unit": "°", "device_class": None},
         "Wind Speed": {
-            "value": mph_to_kmh(safe_get('windspeedmph')) if safe_get('windspeedmph') else None,
-            "unit": "km/h",
-            "device_class": "wind_speed"
+            "value": (
+                mph_to_kmh(safe_get("windspeedmph")) if UNITS == "metric" else round(float(safe_get("windspeedmph")), 1)
+            ) if safe_get("windspeedmph") else None,
+            "unit": "km/h" if UNITS == "metric" else "mph",
+            "device_class": "wind_speed",
         },
         "Wind Gust Speed": {
-            "value": mph_to_kmh(safe_get('windgustmph')) if safe_get('windgustmph') else None,
-            "unit": "km/h",
-            "device_class": "wind_speed"
+            "value": (
+                mph_to_kmh(safe_get("windgustmph")) if UNITS == "metric" else round(float(safe_get("windgustmph")), 1)
+            ) if safe_get("windgustmph") else None,
+            "unit": "km/h" if UNITS == "metric" else "mph",
+            "device_class": "wind_speed",
         },
-        "UV Index": {
-            "value": safe_get('UV'),
-            "unit": "index",
-            "device_class": None
-        },
-        "Solar Radiation": {
-            "value": safe_get('solarRadiation'),
-            "unit": "W/m²",
-            "device_class": "irradiance"
-        }
+        "UV Index": {"value": safe_get("UV"), "unit": "index", "device_class": None},
+        "Solar Radiation": {"value": safe_get("solarRadiation"), "unit": "W/m²", "device_class": "irradiance"},
     }
 
     dateutc = safe_get('dateutc')

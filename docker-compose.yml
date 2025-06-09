@@ -9,3 +9,5 @@ services:
       TZ: Europe/Berlin
       HA_URL: http://xx.xx.xx.xx:8123/api/states/      # <-- SET YOUR HA URL
       HA_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # <-- SET YOUR TOKEN
+      # UNITS can be "metric" or "imperial". Default is metric
+      UNITS: metric

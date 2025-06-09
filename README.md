@@ -9,7 +9,7 @@ No PHP or web server needed&mdash;just Python and Flask!
 ## Features
 
 - Accepts Weather Underground (WU) station GET requests (as sent by the VEVOR weather station)
-- Converts all measurements to **metric units** (°C, hPa, mm, km/h, etc.)
+- Converts measurements to **metric** or **imperial** units based on the `UNITS` environment variable
 - Pushes sensor data to Home Assistant as custom sensors via its REST API
 - Dockerized for simple deployment anywhere
 - Responds with `success` so the weather station doesn’t retry
@@ -31,6 +31,7 @@ Edit the `docker-compose.yml` file and set the following variables:
 
 - `HA_URL`: Base URL to your Home Assistant API (e.g., `http://192.168.1.100:8123/api/states/`)
 - `HA_TOKEN`: Your Home Assistant long-lived access token
+- `UNITS`: `metric` (default) or `imperial`
 
 Example:
 
@@ -39,6 +40,8 @@ environment:
   TZ: Europe/Berlin
   HA_URL: http://192.168.1.100:8123/api/states/
   HA_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  # optional: "metric" (default) or "imperial"
+  UNITS: metric
 ```
 
 ### 3. Build and run
@@ -96,13 +99,15 @@ http://<your-server-ip>/weatherstation/updateweatherstation.php?ID=XXXXX&PASSWOR
 ## How it Works
 
 1. The weather station uploads data to this endpoint.
-2. The service converts all units to metric.
+2. The service converts units to metric or keeps imperial values depending on `UNITS`.
 3. Each value is sent to Home Assistant via its REST API as individual sensors.
 4. The endpoint returns `success` to acknowledge the update.
 
 ### Home Assistant Sensor Entities
 
 The following sensors are created or updated:
+
+*Units in parentheses assume `UNITS=metric`; values switch to imperial when `UNITS=imperial`.*
 
 - `sensor.weather_station_barometric_pressure` (hPa)
 - `sensor.weather_station_temperature` (°C)
@@ -122,7 +127,7 @@ You can use these entities directly in your Home Assistant dashboards or automat
 
 ## Code Overview
 
-- **`weatherstation.py`** – Flask microservice listening on port 80. Parses GET parameters, converts to metric, posts to Home Assistant and responds with `success`.
+- **`weatherstation.py`** – Flask microservice listening on port 80. Parses GET parameters, converts units according to `UNITS`, posts to Home Assistant and responds with `success`.
 - **`requirements.txt`** – Python dependencies: Flask, requests, pytz.
 - **`Dockerfile`** – Uses `python:3.12-slim` as a base image, installs dependencies and runs the service.
 - **`docker-compose.yml`** – Simple build/run configuration that passes environment variables for Home Assistant and timezone.
