@@ -1,16 +1,30 @@
 from flask import Flask, request, jsonify
-import requests
 from datetime import datetime
 import pytz
 import os
+import json
+import paho.mqtt.client as mqtt
 
-# Set these!
-HOME_ASSISTANT_URL_BASE = os.environ.get("HA_URL", "http://xx.xx.xx.xx:8123/api/states/")
-ACCESS_TOKEN = os.environ.get("HA_TOKEN", "YOUR_LONG_LIVED_ACCESS_TOKEN")
+# MQTT settings
+MQTT_HOST = os.environ.get("MQTT_HOST", "localhost")
+MQTT_PORT = int(os.environ.get("MQTT_PORT", 1883))
+MQTT_USER = os.environ.get("MQTT_USER")
+MQTT_PASSWORD = os.environ.get("MQTT_PASSWORD")
+MQTT_PREFIX = os.environ.get("MQTT_PREFIX", "homeassistant")
+DEVICE_ID = os.environ.get("DEVICE_ID", "weather_station")
+DEVICE_NAME = os.environ.get("DEVICE_NAME", "Weather Station")
+DEVICE_MANUFACTURER = os.environ.get("DEVICE_MANUFACTURER", "VEVOR")
+DEVICE_MODEL = os.environ.get("DEVICE_MODEL", "7-in-1 Weather Station")
 TIMEZONE = os.environ.get("TZ", "Europe/Berlin")
 UNITS = os.environ.get("UNITS", "metric").lower()
 
 app = Flask(__name__)
+
+mqtt_client = mqtt.Client()
+if MQTT_USER:
+    mqtt_client.username_pw_set(MQTT_USER, MQTT_PASSWORD)
+mqtt_client.connect(MQTT_HOST, MQTT_PORT, 60)
+mqtt_client.loop_start()
 
 def f_to_c(f): return round((float(f) - 32) * 5.0 / 9.0, 1)
 def inhg_to_hpa(inhg): return round(float(inhg) * 33.8639, 1)
@@ -87,28 +101,32 @@ def update():
         except Exception as e:
             local_time = dateutc  # fallback
 
-    # Post to Home Assistant for each sensor
-    headers = {
-        "Authorization": f"Bearer {ACCESS_TOKEN}",
-        "Content-Type": "application/json"
-    }
+    # Publish each sensor to MQTT using HA auto-discovery
     for name, data in attributes.items():
-        sensor_name = "sensor.weather_station_" + name.lower().replace(" ", "_")
-        payload = {
-            "state": data["value"],
-            "attributes": {
-                "friendly_name": name,
-                "unit_of_measurement": data["unit"],
-                "device_class": data["device_class"],
-                "measured_on": local_time
-            }
+        if data["value"] is None:
+            continue
+        sensor_id = name.lower().replace(" ", "_")
+        base = f"{MQTT_PREFIX}/sensor/{DEVICE_ID}_{sensor_id}"
+        state_topic = f"{base}/state"
+        attr_topic = f"{base}/attributes"
+        config_topic = f"{base}/config"
+        config_payload = {
+            "name": f"{DEVICE_NAME} {name}",
+            "state_topic": state_topic,
+            "unit_of_measurement": data["unit"],
+            "device_class": data["device_class"],
+            "unique_id": f"{DEVICE_ID}_{sensor_id}",
+            "json_attributes_topic": attr_topic,
+            "device": {
+                "identifiers": [DEVICE_ID],
+                "name": DEVICE_NAME,
+                "manufacturer": DEVICE_MANUFACTURER,
+                "model": DEVICE_MODEL,
+            },
         }
-        url = f"{HOME_ASSISTANT_URL_BASE}{sensor_name}"
-        try:
-            resp = requests.post(url, headers=headers, json=payload, timeout=2)
-            resp.raise_for_status()
-        except Exception as e:
-            print(f"Error updating {sensor_name}: {e}")
+        mqtt_client.publish(config_topic, json.dumps(config_payload), retain=True)
+        mqtt_client.publish(state_topic, str(data["value"]), retain=True)
+        mqtt_client.publish(attr_topic, json.dumps({"measured_on": local_time}), retain=True)
 
     return "success", 200
 
