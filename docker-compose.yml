@@ -7,7 +7,13 @@ services:
     restart: unless-stopped
     environment:
       TZ: Europe/Berlin
-      HA_URL: http://xx.xx.xx.xx:8123/api/states/      # <-- SET YOUR HA URL
-      HA_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # <-- SET YOUR TOKEN
+      MQTT_HOST: mqtt             # <-- SET YOUR MQTT BROKER HOST
+      MQTT_PORT: 1883             # <-- Optional broker port
+      MQTT_USER: user             # <-- Optional username
+      MQTT_PASSWORD: pass         # <-- Optional password
+      DEVICE_ID: weather_station  # <-- Device identifier
+      DEVICE_NAME: "Backyard Weather"  # <-- Display name
+      DEVICE_MANUFACTURER: VEVOR  # <-- Optional manufacturer
+      DEVICE_MODEL: "7-in-1 Weather Station"  # <-- Optional model name
       # UNITS can be "metric" or "imperial". Default is metric
       UNITS: metric

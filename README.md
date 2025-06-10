@@ -1,6 +1,6 @@
 # Weather Station to Home Assistant Relay (Dockerized Python Version)
 
-This project provides a lightweight, **Dockerized Python microservice** for ingesting weather data from a VEVOR 7-in-1 Wi-Fi Solar Self-Charging Weather Station (Model YT60234, or any station sending data in Weather Underground format) and forwarding it directly to Home Assistant via its REST API.
+This project provides a lightweight, **Dockerized Python microservice** for ingesting weather data from a VEVOR 7-in-1 Wi-Fi Solar Self-Charging Weather Station (Model YT60234, or any station sending data in Weather Underground format) and forwarding it to Home Assistant via **MQTT**.
 
 ---
 
@@ -8,7 +8,8 @@ This project provides a lightweight, **Dockerized Python microservice** for inge
 
 - Accepts Weather Underground (WU) station GET requests (as sent by the VEVOR weather station)
 - Converts measurements to **metric** or **imperial** units based on the `UNITS` environment variable
-- Pushes sensor data to Home Assistant as custom sensors via its REST API
+- Publishes sensor data to Home Assistant via MQTT using the auto-discovery format
+- All sensors appear under one device in Home Assistant
 - Dockerized for simple deployment anywhere
 - Responds with `success` so the weather station doesn’t retry
 
@@ -27,8 +28,13 @@ cd weatherstation-ha-relay
 
 Edit the `docker-compose.yml` file and set the following variables:
 
-- `HA_URL`: Base URL to your Home Assistant API (e.g., `http://192.168.1.100:8123/api/states/`)
-- `HA_TOKEN`: Your Home Assistant long-lived access token
+- `MQTT_HOST`: Hostname or IP of your MQTT broker
+- `MQTT_PORT`: Broker port (default `1883`)
+- `MQTT_USER` / `MQTT_PASSWORD`: Credentials if required
+- `DEVICE_ID`: Unique identifier for the weather station device (default `weather_station`)
+- `DEVICE_NAME`: Display name for the device in Home Assistant (default `Weather Station`)
+- `DEVICE_MANUFACTURER`: (optional) Manufacturer name shown in Home Assistant (default `VEVOR`)
+- `DEVICE_MODEL`: (optional) Model name (default `7-in-1 Weather Station`)
 - `UNITS`: `metric` (default) or `imperial`
 
 Example:
@@ -36,8 +42,14 @@ Example:
 ```yaml
 environment:
   TZ: Europe/Berlin
-  HA_URL: http://192.168.1.100:8123/api/states/
-  HA_TOKEN: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  MQTT_HOST: 192.168.1.100
+  MQTT_PORT: 1883
+  MQTT_USER: youruser
+  MQTT_PASSWORD: yourpass
+  DEVICE_ID: weather_station
+  DEVICE_NAME: "Backyard Weather"
+  DEVICE_MANUFACTURER: VEVOR
+  DEVICE_MODEL: "7-in-1 Weather Station"
   # optional: "metric" (default) or "imperial"
   UNITS: metric
 ```
@@ -88,12 +100,12 @@ http://<your-server-ip>/weatherstation/updateweatherstation.php?ID=XXXXX&PASSWOR
 
 1. The weather station uploads data to this endpoint.
 2. The service converts units to metric or keeps imperial values depending on `UNITS`.
-3. Each value is sent to Home Assistant via its REST API as individual sensors.
+3. Each value is published to Home Assistant via MQTT, auto-discovered as a sensor, and grouped under the configured device.
 4. The endpoint returns `success` to acknowledge the update.
 
 ### Home Assistant Sensor Entities
 
-The following sensors are created or updated:
+The following sensors are created or updated and will appear under the device specified by `DEVICE_NAME`:
 
 *Units in parentheses assume `UNITS=metric`; values switch to imperial when `UNITS=imperial`.*
 
@@ -118,7 +130,7 @@ You can use these entities directly in your Home Assistant dashboards or automat
 
 - Ensure the container is reachable on port 80 from your network.
 - Check that your DNS or Pi-hole setup correctly redirects the WU domain.
-- Verify your Home Assistant URL and token.
+- Verify your MQTT broker settings.
 - Review logs with:
 
 ```bash
