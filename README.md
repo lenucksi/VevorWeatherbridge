@@ -36,6 +36,8 @@ Edit the `docker-compose.yml` file and set the following variables:
 - `DEVICE_MANUFACTURER`: (optional) Manufacturer name shown in Home Assistant (default `VEVOR`)
 - `DEVICE_MODEL`: (optional) Model name (default `7-in-1 Weather Station`)
 - `UNITS`: `metric` (default) or `imperial`
+- `WU_FORWARD`: Set to `true` to also forward data to Weather Underground (default `false`)
+- `WU_USERNAME` / `WU_PASSWORD`: Credentials for Weather Underground (optional)
 
 Example:
 
@@ -52,6 +54,11 @@ environment:
   DEVICE_MODEL: "7-in-1 Weather Station"
   # optional: "metric" (default) or "imperial"
   UNITS: metric
+  # forward data to Weather Underground
+  WU_FORWARD: "false"
+  # credentials if forwarding
+  WU_USERNAME: yourWUuser
+  WU_PASSWORD: yourWUpass
 ```
 
 ### 3. Build and run

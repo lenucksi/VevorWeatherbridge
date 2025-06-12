@@ -4,6 +4,8 @@ import pytz
 import os
 import json
 import paho.mqtt.client as mqtt
+import requests
+import dns.resolver
 
 # MQTT settings
 MQTT_HOST = os.environ.get("MQTT_HOST", "localhost")
@@ -17,6 +19,9 @@ DEVICE_MANUFACTURER = os.environ.get("DEVICE_MANUFACTURER", "VEVOR")
 DEVICE_MODEL = os.environ.get("DEVICE_MODEL", "7-in-1 Weather Station")
 TIMEZONE = os.environ.get("TZ", "Europe/Berlin")
 UNITS = os.environ.get("UNITS", "metric").lower()
+WU_FORWARD = os.environ.get("WU_FORWARD", "false").lower() == "true"
+WU_USERNAME = os.environ.get("WU_USERNAME")
+WU_PASSWORD = os.environ.get("WU_PASSWORD")
 
 app = Flask(__name__)
 
@@ -127,6 +132,22 @@ def update():
         mqtt_client.publish(config_topic, json.dumps(config_payload), retain=True)
         mqtt_client.publish(state_topic, str(data["value"]), retain=True)
         mqtt_client.publish(attr_topic, json.dumps({"measured_on": local_time}), retain=True)
+
+    if WU_FORWARD:
+        params = request.args.to_dict(flat=True)
+        if WU_USERNAME:
+            params["ID"] = WU_USERNAME
+        if WU_PASSWORD:
+            params["PASSWORD"] = WU_PASSWORD
+        try:
+            resolver = dns.resolver.Resolver()
+            resolver.nameservers = ["8.8.8.8", "8.8.4.4"]
+            wu_ip = resolver.resolve("rtupdate.wunderground.com")[0].to_text()
+            url = f"http://{wu_ip}/weatherstation/updateweatherstation.php"
+            headers = {"Host": "rtupdate.wunderground.com"}
+            requests.get(url, params=params, headers=headers, timeout=5)
+        except Exception as e:
+            print(f"Failed to forward to Weather Underground: {e}")
 
     return "success", 200
 

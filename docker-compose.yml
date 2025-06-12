@@ -17,3 +17,8 @@ services:
       DEVICE_MODEL: "7-in-1 Weather Station"  # <-- Optional model name
       # UNITS can be "metric" or "imperial". Default is metric
       UNITS: metric
+      # forward data to Weather Underground
+      WU_FORWARD: "false"
+      # credentials for Weather Underground (optional)
+      WU_USERNAME: wu-user
+      WU_PASSWORD: wu-pass
