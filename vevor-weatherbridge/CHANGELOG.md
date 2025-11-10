@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.7] - 2025-11-10
+
+### Added
+- **MQTT Discovery Support**: Sensors now automatically appear in Home Assistant
+  - Added required `origin` field with addon name, version, and support URL
+  - Added `availability_topic` for online/offline status tracking
+  - Configured MQTT Last Will and Testament (LWT) for proper offline detection
+  - Availability status published as "online" on connect, "offline" on disconnect
+
+### Fixed
+- **CRITICAL**: Device-based MQTT discovery now works properly
+  - Home Assistant will automatically create all weather sensors
+  - Sensors grouped under single device in HA device registry
+  - `device_class` field only included when applicable (not for UV Index, Wind Direction)
+  - All sensors now appear in HA UI without manual configuration
+
+### Changed
+- Improved MQTT discovery payload structure per HA 2025 requirements
+- Better device availability tracking with retained messages
+
 ## [0.1.6] - 2025-11-10
 
 ### Changed
