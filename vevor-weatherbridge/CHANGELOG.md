@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2025-11-10
+
+### Fixed
+- **CRITICAL**: Fixed MQTT callback signatures for API v2 compatibility
+  - Updated `on_connect` to accept 5 parameters (client, userdata, flags, reason_code, properties)
+  - Updated `on_disconnect` to accept 5 parameters (client, userdata, flags, reason_code, properties)
+  - Updated `on_publish` to accept 5 parameters (client, userdata, mid, reason_codes, properties)
+  - Resolved TypeError that prevented MQTT connection from working
+
+### Added
+- Comprehensive test suite with pytest (test_weatherstation.py)
+- Tests for MQTT callbacks, unit conversions, endpoint functionality
+- Tests for metric conversion, timezone handling, error scenarios
+- pytest and pytest-mock added to requirements.txt
+- Post-edit hook for automatic testing after code changes
+
 ## [0.1.2] - 2025-11-10
 
 ### Fixed
