@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2025-11-10
+
+### Fixed
+- **CRITICAL**: Fixed MQTT authentication using Supervisor Services API
+  - Properly retrieve MQTT credentials from HA Supervisor instead of using empty auth
+  - Added `services: - mqtt:need` to config.yaml to declare MQTT service usage
+  - Use curl with SUPERVISOR_TOKEN to query /services/mqtt endpoint
+  - Extract host, port, username, password from Supervisor API response
+
+### Changed
+- Removed broken ping-based MQTT discovery (was finding host but not credentials)
+- Improved error messages when MQTT broker not available
+
 ## [0.1.3] - 2025-11-10
 
 ### Fixed
