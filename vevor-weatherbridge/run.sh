@@ -42,9 +42,14 @@ if [ -z "$MQTT_HOST_CONFIG" ] || [ "$MQTT_HOST_CONFIG" = "null" ] || [ "$MQTT_HO
     # Use Supervisor Services API to get MQTT credentials
     echo "[INFO] Attempting to auto-detect MQTT broker via Supervisor API..."
 
+    # SUPERVISOR_TOKEN is set by HA addon environment
+    # Fallback to empty if not available (for local testing)
     SUPERVISOR_TOKEN="${SUPERVISOR_TOKEN:-}"
 
+    # Check if we have supervisor access
     if [ -n "$SUPERVISOR_TOKEN" ]; then
+        echo "[DEBUG] SUPERVISOR_TOKEN is available, querying API..."
+
         # Query Supervisor Services API for MQTT config
         MQTT_CONFIG=$(curl -sSL -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" \
                       http://supervisor/services/mqtt 2>/dev/null || echo "")

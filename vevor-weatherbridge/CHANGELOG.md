@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2025-11-10
+
+### Added
+- Comprehensive test suite with 29 passing tests
+- test_run_sh.py for configuration and MQTT auto-detection tests
+- VS Code devcontainer setup for local Home Assistant testing
+- VS Code tasks for running tests and rebuilding addon
+- Complete testing documentation (dev-docs/guides/TESTING.md)
+- Improved post-edit hook that runs full test suite
+
+### Fixed
+- SUPERVISOR_TOKEN detection with proper fallback handling
+- Debug logging for MQTT auto-detection process
+- Test runner hook now properly runs all tests before allowing commits
+
+### Changed
+- Post-edit hook now runs both test files
+- Better error messages in run.sh for MQTT configuration
+
 ## [0.1.4] - 2025-11-10
 
 ### Fixed

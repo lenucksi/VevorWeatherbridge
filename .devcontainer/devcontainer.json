@@ -1,0 +1,25 @@
+{
+  "name": "VEVOR Weatherbridge Development",
+  "image": "ghcr.io/home-assistant/devcontainer:addons",
+  "appPort": ["7123:8123", "7357:4357"],
+  "postStartCommand": "bash devcontainer_bootstrap",
+  "runArgs": ["-e", "TZ=Europe/Berlin"],
+  "containerEnv": {
+    "WORKSPACE_DIRECTORY": "${containerWorkspaceFolder}"
+  },
+  "extensions": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "redhat.vscode-yaml"
+  ],
+  "mounts": [
+    "type=volume,target=/var/lib/docker"
+  ],
+  "settings": {
+    "python.pythonPath": "/usr/bin/python3",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true
+  }
+}
