@@ -6,49 +6,85 @@
     ":semanticCommits",
     ":preserveSemverRanges"
   ],
-  "labels": ["dependencies"],
-  "assignees": ["@lenucksi"],
-  "schedule": ["every weekend"],
+  "labels": [
+    "dependencies"
+  ],
+  "assignees": [
+    "@lenucksi"
+  ],
+  "schedule": [
+    "every weekend"
+  ],
   "timezone": "Europe/Berlin",
   "packageRules": [
     {
+      "matchCategories": [
+        "docker"
+      ],
+      "enabled": true
+    },
+    {
       "description": "Python dependencies - group minor and patch updates",
-      "matchManagers": ["pip_requirements"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "pip_requirements"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupName": "Python dependencies (non-major)",
       "automerge": false
     },
     {
       "description": "Python major updates - separate PRs",
-      "matchManagers": ["pip_requirements"],
-      "matchUpdateTypes": ["major"],
+      "matchManagers": [
+        "pip_requirements"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": null,
       "automerge": false
     },
     {
       "description": "Docker base images",
-      "matchManagers": ["dockerfile"],
-      "matchDatasources": ["docker"],
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
       "enabled": true,
       "automerge": false,
-      "labels": ["dependencies", "docker"]
+      "labels": [
+        "dependencies",
+        "docker"
+      ]
     },
     {
       "description": "GitHub Actions",
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "automerge": false,
-      "labels": ["dependencies", "github-actions"]
+      "labels": [
+        "dependencies",
+        "github-actions"
+      ]
     }
   ],
   "pip_requirements": {
-    "fileMatch": ["(^|/)requirements\\.txt$"]
-  },
-  "docker": {
-    "enabled": true
+    "managerFilePatterns": [
+      "/(^|/)requirements\\.txt$/"
+    ]
   },
   "vulnerabilityAlerts": {
-    "labels": ["security"],
-    "assignees": ["@lenucksi"],
+    "labels": [
+      "security"
+    ],
+    "assignees": [
+      "@lenucksi"
+    ],
     "automerge": false
   },
   "prConcurrentLimit": 5,
