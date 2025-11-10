@@ -1,30 +1,63 @@
-# Weather Station to Home Assistant Relay (Dockerized Python Version)
+# VEVOR Weather Station Bridge
 
-This project provides a lightweight, **Dockerized Python microservice** for ingesting weather data from a VEVOR 7-in-1 Wi-Fi Solar Self-Charging Weather Station (Model YT60234, or any station sending data in Weather Underground format) and forwarding it to Home Assistant via **MQTT**.
+This project provides a **Home Assistant Add-on** (and standalone Docker container) for ingesting weather data from a VEVOR 7-in-1 Wi-Fi Solar Self-Charging Weather Station (Model YT60234, or any station sending data in Weather Underground format) and forwarding it to Home Assistant via **MQTT**.
 
 ---
 
 ## Features
 
+- **Home Assistant Add-on**: One-click installation from the add-on store
 - Accepts Weather Underground (WU) station GET requests (as sent by the VEVOR weather station)
-- Converts measurements to **metric** or **imperial** units based on the `UNITS` environment variable
+- Converts measurements to **metric** or **imperial** units
 - Publishes sensor data to Home Assistant via MQTT using the auto-discovery format
 - All sensors appear under one device in Home Assistant
-- Dockerized for simple deployment anywhere
-- Responds with `success` so the weather station doesn’t retry
+- Automatic MQTT broker detection (works with HA's internal Mosquitto broker)
+- Optional Weather Underground forwarding
+- Multi-architecture support (amd64, armv7, aarch64, armhf, i386)
+- Responds with `success` so the weather station doesn't retry
 
 ---
 
-## Quickstart
+## Installation
 
-### 1. Clone the repository
+### Option 1: Home Assistant Add-on (Recommended)
+
+1. **Add this repository to your Home Assistant**:
+   - Go to **Settings** → **Add-ons** → **Add-on Store**
+   - Click the **⋮** menu (top right) → **Repositories**
+   - Add: `https://github.com/C9H13NO3-dev/VevorWeatherbridge`
+   - Click **Add**
+
+2. **Install the add-on**:
+   - Find "VEVOR Weather Station Bridge" in the add-on store
+   - Click on it and press **Install**
+
+3. **Configure the add-on**:
+   - Go to the **Configuration** tab
+   - Set your device name, units (metric/imperial), timezone
+   - If you have an external MQTT broker, configure it (otherwise it auto-detects HA's internal broker)
+   - Optionally enable Weather Underground forwarding
+
+4. **Start the add-on**:
+   - Click **Start**
+   - Check the **Log** tab to ensure it's running
+
+5. **Configure DNS redirect** (see [DNS Setup](#dns-setup) below)
+
+For detailed add-on documentation, see [DOCS.md](DOCS.md).
+
+### Option 2: Standalone Docker Container
+
+If you prefer to run this outside of Home Assistant:
+
+#### 1. Clone the repository
 
 ```bash
-git clone https://github.com/C9H13NO3-dev/weatherstation-ha-relay.git
-cd weatherstation-ha-relay
+git clone https://github.com/C9H13NO3-dev/VevorWeatherbridge.git
+cd VevorWeatherbridge
 ```
 
-### 2. Configure the environment
+#### 2. Configure the environment
 
 Edit the `docker-compose.yml` file and set the following variables:
 
@@ -61,7 +94,7 @@ environment:
   WU_PASSWORD: yourWUpass
 ```
 
-### 3. Build and run
+#### 3. Build and run
 
 ```bash
 docker-compose up --build -d
@@ -69,21 +102,37 @@ docker-compose up --build -d
 
 The service now listens on port `80` for requests to `/weatherstation/updateweatherstation.php`.
 
-
 ---
 
-## Station Configuration
+## DNS Setup
 
-Redirect the weather station’s upload URL (`rtupdate.wunderground.com`) to the IP of your server running this container. The simplest way is using Pi-hole or custom DNS on your router.
+**Critical Step**: Your weather station needs to connect to this service instead of Weather Underground. You must configure your network to redirect Weather Underground traffic to your Home Assistant (or Docker host) IP address.
 
-Example DNS override:
+The weather station connects to: `rtupdate.wunderground.com`
 
-```
-rtupdate.wunderground.com    <your-server-ip>
-```
+### Using Pi-hole (Recommended)
+
+1. Log into your Pi-hole admin interface
+2. Go to **Local DNS** → **DNS Records**
+3. Add a new record:
+   - **Domain**: `rtupdate.wunderground.com`
+   - **IP Address**: Your Home Assistant IP (e.g., `192.168.1.50`)
+4. Save the record
+
+### Using Router DNS Override
+
+Many routers support local DNS overrides:
+
+1. Log into your router admin interface
+2. Look for **DNS Settings**, **Local DNS**, or **Host Name Mapping**
+3. Add an entry mapping `rtupdate.wunderground.com` to your Home Assistant IP
+4. Save and restart router if needed
+
 **Note:** If your router has DNS rebind protection enabled, you must allow this domain in your router settings when overriding DNS with Pi-hole.
 
-On the weather station, enable Weather Underground uploads with any station ID/key.
+### Weather Station Configuration
+
+On the weather station itself, enable Weather Underground uploads with any station ID/key. The DNS redirect will automatically route this traffic to your local service.
 
 ---
 

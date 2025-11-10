@@ -1,11 +1,20 @@
-from flask import Flask, request, jsonify
-from datetime import datetime
-import pytz
-import os
 import json
-import paho.mqtt.client as mqtt
-import requests
+import logging
+import os
+import sys
+from datetime import datetime
+
 import dns.resolver
+import paho.mqtt.client as mqtt
+import pytz
+import requests
+from flask import Flask, request
+
+# Configure logging for Home Assistant addon environment
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", stream=sys.stdout
+)
+logger = logging.getLogger(__name__)
 
 # MQTT settings
 MQTT_HOST = os.environ.get("MQTT_HOST", "localhost")
@@ -23,57 +32,85 @@ WU_FORWARD = os.environ.get("WU_FORWARD", "false").lower() == "true"
 WU_USERNAME = os.environ.get("WU_USERNAME")
 WU_PASSWORD = os.environ.get("WU_PASSWORD")
 
+logger.info("Starting VEVOR Weather Station Bridge")
+logger.info(f"Device: {DEVICE_NAME} ({DEVICE_ID})")
+logger.info(f"MQTT: {MQTT_HOST}:{MQTT_PORT}")
+logger.info(f"Units: {UNITS}")
+
 app = Flask(__name__)
 
 mqtt_client = mqtt.Client()
 if MQTT_USER:
     mqtt_client.username_pw_set(MQTT_USER, MQTT_PASSWORD)
-mqtt_client.connect(MQTT_HOST, MQTT_PORT, 60)
-mqtt_client.loop_start()
 
-def f_to_c(f): return round((float(f) - 32) * 5.0 / 9.0, 1)
-def inhg_to_hpa(inhg): return round(float(inhg) * 33.8639, 1)
-def mph_to_kmh(mph): return round(float(mph) * 1.60934, 1)
-def inch_to_mm(inch): return round(float(inch) * 25.4, 1)
+try:
+    mqtt_client.connect(MQTT_HOST, MQTT_PORT, 60)
+    mqtt_client.loop_start()
+    logger.info("Connected to MQTT broker successfully")
+except Exception as e:
+    logger.error(f"Failed to connect to MQTT broker: {e}")
+    logger.error("The addon will continue but data will not be published until MQTT connection is established")
+    # Don't exit - allow the service to start and attempt reconnection
 
-def safe_get(key): return request.args.get(key, None)
 
-@app.route('/weatherstation/updateweatherstation.php')
+def f_to_c(f):
+    return round((float(f) - 32) * 5.0 / 9.0, 1)
+
+
+def inhg_to_hpa(inhg):
+    return round(float(inhg) * 33.8639, 1)
+
+
+def mph_to_kmh(mph):
+    return round(float(mph) * 1.60934, 1)
+
+
+def inch_to_mm(inch):
+    return round(float(inch) * 25.4, 1)
+
+
+def safe_get(key):
+    return request.args.get(key, None)
+
+
+@app.route("/weatherstation/updateweatherstation.php")
 def update():
     attributes = {
         "Barometric Pressure": {
-            "value": (
-                inhg_to_hpa(safe_get("baromin")) if UNITS == "metric" else round(float(safe_get("baromin")), 1)
-            ) if safe_get("baromin") else None,
+            "value": (inhg_to_hpa(safe_get("baromin")) if UNITS == "metric" else round(float(safe_get("baromin")), 1))
+            if safe_get("baromin")
+            else None,
             "unit": "hPa" if UNITS == "metric" else "inHg",
             "device_class": "atmospheric_pressure",
         },
         "Temperature": {
-            "value": (
-                f_to_c(safe_get("tempf")) if UNITS == "metric" else round(float(safe_get("tempf")), 1)
-            ) if safe_get("tempf") else None,
+            "value": (f_to_c(safe_get("tempf")) if UNITS == "metric" else round(float(safe_get("tempf")), 1))
+            if safe_get("tempf")
+            else None,
             "unit": "°C" if UNITS == "metric" else "°F",
             "device_class": "temperature",
         },
         "Humidity": {"value": safe_get("humidity"), "unit": "%", "device_class": "humidity"},
         "Dew Point": {
-            "value": (
-                f_to_c(safe_get("dewptf")) if UNITS == "metric" else round(float(safe_get("dewptf")), 1)
-            ) if safe_get("dewptf") else None,
+            "value": (f_to_c(safe_get("dewptf")) if UNITS == "metric" else round(float(safe_get("dewptf")), 1))
+            if safe_get("dewptf")
+            else None,
             "unit": "°C" if UNITS == "metric" else "°F",
             "device_class": "temperature",
         },
         "Rainfall": {
-            "value": (
-                inch_to_mm(safe_get("rainin")) if UNITS == "metric" else round(float(safe_get("rainin")), 2)
-            ) if safe_get("rainin") else None,
+            "value": (inch_to_mm(safe_get("rainin")) if UNITS == "metric" else round(float(safe_get("rainin")), 2))
+            if safe_get("rainin")
+            else None,
             "unit": "mm" if UNITS == "metric" else "in",
             "device_class": "precipitation",
         },
         "Daily Rainfall": {
             "value": (
                 inch_to_mm(safe_get("dailyrainin")) if UNITS == "metric" else round(float(safe_get("dailyrainin")), 2)
-            ) if safe_get("dailyrainin") else None,
+            )
+            if safe_get("dailyrainin")
+            else None,
             "unit": "mm" if UNITS == "metric" else "in",
             "device_class": "precipitation",
         },
@@ -81,14 +118,18 @@ def update():
         "Wind Speed": {
             "value": (
                 mph_to_kmh(safe_get("windspeedmph")) if UNITS == "metric" else round(float(safe_get("windspeedmph")), 1)
-            ) if safe_get("windspeedmph") else None,
+            )
+            if safe_get("windspeedmph")
+            else None,
             "unit": "km/h" if UNITS == "metric" else "mph",
             "device_class": "wind_speed",
         },
         "Wind Gust Speed": {
             "value": (
                 mph_to_kmh(safe_get("windgustmph")) if UNITS == "metric" else round(float(safe_get("windgustmph")), 1)
-            ) if safe_get("windgustmph") else None,
+            )
+            if safe_get("windgustmph")
+            else None,
             "unit": "km/h" if UNITS == "metric" else "mph",
             "device_class": "wind_speed",
         },
@@ -96,14 +137,14 @@ def update():
         "Solar Radiation": {"value": safe_get("solarRadiation"), "unit": "W/m²", "device_class": "irradiance"},
     }
 
-    dateutc = safe_get('dateutc')
+    dateutc = safe_get("dateutc")
     local_time = ""
     if dateutc:
         try:
             dt = datetime.strptime(dateutc, "%Y-%m-%d %H:%M:%S")
             dt = pytz.utc.localize(dt).astimezone(pytz.timezone(TIMEZONE))
             local_time = dt.strftime("%Y-%m-%d %H:%M:%S")
-        except Exception as e:
+        except Exception:
             local_time = dateutc  # fallback
 
     # Publish each sensor to MQTT using HA auto-discovery
@@ -134,7 +175,7 @@ def update():
         mqtt_client.publish(attr_topic, json.dumps({"measured_on": local_time}), retain=True)
 
     if WU_FORWARD:
-        params = request.args.to_dict(flat=True)
+        params = request.args.to_dict()
         if WU_USERNAME:
             params["ID"] = WU_USERNAME
         if WU_PASSWORD:
@@ -147,9 +188,12 @@ def update():
             headers = {"Host": "rtupdate.wunderground.com"}
             requests.get(url, params=params, headers=headers, timeout=5)
         except Exception as e:
-            print(f"Failed to forward to Weather Underground: {e}")
+            logger.warning(f"Failed to forward to Weather Underground: {e}")
 
+    logger.info("Weather data received and published to MQTT")
     return "success", 200
 
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80)
+    logger.info("Starting Flask server on 0.0.0.0:80")
+    app.run(host="0.0.0.0", port=80)  # nosec B104 - binding to all interfaces is intentional for container
