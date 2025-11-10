@@ -1,0 +1,49 @@
+name: VEVOR Weather Station Bridge
+version: 0.1.0
+slug: vevor-weatherbridge
+description: Intercepts VEVOR weather station data and forwards it to Home Assistant via MQTT
+url: https://github.com/C9H13NO3-dev/VevorWeatherbridge
+arch:
+  - amd64
+  - armv7
+  - aarch64
+  - armhf
+  - i386
+startup: application
+boot: auto
+init: false
+ports:
+  80/tcp: 8099
+ports_description:
+  80/tcp: Weather station HTTP endpoint (default 8099, can be changed)
+map:
+  - config:rw
+options:
+  device_name: "Weather Station"
+  device_manufacturer: "VEVOR"
+  device_model: "7-in-1 Weather Station"
+  units: "metric"
+  mqtt_host: ""
+  mqtt_port: 1883
+  mqtt_user: ""
+  mqtt_password: ""
+  mqtt_prefix: "homeassistant"
+  timezone: "Europe/Berlin"
+  wu_forward: false
+  wu_username: ""
+  wu_password: ""
+schema:
+  device_name: str
+  device_manufacturer: str
+  device_model: str
+  units: list(metric|imperial)
+  mqtt_host: str?
+  mqtt_port: port
+  mqtt_user: str?
+  mqtt_password: password?
+  mqtt_prefix: str
+  timezone: str
+  wu_forward: bool
+  wu_username: str?
+  wu_password: password?
+image: ghcr.io/c9h13no3-dev/vevor-weatherbridge-{arch}
