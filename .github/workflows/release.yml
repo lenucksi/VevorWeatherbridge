@@ -2,95 +2,96 @@ name: Create Release
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'vevor-weatherbridge/config.yaml'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to release (leave empty to use config.yaml version)'
-        required: false
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
 
 jobs:
-  check-version:
+  release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    outputs:
-      version: ${{ steps.get_version.outputs.version }}
-      should_release: ${{ steps.check.outputs.should_release }}
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
-      - name: Get version from config.yaml
+      - name: Get version from tag
         id: get_version
         run: |
-          if [ -n "${{ github.event.inputs.version }}" ]; then
-            VERSION="${{ github.event.inputs.version }}"
-          else
-            VERSION=$(grep '^version:' vevor-weatherbridge/config.yaml | awk '{print $2}')
-          fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Check if release exists
-        id: check
-        run: |
-          VERSION="${{ steps.get_version.outputs.version }}"
-          if gh release view "v$VERSION" > /dev/null 2>&1; then
-            echo "should_release=false" >> $GITHUB_OUTPUT
-            echo "Release v$VERSION already exists"
-          else
-            echo "should_release=true" >> $GITHUB_OUTPUT
-            echo "Will create release v$VERSION"
-          fi
-        env:
-          GH_TOKEN: ${{ github.token }}
-
-  release:
-    needs: check-version
-    if: needs.check-version.outputs.should_release == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Extract changelog for version
+      - name: Extract changelog for this version
         id: changelog
         run: |
-          VERSION="${{ needs.check-version.outputs.version }}"
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          CHANGELOG_FILE="vevor-weatherbridge/CHANGELOG.md"
+          awk "/## \[$VERSION\]/{flag=1; next} /## \[/{flag=0} flag" "$CHANGELOG_FILE" > /tmp/changelog_entry.md
+          cat > /tmp/release_notes.md << EOF
+          # VEVOR Weatherbridge v$VERSION
+          
+          $(cat /tmp/changelog_entry.md)
+          
+          ## Installation
+          
+          ### Home Assistant Addon
+          
+          1. Update the addon to v$VERSION in Home Assistant
+          2. Restart the addon
+          3. Check the logs for any errors
+          
+          ### Docker Image
+          
+          \`\`\`bash
+          docker pull ghcr.io/lenucksi/vevor-weatherbridge-amd64:$VERSION
+          \`\`\`
+          
+          Available architectures: \`amd64\`, \`armv7\`, \`aarch64\`, \`armhf\`, \`i386\`
+          
+          ## Full Changelog
+          
+          See [CHANGELOG.md](https://github.com/lenucksi/VevorWeatherbridge/blob/main/vevor-weatherbridge/CHANGELOG.md) for complete version history.
+          EOF
 
-          # Extract the changelog section for this version
-          awk "/## \[$VERSION\]/,/## \[/" vevor-weatherbridge/CHANGELOG.md | \
-            sed '/^## \[/d' | \
-            sed '/^$/d' | \
-            head -n -1 > release_notes.md
-
-          if [ ! -s release_notes.md ]; then
-            echo "Release notes for version $VERSION" > release_notes.md
+      - name: Get contributors and commits
+        id: git_info
+        run: |
+          PREV_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
+          if [ -n "$PREV_TAG" ]; then
+            RANGE="$PREV_TAG..${{ steps.get_version.outputs.TAG }}"
+          else
+            RANGE="${{ steps.get_version.outputs.TAG }}"
           fi
-
-          cat release_notes.md
+          
+          # Contributors
+          git log $RANGE --format='%an' --no-merges | sort -u | sed 's/^/- @/' > /tmp/contributors.txt
+          
+          # Commits
+          git log $RANGE --pretty=format:"- %s (%h)" --no-merges > /tmp/commits.txt
+          
+          # Append to release notes
+          cat >> /tmp/release_notes.md << EOF
+          
+          ## Contributors
+          
+          $(cat /tmp/contributors.txt)
+          
+          ## Commits
+          
+          $(cat /tmp/commits.txt)
+          
+          **Full Diff**: https://github.com/lenucksi/VevorWeatherbridge/compare/${PREV_TAG:-initial}...${{ steps.get_version.outputs.TAG }}
+          EOF
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ needs.check-version.outputs.version }}
-          name: v${{ needs.check-version.outputs.version }}
-          body_path: release_notes.md
+          body_path: /tmp/release_notes.md
           draft: false
           prerelease: false
+          generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Summary
-        run: |
-          echo "✅ Released version ${{ needs.check-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Release: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.check-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
