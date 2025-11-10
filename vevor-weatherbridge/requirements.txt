@@ -3,3 +3,5 @@ pytz
 paho-mqtt
 requests
 dnspython
+pytest
+pytest-mock
