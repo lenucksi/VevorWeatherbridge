@@ -11,8 +11,12 @@ import requests
 from flask import Flask, request
 
 # Configure logging for Home Assistant addon environment
+# Allow LOG_LEVEL to be configured via environment variable
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", stream=sys.stdout
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    stream=sys.stdout,
 )
 logger = logging.getLogger(__name__)
 
@@ -33,24 +37,59 @@ WU_USERNAME = os.environ.get("WU_USERNAME")
 WU_PASSWORD = os.environ.get("WU_PASSWORD")
 
 logger.info("Starting VEVOR Weather Station Bridge")
+logger.info(f"Log level: {LOG_LEVEL}")
 logger.info(f"Device: {DEVICE_NAME} ({DEVICE_ID})")
 logger.info(f"MQTT: {MQTT_HOST}:{MQTT_PORT}")
 logger.info(f"Units: {UNITS}")
 
 app = Flask(__name__)
 
-mqtt_client = mqtt.Client()
+# Global MQTT connection state
+mqtt_connected = False
+
+
+def on_connect(client, userdata, flags, rc, properties=None):
+    """MQTT connection callback."""
+    global mqtt_connected
+    if rc == 0:
+        mqtt_connected = True
+        logger.info(f"Connected to MQTT broker successfully (rc={rc})")
+    else:
+        mqtt_connected = False
+        logger.error(f"Failed to connect to MQTT broker (rc={rc})")
+
+
+def on_disconnect(client, userdata, rc, properties=None):
+    """MQTT disconnection callback."""
+    global mqtt_connected
+    mqtt_connected = False
+    if rc != 0:
+        logger.warning(f"Unexpected MQTT disconnection (rc={rc})")
+
+
+def on_publish(client, userdata, mid, properties=None, reason_code=None):
+    """MQTT publish callback."""
+    logger.debug(f"MQTT message published (mid={mid})")
+
+
+# Create MQTT client with callback API version 2
+mqtt_client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
+mqtt_client.on_connect = on_connect
+mqtt_client.on_disconnect = on_disconnect
+mqtt_client.on_publish = on_publish
+
 if MQTT_USER:
+    logger.debug(f"Setting MQTT credentials for user: {MQTT_USER}")
     mqtt_client.username_pw_set(MQTT_USER, MQTT_PASSWORD)
 
 try:
+    logger.info(f"Connecting to MQTT broker at {MQTT_HOST}:{MQTT_PORT}...")
     mqtt_client.connect(MQTT_HOST, MQTT_PORT, 60)
     mqtt_client.loop_start()
-    logger.info("Connected to MQTT broker successfully")
+    logger.info("MQTT connection initiated")
 except Exception as e:
-    logger.error(f"Failed to connect to MQTT broker: {e}")
+    logger.error(f"Failed to initiate MQTT connection: {e}")
     logger.error("The addon will continue but data will not be published until MQTT connection is established")
-    # Don't exit - allow the service to start and attempt reconnection
 
 
 def f_to_c(f):
@@ -147,15 +186,30 @@ def update():
         except Exception:
             local_time = dateutc  # fallback
 
+    # Check MQTT connection status
+    if not mqtt_connected:
+        logger.warning("MQTT not connected - attempting to reconnect...")
+        try:
+            mqtt_client.reconnect()
+        except Exception as e:
+            logger.error(f"MQTT reconnection failed: {e}")
+
+    logger.debug(f"Processing weather data - MQTT connected: {mqtt_connected}")
+    logger.debug(f"Received parameters: {request.args.to_dict()}")
+
     # Publish each sensor to MQTT using HA auto-discovery
+    published_count = 0
     for name, data in attributes.items():
         if data["value"] is None:
+            logger.debug(f"Skipping {name} - no value")
             continue
+
         sensor_id = name.lower().replace(" ", "_")
         base = f"{MQTT_PREFIX}/sensor/{DEVICE_ID}_{sensor_id}"
         state_topic = f"{base}/state"
         attr_topic = f"{base}/attributes"
         config_topic = f"{base}/config"
+
         config_payload = {
             "name": f"{DEVICE_NAME} {name}",
             "state_topic": state_topic,
@@ -170,9 +224,21 @@ def update():
                 "model": DEVICE_MODEL,
             },
         }
-        mqtt_client.publish(config_topic, json.dumps(config_payload), retain=True)
-        mqtt_client.publish(state_topic, str(data["value"]), retain=True)
-        mqtt_client.publish(attr_topic, json.dumps({"measured_on": local_time}), retain=True)
+
+        logger.debug(f"Publishing {name}: {data['value']} {data['unit']} to {state_topic}")
+
+        try:
+            mqtt_client.publish(config_topic, json.dumps(config_payload), retain=True)
+            result_state = mqtt_client.publish(state_topic, str(data["value"]), retain=True)
+            mqtt_client.publish(attr_topic, json.dumps({"measured_on": local_time}), retain=True)
+
+            if result_state.rc == mqtt.MQTT_ERR_SUCCESS:
+                published_count += 1
+                logger.debug(f"Successfully queued {name} for publishing (mid={result_state.mid})")
+            else:
+                logger.error(f"Failed to queue {name} for publishing (rc={result_state.rc})")
+        except Exception as e:
+            logger.error(f"Exception publishing {name}: {e}")
 
     if WU_FORWARD:
         params = request.args.to_dict()
@@ -181,16 +247,24 @@ def update():
         if WU_PASSWORD:
             params["PASSWORD"] = WU_PASSWORD
         try:
+            logger.debug("Forwarding to Weather Underground...")
             resolver = dns.resolver.Resolver()
             resolver.nameservers = ["8.8.8.8", "8.8.4.4"]
             wu_ip = resolver.resolve("rtupdate.wunderground.com")[0].to_text()
             url = f"http://{wu_ip}/weatherstation/updateweatherstation.php"
             headers = {"Host": "rtupdate.wunderground.com"}
-            requests.get(url, params=params, headers=headers, timeout=5)
+            response = requests.get(url, params=params, headers=headers, timeout=5)
+            logger.debug(f"Weather Underground response: {response.status_code}")
         except Exception as e:
             logger.warning(f"Failed to forward to Weather Underground: {e}")
 
-    logger.info("Weather data received and published to MQTT")
+    if mqtt_connected and published_count > 0:
+        logger.info(f"Weather data received - published {published_count} sensors to MQTT")
+    elif published_count > 0:
+        logger.warning(f"Weather data queued ({published_count} sensors) but MQTT not confirmed connected")
+    else:
+        logger.error("Weather data received but no sensors were published")
+
     return "success", 200
 
 

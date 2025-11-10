@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2025-11-10
+
+### Fixed
+- MQTT connection state tracking - data now publishes correctly to MQTT broker
+- MQTT callbacks now properly track connection status and handle reconnection
+- Enhanced error logging with detailed MQTT publish status information
+
+### Added
+- Configurable log level via addon options (DEBUG, INFO, WARNING, ERROR)
+- MQTT connection state callbacks (on_connect, on_disconnect, on_publish)
+- Detailed debug logging for MQTT publish operations
+- Automatic MQTT reconnection attempts when disconnected
+
+### Changed
+- Upgraded to MQTT Client API v2 to fix deprecation warnings
+- Improved logging with connection status and publish confirmations
+- Enhanced weather data processing logs with sensor counts
+
+## [0.1.1] - 2025-11-10
+
+### Fixed
+- MQTT broker auto-detection now works without bashio dependency
+- Replaced bashio calls with standard bash and jq for better compatibility
+- Added jq package to Docker image for JSON config parsing
+- Implemented multi-method MQTT broker detection (secrets, ping, fallback)
+
+### Changed
+- Startup script now uses plain bash instead of bashio helpers
+- Improved logging format for better clarity in HA logs
+
 ## [0.1.0] - 2025-11-10
 
 ### Added

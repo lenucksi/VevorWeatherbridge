@@ -18,6 +18,7 @@ export DEVICE_MODEL=$(jq -r '.device_model' $CONFIG_PATH)
 export UNITS=$(jq -r '.units' $CONFIG_PATH)
 export MQTT_PREFIX=$(jq -r '.mqtt_prefix' $CONFIG_PATH)
 export TZ=$(jq -r '.timezone' $CONFIG_PATH)
+export LOG_LEVEL=$(jq -r '.log_level' $CONFIG_PATH)
 
 # Generate device ID from device name (lowercase, replace spaces with underscores)
 export DEVICE_ID=$(echo "${DEVICE_NAME}" | tr '[:upper:]' '[:lower:]' | tr ' ' '_')
