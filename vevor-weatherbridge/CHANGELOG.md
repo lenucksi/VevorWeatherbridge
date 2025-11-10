@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2025-11-10
+
+### Changed
+- **BREAKING**: Migrated from manual jq/curl to bashio library for all addon operations
+  - run.sh now uses `#!/usr/bin/with-contenv bashio` shebang
+  - Configuration reading via `bashio::config` functions
+  - MQTT service discovery via `bashio::services.available` and `bashio::services`
+  - Logging via `bashio::log.*` functions (info, fatal, etc.)
+- Removed jq dependency from Dockerfile (bashio provides all needed functionality)
+- Simplified MQTT auto-detection logic using bashio's built-in service query
+- Improved logging with proper bashio log levels
+
+### Fixed
+- **CRITICAL**: SUPERVISOR_TOKEN access now handled correctly by bashio
+  - No more "SUPERVISOR_TOKEN not available" errors
+  - Bashio automatically manages Supervisor API authentication
+  - Proper fallback when MQTT service not available
+
 ## [0.1.5] - 2025-11-10
 
 ### Added

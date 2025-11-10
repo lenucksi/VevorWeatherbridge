@@ -4,9 +4,6 @@ FROM ${BUILD_FROM}
 # Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install system dependencies (jq for config parsing)
-RUN apk add --no-cache jq
-
 # Install Python dependencies
 WORKDIR /app
 COPY requirements.txt .

@@ -1,5 +1,5 @@
 name: VEVOR Weather Station Bridge
-version: 0.1.5
+version: 0.1.6
 slug: vevor-weatherbridge
 description: Intercepts VEVOR weather station data and forwards it to Home Assistant via MQTT
 url: https://github.com/C9H13NO3-dev/VevorWeatherbridge
