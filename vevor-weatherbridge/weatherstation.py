@@ -55,6 +55,10 @@ def on_connect(client, userdata, flags, reason_code, properties):
     if reason_code == 0:
         mqtt_connected = True
         logger.info(f"Connected to MQTT broker successfully (reason_code={reason_code})")
+        # Publish availability status
+        availability_topic = f"{MQTT_PREFIX}/sensor/{DEVICE_ID}/availability"
+        client.publish(availability_topic, "online", retain=True)
+        logger.debug(f"Published availability status to {availability_topic}")
     else:
         mqtt_connected = False
         logger.error(f"Failed to connect to MQTT broker (reason_code={reason_code})")
@@ -78,6 +82,10 @@ mqtt_client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
 mqtt_client.on_connect = on_connect
 mqtt_client.on_disconnect = on_disconnect
 mqtt_client.on_publish = on_publish
+
+# Set Last Will and Testament for availability tracking
+availability_topic = f"{MQTT_PREFIX}/sensor/{DEVICE_ID}/availability"
+mqtt_client.will_set(availability_topic, "offline", retain=True)
 
 if MQTT_USER:
     logger.debug(f"Setting MQTT credentials for user: {MQTT_USER}")
@@ -215,16 +223,25 @@ def update():
             "name": f"{DEVICE_NAME} {name}",
             "state_topic": state_topic,
             "unit_of_measurement": data["unit"],
-            "device_class": data["device_class"],
             "unique_id": f"{DEVICE_ID}_{sensor_id}",
             "json_attributes_topic": attr_topic,
+            "availability_topic": f"{MQTT_PREFIX}/sensor/{DEVICE_ID}/availability",
             "device": {
                 "identifiers": [DEVICE_ID],
                 "name": DEVICE_NAME,
                 "manufacturer": DEVICE_MANUFACTURER,
                 "model": DEVICE_MODEL,
             },
+            "origin": {
+                "name": "VEVOR Weatherbridge",
+                "sw_version": "0.1.7",
+                "support_url": "https://github.com/C9H13NO3-dev/VevorWeatherbridge",
+            },
         }
+
+        # Only add device_class if it's not None
+        if data["device_class"] is not None:
+            config_payload["device_class"] = data["device_class"]
 
         logger.debug(f"Publishing {name}: {data['value']} {data['unit']} to {state_topic}")
 
