@@ -39,33 +39,40 @@ fi
 MQTT_HOST_CONFIG=$(jq -r '.mqtt_host' $CONFIG_PATH)
 
 if [ -z "$MQTT_HOST_CONFIG" ] || [ "$MQTT_HOST_CONFIG" = "null" ] || [ "$MQTT_HOST_CONFIG" = "" ]; then
-    # Try to detect HA's internal MQTT broker via supervisor API
-    echo "[INFO] Attempting to detect Home Assistant's internal MQTT broker..."
+    # Use Supervisor Services API to get MQTT credentials
+    echo "[INFO] Attempting to auto-detect MQTT broker via Supervisor API..."
 
-    # Try to get MQTT service info from supervisor
-    if [ -f /run/secrets/mqtt_host ]; then
-        export MQTT_HOST=$(cat /run/secrets/mqtt_host)
-        export MQTT_PORT=$(cat /run/secrets/mqtt_port 2>/dev/null || echo "1883")
-        export MQTT_USER=$(cat /run/secrets/mqtt_username 2>/dev/null || echo "")
-        export MQTT_PASSWORD=$(cat /run/secrets/mqtt_password 2>/dev/null || echo "")
-        echo "[INFO] Using Home Assistant's internal MQTT broker from secrets"
-    else
-        # Try common HA MQTT broker hostnames
-        for host in "core-mosquitto" "mosquitto" "homeassistant.local"; do
-            if ping -c 1 -W 1 "$host" > /dev/null 2>&1; then
-                export MQTT_HOST="$host"
-                export MQTT_PORT="1883"
-                export MQTT_USER=""
-                export MQTT_PASSWORD=""
-                echo "[INFO] Found MQTT broker at: $host"
-                break
+    SUPERVISOR_TOKEN="${SUPERVISOR_TOKEN:-}"
+
+    if [ -n "$SUPERVISOR_TOKEN" ]; then
+        # Query Supervisor Services API for MQTT config
+        MQTT_CONFIG=$(curl -sSL -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" \
+                      http://supervisor/services/mqtt 2>/dev/null || echo "")
+
+        if [ -n "$MQTT_CONFIG" ] && [ "$MQTT_CONFIG" != "null" ]; then
+            export MQTT_HOST=$(echo "$MQTT_CONFIG" | jq -r '.data.host // empty')
+            export MQTT_PORT=$(echo "$MQTT_CONFIG" | jq -r '.data.port // 1883')
+            export MQTT_USER=$(echo "$MQTT_CONFIG" | jq -r '.data.username // empty')
+            export MQTT_PASSWORD=$(echo "$MQTT_CONFIG" | jq -r '.data.password // empty')
+
+            if [ -n "$MQTT_HOST" ]; then
+                echo "[INFO] Using Home Assistant MQTT broker from Supervisor API"
+                echo "[INFO] MQTT Host: ${MQTT_HOST}:${MQTT_PORT}"
+                echo "[INFO] MQTT User: ${MQTT_USER}"
+            else
+                echo "[ERROR] Supervisor API returned empty MQTT configuration"
+                echo "[FATAL] No MQTT broker configured! Please install Mosquitto broker addon or configure MQTT manually."
+                exit 1
             fi
-        done
-
-        if [ -z "$MQTT_HOST" ]; then
-            echo "[FATAL] No MQTT broker configured! Please provide MQTT settings in addon configuration."
+        else
+            echo "[ERROR] Could not retrieve MQTT config from Supervisor API"
+            echo "[FATAL] No MQTT broker configured! Please install Mosquitto broker addon or configure MQTT manually."
             exit 1
         fi
+    else
+        echo "[ERROR] SUPERVISOR_TOKEN not available"
+        echo "[FATAL] Cannot auto-detect MQTT broker. Please configure MQTT settings in addon configuration."
+        exit 1
     fi
 else
     # Use user-provided MQTT configuration
