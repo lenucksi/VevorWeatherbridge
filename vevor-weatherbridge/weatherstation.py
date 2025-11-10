@@ -48,27 +48,28 @@ app = Flask(__name__)
 mqtt_connected = False
 
 
-def on_connect(client, userdata, flags, rc, properties=None):
-    """MQTT connection callback."""
+def on_connect(client, userdata, flags, reason_code, properties):
+    """MQTT connection callback (API v2)."""
     global mqtt_connected
-    if rc == 0:
+    # reason_code is a ReasonCode instance in v2
+    if reason_code == 0:
         mqtt_connected = True
-        logger.info(f"Connected to MQTT broker successfully (rc={rc})")
+        logger.info(f"Connected to MQTT broker successfully (reason_code={reason_code})")
     else:
         mqtt_connected = False
-        logger.error(f"Failed to connect to MQTT broker (rc={rc})")
+        logger.error(f"Failed to connect to MQTT broker (reason_code={reason_code})")
 
 
-def on_disconnect(client, userdata, rc, properties=None):
-    """MQTT disconnection callback."""
+def on_disconnect(client, userdata, flags, reason_code, properties):
+    """MQTT disconnection callback (API v2)."""
     global mqtt_connected
     mqtt_connected = False
-    if rc != 0:
-        logger.warning(f"Unexpected MQTT disconnection (rc={rc})")
+    if reason_code != 0:
+        logger.warning(f"Unexpected MQTT disconnection (reason_code={reason_code})")
 
 
-def on_publish(client, userdata, mid, properties=None, reason_code=None):
-    """MQTT publish callback."""
+def on_publish(client, userdata, mid, reason_codes, properties):
+    """MQTT publish callback (API v2)."""
     logger.debug(f"MQTT message published (mid={mid})")
 
 
