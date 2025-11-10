@@ -1,0 +1,91 @@
+name: Build and Publish Add-on
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/vevor-weatherbridge
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        arch: [amd64, armv7, aarch64, armhf, i386]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=0.1.0
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Map architecture to Docker platform
+        id: arch
+        run: |
+          case "${{ matrix.arch }}" in
+            amd64)   echo "platform=linux/amd64" >> $GITHUB_OUTPUT ;;
+            armv7)   echo "platform=linux/arm/v7" >> $GITHUB_OUTPUT ;;
+            aarch64) echo "platform=linux/arm64" >> $GITHUB_OUTPUT ;;
+            armhf)   echo "platform=linux/arm/v6" >> $GITHUB_OUTPUT ;;
+            i386)    echo "platform=linux/386" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Map architecture to base image
+        id: base
+        run: |
+          case "${{ matrix.arch }}" in
+            amd64)   echo "image=ghcr.io/home-assistant/amd64-base-python:3.12-alpine3.19" >> $GITHUB_OUTPUT ;;
+            armv7)   echo "image=ghcr.io/home-assistant/armv7-base-python:3.12-alpine3.19" >> $GITHUB_OUTPUT ;;
+            aarch64) echo "image=ghcr.io/home-assistant/aarch64-base-python:3.12-alpine3.19" >> $GITHUB_OUTPUT ;;
+            armhf)   echo "image=ghcr.io/home-assistant/armhf-base-python:3.12-alpine3.19" >> $GITHUB_OUTPUT ;;
+            i386)    echo "image=ghcr.io/home-assistant/i386-base-python:3.12-alpine3.19" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./vevor-weatherbridge
+          platforms: ${{ steps.arch.outputs.platform }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BUILD_FROM=${{ steps.base.outputs.image }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

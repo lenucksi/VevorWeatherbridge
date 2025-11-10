@@ -46,3 +46,4 @@ schema:
   wu_forward: bool
   wu_username: str?
   wu_password: password?
+image: ghcr.io/lenucksi/vevor-weatherbridge-{arch}
