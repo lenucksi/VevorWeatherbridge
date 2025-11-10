@@ -1,0 +1,68 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":preserveSemverRanges"
+  ],
+  "labels": ["dependencies"],
+  "assignees": ["@lenucksi"],
+  "schedule": ["every weekend"],
+  "timezone": "Europe/Berlin",
+  "packageRules": [
+    {
+      "description": "Python dependencies - group minor and patch updates",
+      "matchManagers": ["pip_requirements"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Python dependencies (non-major)",
+      "automerge": false
+    },
+    {
+      "description": "Python major updates - separate PRs",
+      "matchManagers": ["pip_requirements"],
+      "matchUpdateTypes": ["major"],
+      "groupName": null,
+      "automerge": false
+    },
+    {
+      "description": "Docker base images",
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
+      "enabled": true,
+      "automerge": false,
+      "labels": ["dependencies", "docker"]
+    },
+    {
+      "description": "GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "automerge": false,
+      "labels": ["dependencies", "github-actions"]
+    }
+  ],
+  "pip_requirements": {
+    "fileMatch": ["(^|/)requirements\\.txt$"]
+  },
+  "docker": {
+    "enabled": true
+  },
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "assignees": ["@lenucksi"],
+    "automerge": false
+  },
+  "prConcurrentLimit": 5,
+  "prCreation": "immediate",
+  "prHourlyLimit": 0,
+  "platformAutomerge": false,
+  "configMigration": true,
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Dependency Dashboard 🤖",
+  "dependencyDashboardHeader": "This dashboard tracks pending dependency updates and provides an overview of the repository's dependency status.",
+  "dependencyDashboardFooter": "Managed by Renovate Bot. Updates are checked every weekend.",
+  "commitMessagePrefix": "chore(deps):",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
+  "commitBody": "This PR contains the following updates:\n\n| Package | Update | Change |\n|---|---|---|\n{{#each upgrades as |upgrade|}}\n| {{upgrade.depName}} | {{upgrade.updateType}} | `{{upgrade.currentValue}}` -> `{{upgrade.newValue}}` |\n{{/each}}\n\n---\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>"
+}

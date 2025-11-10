@@ -1,0 +1,54 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'dependencies')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          warn-on-severity: moderate
+          comment-summary-in-pr: always
+
+  security-scan:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'dependencies')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r vevor-weatherbridge/requirements.txt
+          pip install pip-audit bandit
+
+      - name: Run pip-audit
+        run: |
+          echo "## Dependency Vulnerability Scan" >> $GITHUB_STEP_SUMMARY
+          pip-audit --format markdown >> $GITHUB_STEP_SUMMARY || true
+
+      - name: Run bandit security scan
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Code Security Scan" >> $GITHUB_STEP_SUMMARY
+          bandit -r vevor-weatherbridge/weatherstation.py -f txt || true
