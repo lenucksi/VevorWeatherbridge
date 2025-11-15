@@ -16,7 +16,7 @@ dnspython = "^2.6.0"
 
 [tool.poetry.group.dev.dependencies]
 # Quality tools
-ruff = "^0.8.4"
+ruff = "^0.14.0"
 mypy = "^1.13.0"
 bandit = "^1.7.10"
 pip-audit = "^2.7.3"
