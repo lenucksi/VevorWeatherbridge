@@ -29,7 +29,7 @@ types-pytz = "^2024.1.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^9.0.0"
-pytest-cov = "^6.0.0"
+pytest-cov = "^7.0.0"
 
 [build-system]
 requires = ["poetry-core"]
