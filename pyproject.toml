@@ -28,7 +28,7 @@ types-requests = "^2.31.0"
 types-pytz = "^2024.1.0"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.3.0"
+pytest = "^9.0.0"
 pytest-cov = "^6.0.0"
 
 [build-system]
