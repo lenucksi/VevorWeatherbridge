@@ -9,7 +9,7 @@ packages = [{include = "weatherstation.py"}]
 [tool.poetry.dependencies]
 python = "^3.12"
 flask = "^3.0.0"
-pytz = "^2024.1"
+pytz = "^2025.2"
 paho-mqtt = "^2.1.0"
 requests = "^2.31.0"
 dnspython = "^2.6.0"
