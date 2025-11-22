@@ -1,4 +1,6 @@
 # VEVOR Weather Station Bridge
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge?ref=badge_shield)
+
 
 This project provides a **Home Assistant Add-on** (and standalone Docker container) for ingesting weather data from a VEVOR 7-in-1 Wi-Fi Solar Self-Charging Weather Station (Model YT60234, or any station sending data in Weather Underground format) and forwarding it to Home Assistant via **MQTT**.
 
@@ -202,6 +204,9 @@ Add logging or print statements to `weatherstation.py` for further debugging.
 This project is licensed under the [CC0 1.0 Universal](LICENSE).
 
 ---
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge?ref=badge_large)
 
 ## Acknowledgements
 
