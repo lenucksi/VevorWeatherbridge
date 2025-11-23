@@ -1,0 +1,188 @@
+# Example Lovelace Windrose Card Configuration
+# Copy this configuration to your Home Assistant dashboard
+#
+# Prerequisites:
+# 1. Install lovelace-windrose-card via HACS
+# 2. Ensure VevorWeatherbridge addon is running
+# 3. Verify wind sensors are available in Home Assistant
+
+# Basic Windrose Configuration
+# Shows 24 hours of wind data with default settings
+type: custom:windrose-card
+title: Wind Rose
+data_period:
+  hours_to_show: 24
+wind_direction_entity: sensor.weather_station_wind_direction
+windspeed_entities:
+  - entity: sensor.weather_station_wind_speed
+  - entity: sensor.weather_station_wind_gust_speed
+refresh_interval: 300
+cardinal_direction_letters: NESW
+matching_strategy: direction-first
+windspeed_bar_location: bottom
+wind_direction_count: 16
+center_calm_percentage: true
+
+---
+# Advanced Configuration with Custom Speed Ranges
+# Uses custom colors and speed thresholds
+type: custom:windrose-card
+title: Wind Rose - Custom Colors
+data_period:
+  hours_to_show: 48  # Show 2 days of data
+wind_direction_entity: sensor.weather_station_wind_direction
+windspeed_entities:
+  - entity: sensor.weather_station_wind_speed
+    name: Wind Speed
+  - entity: sensor.weather_station_wind_gust_speed
+    name: Wind Gust
+refresh_interval: 300
+cardinal_direction_letters: NESW
+matching_strategy: direction-first
+windspeed_bar_location: bottom
+wind_direction_count: 16
+center_calm_percentage: true
+
+# Custom speed ranges (km/h) with colors
+# Adjust values based on your unit system (metric vs imperial)
+speed_ranges:
+  - from_value: 0
+    to_value: 5
+    color: '#d4d4d4'  # Light gray - Calm
+  - from_value: 5
+    to_value: 10
+    color: '#a3d4d4'  # Light blue - Light breeze
+  - from_value: 10
+    to_value: 20
+    color: '#4fa8d4'  # Blue - Moderate wind
+  - from_value: 20
+    to_value: 30
+    color: '#2a6f9a'  # Dark blue - Fresh wind
+  - from_value: 30
+    to_value: 40
+    color: '#ff9800'  # Orange - Strong wind
+  - from_value: 40
+    to_value: 1000
+    color: '#f44336'  # Red - Very strong wind
+
+# Wind rose appearance
+windrose_draw_north_offset: 0
+cardinal_direction_letters: NESW
+matching_strategy: direction-first
+
+# Output units (change based on your UNITS setting in addon config)
+# Options: mps (m/s), fps (ft/s), kph (km/h), mph, kn (knots), bft (Beaufort)
+output_speed_unit: kph  # Use 'mph' if using imperial units
+
+# Corner information display
+corner_info:
+  top_left:
+    - label: Current
+      entity: sensor.weather_station_wind_direction
+      attribute: cardinal
+  top_right:
+    - label: Speed
+      entity: sensor.weather_station_wind_speed
+  bottom_left:
+    - label: Gust
+      entity: sensor.weather_station_wind_gust_speed
+
+---
+# Beaufort Scale Configuration
+# Uses official Beaufort scale for wind speed classification
+type: custom:windrose-card
+title: Wind Rose - Beaufort Scale
+data_period:
+  hours_to_show: 24
+wind_direction_entity: sensor.weather_station_wind_direction
+windspeed_entities:
+  - entity: sensor.weather_station_wind_speed
+refresh_interval: 300
+cardinal_direction_letters: NESW
+matching_strategy: direction-first
+windspeed_bar_location: bottom
+wind_direction_count: 16
+center_calm_percentage: true
+
+# Use Beaufort scale (automatically adjusts for wind speed units)
+speed_range_beaufort: true
+output_speed_unit: bft  # Display as Beaufort numbers
+
+---
+# Compact Configuration
+# Minimal windrose for small dashboard spaces
+type: custom:windrose-card
+data_period:
+  hours_to_show: 12
+wind_direction_entity: sensor.weather_station_wind_direction
+windspeed_entities:
+  - entity: sensor.weather_station_wind_speed
+refresh_interval: 300
+wind_direction_count: 8  # 8-point compass (N, NE, E, SE, S, SW, W, NW)
+center_calm_percentage: false
+windrose_draw_north_offset: 0
+speed_range_beaufort: true
+output_speed_unit: kph
+
+# Hide cardinal letters for compact view
+cardinal_direction_letters: ''
+
+---
+# Real-time Focus Configuration
+# Emphasizes current wind conditions with shorter history
+type: custom:windrose-card
+title: Current Wind Conditions
+data_period:
+  hours_to_show: 4  # Only last 4 hours
+wind_direction_entity: sensor.weather_station_wind_direction
+windspeed_entities:
+  - entity: sensor.weather_station_wind_speed
+  - entity: sensor.weather_station_wind_gust_speed
+refresh_interval: 60  # Update every minute
+cardinal_direction_letters: NESW
+matching_strategy: direction-first
+windspeed_bar_location: right  # Bars on the right side
+wind_direction_count: 16
+center_calm_percentage: true
+
+# Show current values in corners
+corner_info:
+  top_left:
+    - label: Direction
+      entity: sensor.weather_station_wind_direction
+      unit: '°'
+  top_right:
+    - label: Cardinal
+      entity: sensor.weather_station_wind_direction
+      attribute: cardinal
+  bottom_left:
+    - label: Speed
+      entity: sensor.weather_station_wind_speed
+  bottom_right:
+    - label: Gust
+      entity: sensor.weather_station_wind_gust_speed
+
+---
+# Installation Notes:
+#
+# 1. Install lovelace-windrose-card:
+#    - Open HACS → Frontend
+#    - Three dots menu → Custom repositories
+#    - Add: https://github.com/aukedejong/lovelace-windrose-card
+#    - Install "Windrose Card"
+#    - Restart Home Assistant
+#
+# 2. Add to dashboard:
+#    - Edit dashboard → Add Card
+#    - Search for "Custom: Windrose Card"
+#    - Paste one of the configurations above
+#
+# 3. Customize:
+#    - Adjust entity names if you changed device_name in addon config
+#    - Change output_speed_unit to match your units setting (kph/mph)
+#    - Modify colors and speed ranges to your preference
+#
+# 4. Additional Resources:
+#    - Full documentation: https://github.com/aukedejong/lovelace-windrose-card
+#    - HACS: https://hacs.xyz/
+#    - Report issues: https://github.com/C9H13NO3-dev/VevorWeatherbridge/issues
