@@ -9,7 +9,6 @@ Comprehensive tests for all unit conversion functions including:
 """
 
 
-
 class TestFahrenheitToCelsius:
     """Tests for Fahrenheit to Celsius conversion."""
 

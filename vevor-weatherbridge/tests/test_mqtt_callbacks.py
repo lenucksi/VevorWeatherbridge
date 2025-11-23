@@ -7,7 +7,6 @@ Tests for MQTT API v2 callbacks:
 """
 
 
-
 class TestMQTTCallbacks:
     """Test MQTT callback functions."""
 

@@ -171,9 +171,7 @@ class TestTimezoneHandling:
     @patch("weatherstation.TIMEZONE", "Europe/Berlin")
     def test_utc_to_local_timezone(self, client, mock_mqtt):
         """Test UTC timestamp converted to local timezone."""
-        response = client.get(
-            "/weatherstation/updateweatherstation.php?" "dateutc=2025-11-10+12:00:00&tempf=70"
-        )
+        response = client.get("/weatherstation/updateweatherstation.php?dateutc=2025-11-10+12:00:00&tempf=70")
         assert response.status_code == 200
 
 
@@ -197,9 +195,7 @@ class TestErrorHandling:
 
     def test_malformed_timestamp_handled(self, client, mock_mqtt):
         """Test invalid timestamp doesn't crash endpoint."""
-        response = client.get(
-            "/weatherstation/updateweatherstation.php?" "dateutc=invalid_timestamp&tempf=70"
-        )
+        response = client.get("/weatherstation/updateweatherstation.php?dateutc=invalid_timestamp&tempf=70")
 
         # Should still succeed
         assert response.status_code == 200

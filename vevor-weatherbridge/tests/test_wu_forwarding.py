@@ -48,9 +48,7 @@ class TestWeatherUndergroundForwarding:
     @patch("weatherstation.WU_PASSWORD", "test_pass")
     @patch("weatherstation.requests.get")
     @patch("weatherstation.dns.resolver.Resolver")
-    def test_wu_forwarding_error_does_not_affect_response(
-        self, mock_resolver, mock_requests, client, mock_mqtt
-    ):
+    def test_wu_forwarding_error_does_not_affect_response(self, mock_resolver, mock_requests, client, mock_mqtt):
         """Test that WU forwarding errors don't affect the main response."""
         # Mock DNS resolution to raise an exception
         mock_resolver.return_value.resolve.side_effect = Exception("DNS error")
@@ -66,9 +64,7 @@ class TestWeatherUndergroundForwarding:
     @patch("weatherstation.WU_PASSWORD", "test_pass")
     @patch("weatherstation.requests.get")
     @patch("weatherstation.dns.resolver.Resolver")
-    def test_wu_forwarding_http_error_handled(
-        self, mock_resolver, mock_requests, client, mock_mqtt
-    ):
+    def test_wu_forwarding_http_error_handled(self, mock_resolver, mock_requests, client, mock_mqtt):
         """Test that HTTP errors during WU forwarding are handled gracefully."""
         # Mock DNS resolution
         mock_answer = Mock()
