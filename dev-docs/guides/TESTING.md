@@ -132,12 +132,12 @@ poetry run pytest -v
 ID=test&tempf=70&humidity=50&baromin=29.92"
    ```
 
-5. Check logs for:
+1. Check logs for:
    - MQTT connection success
    - Sensor publishing
    - No errors
 
-6. Verify in HA:
+2. Verify in HA:
    - Go to Settings → Devices & Services
    - Look for "Weather Station" device
    - Check sensors are created and updating

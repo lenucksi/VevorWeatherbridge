@@ -40,7 +40,7 @@ Create a Claude Code skill that generates VS Code workspace extension configurat
 
 ### Files to Create
 
-```
+```text
 .claude/skills/vscode-extensions-skill/
 ├── run.sh                    # Main skill entry point
 ├── README.md                 # Skill documentation
@@ -67,6 +67,7 @@ The skill should accept the following arguments:
 The skill should include presets for common development environments:
 
 #### Python Preset
+
 ```json
 {
   "recommendations": [
@@ -82,6 +83,7 @@ The skill should include presets for common development environments:
 ```
 
 #### Go Preset
+
 ```json
 {
   "recommendations": [
@@ -92,6 +94,7 @@ The skill should include presets for common development environments:
 ```
 
 #### TypeScript Preset
+
 ```json
 {
   "recommendations": [
@@ -105,6 +108,7 @@ The skill should include presets for common development environments:
 ```
 
 #### Rust Preset
+
 ```json
 {
   "recommendations": [
@@ -208,6 +212,7 @@ The skill should validate that provided extension IDs match this pattern.
 ### 3. User Feedback
 
 The skill should output:
+
 - List of files created/modified
 - Clear explanation of what each file does
 - Warning about the recommendation-only limitation
@@ -215,7 +220,7 @@ The skill should output:
 
 Example output:
 
-```
+```text
 Created: .vscode/extensions.json
 
 Recommended extensions (VS Code will prompt to install):
@@ -239,6 +244,7 @@ to get warnings when unwanted extensions are enabled.
 ### Merge vs Overwrite
 
 When `.vscode/extensions.json` already exists:
+
 - Read existing file
 - Merge new recommendations (avoid duplicates)
 - Warn user about the merge

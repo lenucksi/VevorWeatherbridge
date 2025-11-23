@@ -37,6 +37,7 @@ This is the primary workspace extension configuration file:
 ```
 
 **Behavior:**
+
 - When a user opens the workspace for the first time, VS Code prompts them to install recommended extensions
 - The `@recommended` search filter in Extensions view shows these extensions
 - `unwantedRecommendations` does NOT auto-disable - it only suppresses those extensions from appearing in recommendations
@@ -46,6 +47,7 @@ This is the primary workspace extension configuration file:
 Profiles provide a more comprehensive solution but require manual action:
 
 **What profiles include:**
+
 - Extensions (enabled/disabled state)
 - Settings
 - Keyboard shortcuts
@@ -55,6 +57,7 @@ Profiles provide a more comprehensive solution but require manual action:
 - UI layout
 
 **Export/Import:**
+
 1. Export: `File > Preferences > Profiles > Export...` → Creates `.code-profile` file
 2. Import: `File > Preferences > Profiles > Import Profile...`
 3. CLI: `code --profile "Profile Name" /path/to/folder`
@@ -77,6 +80,7 @@ Profiles provide a more comprehensive solution but require manual action:
 #### Option A: GARAIO Extension
 
 The [vscode-unwanted-recommendations](https://github.com/garaio/vscode-unwanted-recommendations) extension adds enforcement:
+
 - Monitors enabled extensions
 - Shows warning when an extension in `unwantedRecommendations` is enabled
 - Does NOT auto-disable, but alerts the user
@@ -84,6 +88,7 @@ The [vscode-unwanted-recommendations](https://github.com/garaio/vscode-unwanted-
 #### Option B: Manual Workspace Disable
 
 Users can manually disable extensions per workspace:
+
 1. Open Extensions view
 2. Click gear icon on extension
 3. Select "Disable (Workspace)"
@@ -134,16 +139,19 @@ This setting is stored in VS Code's internal state, not in `.vscode/`.
 ## Implications for Claude Code Skills
 
 A skill can generate `.vscode/extensions.json` files that will be:
+
 - Automatically loaded by VS Code
 - Version-controllable (committable to git)
 - Cross-platform compatible
 
 The skill **cannot**:
+
 - Force extensions to be enabled or disabled
 - Guarantee extensions are installed
 - Override user preferences
 
 The skill **should**:
+
 - Clearly document the recommendation-only nature
 - Suggest the GARAIO extension for enforcement
 - Provide instructions for manual workspace disabling
