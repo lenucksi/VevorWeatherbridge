@@ -46,7 +46,7 @@ jobs:
 
       # Upload raw results as artifact
       - name: Upload Scorecard results artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: scorecard-results
           path: results.sarif
