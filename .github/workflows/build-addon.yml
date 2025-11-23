@@ -1,4 +1,4 @@
-name: Build and Publish Add-on
+name: Build and Publish Add-ons
 
 on:
   push:
@@ -6,18 +6,31 @@ on:
       - main
     tags:
       - 'v*'
+      - 'vevor-weatherbridge-v*'
+      - 'vevor-weatherbridge-go-v*'
   pull_request:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      addon:
+        description: 'Which addon(s) to build'
+        type: choice
+        default: 'both'
+        options:
+          - both
+          - python
+          - go
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/vevor-weatherbridge
 
 jobs:
-  build:
+  # Python addon build
+  build-python:
+    name: Build Python Addon (${{ matrix.arch }})
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.addon == 'both' || inputs.addon == 'python' }}
     permissions:
       contents: read
       packages: write
@@ -52,7 +65,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/vevor-weatherbridge-${{ matrix.arch }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -89,10 +102,128 @@ jobs:
         with:
           context: ./vevor-weatherbridge
           platforms: ${{ steps.arch.outputs.platform }}
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD_FROM=${{ steps.base.outputs.image }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=python-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=python-${{ matrix.arch }}
+
+  # Go addon build
+  build-go:
+    name: Build Go Addon (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.addon == 'both' || inputs.addon == 'go' }}
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        arch: [amd64, armv7, aarch64, armhf, i386]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Get version from config.yaml
+        id: version
+        run: |
+          VERSION=$(grep '^version:' vevor-weatherbridge-go/config.yaml | awk '{print $2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Go Addon version: $VERSION"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/vevor-weatherbridge-go-${{ matrix.arch }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=${{ steps.version.outputs.version }}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Map architecture to Docker platform
+        id: arch
+        run: |
+          case "${{ matrix.arch }}" in
+            amd64)   echo "platform=linux/amd64" >> $GITHUB_OUTPUT ;;
+            armv7)   echo "platform=linux/arm/v7" >> $GITHUB_OUTPUT ;;
+            aarch64) echo "platform=linux/arm64" >> $GITHUB_OUTPUT ;;
+            armhf)   echo "platform=linux/arm/v6" >> $GITHUB_OUTPUT ;;
+            i386)    echo "platform=linux/386" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Map architecture to HA base image (for runtime)
+        id: base
+        run: |
+          # Go addon uses HA base for bashio integration at runtime
+          case "${{ matrix.arch }}" in
+            amd64)   echo "image=ghcr.io/home-assistant/amd64-base:3.19" >> $GITHUB_OUTPUT ;;
+            armv7)   echo "image=ghcr.io/home-assistant/armv7-base:3.19" >> $GITHUB_OUTPUT ;;
+            aarch64) echo "image=ghcr.io/home-assistant/aarch64-base:3.19" >> $GITHUB_OUTPUT ;;
+            armhf)   echo "image=ghcr.io/home-assistant/armhf-base:3.19" >> $GITHUB_OUTPUT ;;
+            i386)    echo "image=ghcr.io/home-assistant/i386-base:3.19" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./vevor-weatherbridge-go
+          platforms: ${{ steps.arch.outputs.platform }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BUILD_FROM=${{ steps.base.outputs.image }}
+          cache-from: type=gha,scope=go-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=go-${{ matrix.arch }}
+
+  # Summary job
+  build-summary:
+    name: Build Summary
+    runs-on: ubuntu-latest
+    needs: [build-python, build-go]
+    if: always()
+    steps:
+      - name: Check build results
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.build-python.result }}" == "success" ]; then
+            echo "✅ Python addon: Success" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.build-python.result }}" == "skipped" ]; then
+            echo "⏭️ Python addon: Skipped" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Python addon: ${{ needs.build-python.result }}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.build-go.result }}" == "success" ]; then
+            echo "✅ Go addon: Success" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.build-go.result }}" == "skipped" ]; then
+            echo "⏭️ Go addon: Skipped" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Go addon: ${{ needs.build-go.result }}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Fail if any required build failed
+          if [ "${{ needs.build-python.result }}" == "failure" ] || [ "${{ needs.build-go.result }}" == "failure" ]; then
+            exit 1
+          fi
