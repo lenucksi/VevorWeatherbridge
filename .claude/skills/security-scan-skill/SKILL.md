@@ -1,9 +1,11 @@
 # security-scan-skill
 
 ## Role
+
 Centralized SAST and security scanning orchestration for the VevorWeatherbridge project.
 
 ## Triggers
+
 - Manual: `/skills run security-scan-skill`
 - Delegated: Called by `python-ci-skill` for security focus
 - Hook-based: Suggested when `requirements.txt` is modified
@@ -11,24 +13,29 @@ Centralized SAST and security scanning orchestration for the VevorWeatherbridge 
 ## Tools Required
 
 ### Primary SAST
+
 - `semgrep` - Pattern-based security scanning (supports custom rules)
 - `bandit` - Python AST-based security issue detection
 
 ### Dependency Security
+
 - `pip-audit` - Python package vulnerability scanner
 - `safety` - Alternative dependency checker (optional)
 
 ### Secret Detection
+
 - `trufflehog` - Git history secret scanner (optional)
 - Built-in regex patterns for common secrets
 
 ### Container Security
+
 - `trivy` - Container vulnerability scanner (for Docker images)
 - `grype` - Alternative container scanner (optional)
 
 ## Responsibilities
 
 ### 1. Python Security Scanning
+
 - Run `bandit` with focus on high/critical severity issues
 - Check for:
   - SQL injection vulnerabilities
@@ -40,6 +47,7 @@ Centralized SAST and security scanning orchestration for the VevorWeatherbridge 
   - XSS vulnerabilities (Flask templates)
 
 ### 2. SAST with Semgrep
+
 - Use Semgrep rules for Python security patterns
 - Check against OWASP Top 10 patterns
 - Custom rules for Flask security:
@@ -49,12 +57,14 @@ Centralized SAST and security scanning orchestration for the VevorWeatherbridge 
   - SQL query construction
 
 ### 3. Dependency Vulnerability Scanning
+
 - Run `pip-audit` against `requirements.txt`
 - Identify known CVEs in dependencies
 - Suggest version upgrades or patches
 - Check for outdated packages with security issues
 
 ### 4. Secret Detection
+
 - Scan for exposed credentials:
   - API keys
   - Passwords
@@ -64,6 +74,7 @@ Centralized SAST and security scanning orchestration for the VevorWeatherbridge 
 - Check environment variable usage vs hardcoded secrets
 
 ### 5. Docker Security
+
 - Scan base images for vulnerabilities
 - Check for:
   - Running as root user
@@ -74,26 +85,31 @@ Centralized SAST and security scanning orchestration for the VevorWeatherbridge 
 ## Usage Examples
 
 ### Full security scan
+
 ```bash
 /skills run security-scan-skill
 ```
 
 ### Focus on dependencies only
+
 ```bash
 /skills run security-scan-skill --focus dependencies
 ```
 
 ### Focus on code SAST
+
 ```bash
 /skills run security-scan-skill --focus sast
 ```
 
 ### Scan Docker image
+
 ```bash
 /skills run security-scan-skill --scan-image weatherstation:latest
 ```
 
 ### Check for secrets
+
 ```bash
 /skills run security-scan-skill --focus secrets
 ```
@@ -101,6 +117,7 @@ Centralized SAST and security scanning orchestration for the VevorWeatherbridge 
 ## Output Format
 
 JSON structure:
+
 ```json
 {
   "summary": {
@@ -168,6 +185,7 @@ JSON structure:
 ## Security Best Practices for This Project
 
 ### Flask Security
+
 - Never run with `debug=True` in production
 - Validate all input from weather station
 - Sanitize data before MQTT publishing
@@ -175,6 +193,7 @@ JSON structure:
 - Implement rate limiting for endpoint
 
 ### MQTT Security
+
 - Use TLS for MQTT connections in production
 - Validate MQTT broker certificates
 - Use strong authentication credentials
@@ -182,6 +201,7 @@ JSON structure:
 - Avoid publishing sensitive data in retained messages
 
 ### Docker Security
+
 - Use specific base image versions (not 'latest')
 - Run container as non-root user
 - Minimize installed packages
@@ -190,6 +210,7 @@ JSON structure:
 - Keep base images updated
 
 ### Dependency Management
+
 - Pin dependency versions in requirements.txt
 - Regularly update dependencies
 - Review security advisories
@@ -197,6 +218,7 @@ JSON structure:
 - Audit transitive dependencies
 
 ### Data Handling
+
 - Validate weather station data format
 - Sanitize before forwarding to Weather Underground
 - Don't log sensitive credentials
@@ -218,12 +240,13 @@ JSON structure:
 
 ## Reference Documentation
 
-- **Semgrep Rules:** https://semgrep.dev/explore
-- **Bandit Docs:** https://bandit.readthedocs.io/
-- **pip-audit:** https://github.com/pypa/pip-audit
-- **OWASP Top 10:** https://owasp.org/Top10/
-- **Docker Security:** https://docs.docker.com/engine/security/
-- **Flask Security:** https://flask.palletsprojects.com/en/latest/security/
+- **Semgrep Rules:** <https://semgrep.dev/explore>
+- **Bandit Docs:** <https://bandit.readthedocs.io/>
+- **pip-audit:** <https://github.com/pypa/pip-audit>
+- **OWASP Top 10:** <https://owasp.org/Top10/>
+- **Docker Security:** <https://docs.docker.com/engine/security/>
+- **Flask Security:** <https://flask.palletsprojects.com/en/latest/security/>
 
 ## Model Recommendation
+
 Use **Haiku** for basic vulnerability scanning, **Sonnet** for security remediation and architectural recommendations.

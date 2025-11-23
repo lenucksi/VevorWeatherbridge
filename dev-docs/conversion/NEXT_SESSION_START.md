@@ -7,6 +7,7 @@ You are Claude, working on converting the **VevorWeatherbridge** project from a 
 ## Project Status
 
 ### Current State
+
 - ✅ Working standalone Docker container (see [weatherstation.py](weatherstation.py), [Dockerfile](Dockerfile), [docker-compose.yml](docker-compose.yml))
 - ✅ MQTT integration with Home Assistant auto-discovery
 - ✅ Weather Underground data interception and forwarding
@@ -14,6 +15,7 @@ You are Claude, working on converting the **VevorWeatherbridge** project from a 
 - ✅ Poetry development environment with all quality tools (ruff, mypy, bandit, semgrep, pip-audit, yamllint)
 
 ### What's Missing for HA Addon
+
 - ❌ `config.yaml` - Home Assistant addon configuration with schema
 - ❌ `build.json` - Multi-architecture build configuration
 - ❌ `DOCS.md` - User-facing documentation
@@ -26,6 +28,7 @@ You are Claude, working on converting the **VevorWeatherbridge** project from a 
 ## Ultimate Goal
 
 **Create a "zero-configuration" Home Assistant Add-on** where users can:
+
 1. Install the addon from the store with a few clicks
 2. Optionally configure MQTT settings (or use HA's built-in MQTT broker automatically)
 3. Configure their weather station device details
@@ -38,6 +41,7 @@ You are Claude, working on converting the **VevorWeatherbridge** project from a 
 This project has a **comprehensive quality assurance harness**. Always leverage it:
 
 ### Skills (Invoke Before/After Changes)
+
 ```bash
 # Python quality checks
 ./.claude/skills/python-ci-skill/run.sh
@@ -50,6 +54,7 @@ This project has a **comprehensive quality assurance harness**. Always leverage 
 ```
 
 ### Quality Tools (via Poetry)
+
 ```bash
 # All tools are installed in Poetry environment:
 poetry run ruff check --fix .          # Linting
@@ -61,6 +66,7 @@ poetry run yamllint config.yaml         # YAML validation
 ```
 
 ### Hooks
+
 - Automatically trigger on file edits via `.claude/settings.local.json`
 - Display recommendations (don't auto-execute)
 - See [.claude/hooks/](.claude/hooks/) for individual hook scripts
@@ -68,6 +74,7 @@ poetry run yamllint config.yaml         # YAML validation
 ## Key Documentation References
 
 ### Project Documentation
+
 - **Project Rules:** [CLAUDE.md](CLAUDE.md) - Coding standards, automation rules, project context
 - **Harness Guide:** [.claude/MANIFEST.md](.claude/MANIFEST.md) - Complete harness documentation
 - **Quick Reference:** [.claude/QUICKSTART.md](.claude/QUICKSTART.md) - Command reference
@@ -75,17 +82,19 @@ poetry run yamllint config.yaml         # YAML validation
 - **Summary:** [HARNESS_SUMMARY.md](HARNESS_SUMMARY.md) - Implementation overview
 
 ### Home Assistant Resources
-- **Addon Development:** https://developers.home-assistant.io/docs/add-ons
-- **Addon Configuration:** https://developers.home-assistant.io/docs/add-ons/configuration
-- **Addon Tutorial:** https://developers.home-assistant.io/docs/add-ons/tutorial
-- **MQTT Discovery:** https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery
-- **Supervisor API:** https://developers.home-assistant.io/docs/add-ons/communication
+
+- **Addon Development:** <https://developers.home-assistant.io/docs/add-ons>
+- **Addon Configuration:** <https://developers.home-assistant.io/docs/add-ons/configuration>
+- **Addon Tutorial:** <https://developers.home-assistant.io/docs/add-ons/tutorial>
+- **MQTT Discovery:** <https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery>
+- **Supervisor API:** <https://developers.home-assistant.io/docs/add-ons/communication>
 
 ### Quality Standards (2025)
-- **Ruff (Python):** https://docs.astral.sh/ruff/
-- **Hadolint (Docker):** https://github.com/hadolint/hadolint
-- **Semgrep (SAST):** https://semgrep.dev/docs/
-- **Bandit (Security):** https://bandit.readthedocs.io/
+
+- **Ruff (Python):** <https://docs.astral.sh/ruff/>
+- **Hadolint (Docker):** <https://github.com/hadolint/hadolint>
+- **Semgrep (SAST):** <https://semgrep.dev/docs/>
+- **Bandit (Security):** <https://bandit.readthedocs.io/>
 
 ## Immediate Next Tasks
 
@@ -118,13 +127,13 @@ poetry run yamllint config.yaml         # YAML validation
 
 ### Phase 2: Adaptation
 
-5. **Modify `weatherstation.py`**
+1. **Modify `weatherstation.py`**
    - Read config from HA addon options (not environment variables)
    - Support HA's internal MQTT broker (hostname: `core-mosquitto`)
    - Add better error handling and logging for addon environment
    - Use skill: `./.claude/skills/python-ci-skill/run.sh` before/after
 
-6. **Update `Dockerfile`**
+2. **Update `Dockerfile`**
    - Adapt for HA addon base images
    - Add `run.sh` as entrypoint
    - Ensure multi-architecture support
@@ -133,21 +142,22 @@ poetry run yamllint config.yaml         # YAML validation
 
 ### Phase 3: Documentation & Polish
 
-7. **Create `CHANGELOG.md`**
+1. **Create `CHANGELOG.md`**
    - Version history
    - Semantic versioning
 
-8. **Add `icon.png`**
+2. **Add `icon.png`**
    - 256x256 addon icon
    - Weather-themed icon
 
-9. **Update `README.md`**
+3. **Update `README.md`**
    - Add HA addon installation instructions
    - Keep Docker standalone instructions as fallback
 
 ## Important Implementation Notes
 
 ### MQTT Integration Strategy
+
 ```python
 # In run.sh, detect MQTT configuration:
 if [ -z "$MQTT_HOST" ]; then
@@ -159,6 +169,7 @@ fi
 ```
 
 ### Configuration Schema Pattern
+
 ```yaml
 # In config.yaml
 options:
@@ -176,6 +187,7 @@ options:
 ```
 
 ### Addon Lifecycle
+
 1. User installs addon
 2. User configures options via HA UI
 3. HA calls `run.sh`
@@ -187,14 +199,17 @@ options:
 ## Token Efficiency Reminders
 
 ### When Working with Files
+
 - Use `@repo:/path/to/file` MCP references instead of reading files when possible
 - This reduces token usage by 90%
 
 ### When Searching/Exploring
+
 - Use Task tool with Explore agent for open-ended searches
 - Don't use multiple Grep/Glob calls sequentially
 
 ### Model Selection
+
 - **Haiku:** Config validation, linting, simple file operations
 - **Sonnet (you):** Refactoring, architecture, security remediation, addon creation
 
@@ -221,6 +236,7 @@ poetry run ruff format .
 ## Workflow Recommendations
 
 ### Creating New Files
+
 1. Read existing similar files for context
 2. Check HA addon examples/documentation
 3. Create the file
@@ -229,6 +245,7 @@ poetry run ruff format .
 6. Validate again
 
 ### Modifying Existing Files
+
 1. Read the file first (required by Claude Code)
 2. Make changes using Edit tool
 3. Run appropriate skill
@@ -248,20 +265,25 @@ poetry run ruff format .
 ## Expected Challenges & Solutions
 
 ### Challenge: MQTT Broker Detection
+
 **Solution:** Use Supervisor API to detect if internal MQTT is available, fallback to user config
 
 ### Challenge: Configuration Format Change
+
 **Solution:** Create adapter in `run.sh` that transforms `/data/options.json` to environment variables
 
 ### Challenge: Multi-Architecture Builds
+
 **Solution:** Use HA's base images which handle this automatically
 
 ### Challenge: User DNS Configuration
+
 **Solution:** Clear documentation in DOCS.md with examples for Pi-hole, router DNS, etc.
 
 ## Success Criteria
 
 The addon is complete when:
+
 - ✅ `ha-addon-skill` reports all required files present and valid
 - ✅ All quality tools pass (python-ci-skill, security-scan-skill)
 - ✅ Config schema validates correctly
@@ -274,13 +296,15 @@ The addon is complete when:
 ## How to Start This Session
 
 Begin with:
-```
+
+```text
 I'm continuing work on converting VevorWeatherbridge to a Home Assistant add-on.
 I've read @NEXT_SESSION_START.md and @CLAUDE.md.
 Let me first validate the current project state by running the ha-addon-skill.
 ```
 
 Then invoke:
+
 ```bash
 ./.claude/skills/ha-addon-skill/run.sh
 ```

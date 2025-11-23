@@ -12,7 +12,7 @@ This project has a `.devcontainer/devcontainer.json` file that needs to be revie
 
 ### 1. DevContainer Fundamentals
 
-Research the official devcontainer specification at https://containers.dev/ and answer:
+Research the official devcontainer specification at <https://containers.dev/> and answer:
 
 - What is the purpose of devcontainers?
 - What is the devcontainer specification (vs VS Code implementation)?
@@ -62,6 +62,7 @@ Research current best practices:
 After research, analyze what should and should NOT be in this project's devcontainer:
 
 **Should include:**
+
 - Python 3.12 environment
 - UV package manager
 - Development tools (ruff, mypy, pytest)
@@ -69,11 +70,13 @@ After research, analyze what should and should NOT be in this project's devconta
 - VS Code extensions for Python
 
 **Consider:**
+
 - Docker-in-Docker (for building HA add-on images)
 - MQTT broker for local testing
 - Pre-commit hooks
 
 **Should NOT include:**
+
 - Production dependencies only
 - Large unnecessary tools
 - Secrets or credentials
@@ -95,6 +98,7 @@ Create a report in `dev-docs/devcontainer-analysis.md` containing:
 ## Reference Files
 
 Read these files to understand the project:
+
 - `.devcontainer/devcontainer.json` - Current configuration
 - `pyproject.toml` - Project dependencies and tools
 - `CLAUDE.md` - Project conventions
@@ -102,10 +106,11 @@ Read these files to understand the project:
 ## Research Sources
 
 Use web search and fetch to research from:
-- https://containers.dev/ - Official specification
-- https://code.visualstudio.com/docs/devcontainers/containers - VS Code docs
-- https://github.com/devcontainers - Official GitHub org
-- https://github.com/devcontainers/features - Available features
+
+- <https://containers.dev/> - Official specification
+- <https://code.visualstudio.com/docs/devcontainers/containers> - VS Code docs
+- <https://github.com/devcontainers> - Official GitHub org
+- <https://github.com/devcontainers/features> - Available features
 - JetBrains Gateway documentation
 - Podman documentation for devcontainer support
 

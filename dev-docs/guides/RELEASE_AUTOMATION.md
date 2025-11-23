@@ -31,6 +31,6 @@ Commit changes
 Create and push git tag: git tag v0.1.8 && git push origin v0.1.8
 GitHub Actions automatically creates comprehensive release notes
 Current Releases:
-View updated v0.1.7: https://github.com/lenucksi/VevorWeatherbridge/releases/tag/v0.1.7
-View updated v0.1.6: https://github.com/lenucksi/VevorWeatherbridge/releases/tag/v0.1.6
+View updated v0.1.7: <https://github.com/lenucksi/VevorWeatherbridge/releases/tag/v0.1.7>
+View updated v0.1.6: <https://github.com/lenucksi/VevorWeatherbridge/releases/tag/v0.1.6>
 All releases now have complete information including changelog, contributors, commits, installation instructions, and Docker image references.

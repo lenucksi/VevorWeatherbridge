@@ -5,12 +5,14 @@
 Builds and publishes Docker images for the Home Assistant add-on to GitHub Container Registry.
 
 ### Triggers
+
 - Push to `main` branch
 - Push of version tags (`v*`)
 - Pull requests to `main`
 - Manual workflow dispatch
 
 ### What it does
+
 1. Builds Docker images for all supported architectures:
    - amd64 (x86_64)
    - armv7 (32-bit ARM)
@@ -28,7 +30,7 @@ Builds and publishes Docker images for the Home Assistant add-on to GitHub Conta
 
 The images are published to GitHub Container Registry. After the first build:
 
-1. Go to https://github.com/users/lenucksi/packages
+1. Go to <https://github.com/users/lenucksi/packages>
 2. Find the `vevor-weatherbridge-*` packages
 3. Click on each package
 4. Go to "Package settings"
@@ -39,6 +41,7 @@ This allows Home Assistant to pull the images without authentication.
 ### Manual Trigger
 
 To manually trigger a build:
+
 1. Go to Actions tab in GitHub
 2. Select "Build and Publish Add-on"
 3. Click "Run workflow"
@@ -47,6 +50,7 @@ To manually trigger a build:
 ### Versioning
 
 Images are tagged with:
+
 - `0.1.0` - Current version
 - `latest` - Latest build from main branch
 - Git tags (when pushing `v*` tags)

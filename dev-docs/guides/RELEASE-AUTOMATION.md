@@ -40,6 +40,7 @@ Each automated release includes:
 1. **Update Version Number**
 
    Edit [vevor-weatherbridge/config.yaml](../../vevor-weatherbridge/config.yaml):
+
    ```yaml
    version: 0.1.8  # Increment version
    ```
@@ -47,6 +48,7 @@ Each automated release includes:
 2. **Update Software Version in Code**
 
    Edit [vevor-weatherbridge/weatherstation.py](../../vevor-weatherbridge/weatherstation.py):
+
    ```python
    "origin": {
        "name": "VEVOR Weatherbridge",
@@ -58,6 +60,7 @@ Each automated release includes:
 3. **Add Changelog Entry**
 
    Edit [vevor-weatherbridge/CHANGELOG.md](../../vevor-weatherbridge/CHANGELOG.md):
+
    ```markdown
    ## [0.1.8] - 2025-11-XX
 
@@ -72,12 +75,14 @@ Each automated release includes:
    ```
 
 4. **Commit Changes**
+
    ```bash
    git add vevor-weatherbridge/config.yaml vevor-weatherbridge/weatherstation.py vevor-weatherbridge/CHANGELOG.md
    git commit -m "Bump version to 0.1.8"
    ```
 
 5. **Create and Push Tag**
+
    ```bash
    git tag v0.1.8
    git push origin main
@@ -87,6 +92,7 @@ Each automated release includes:
 6. **Wait for Automation**
 
    The GitHub Actions workflow will automatically:
+
    - Extract the `[0.1.8]` section from CHANGELOG.md
    - Generate contributor and commit lists
    - Create the release with comprehensive notes
@@ -144,19 +150,22 @@ See [CHANGELOG.md](link) for complete version history.
 - Commit message 2 (hash2)
 
 **Full Diff**: https://github.com/lenucksi/VevorWeatherbridge/compare/v0.1.X-1...v0.1.X
-```
+
+```text
 
 ## Workflow Details
 
 ### File Structure
 
 ```
+
 .github/
 ├── workflows/
 │   └── release.yml           # Automated release workflow
 ├── RELEASE_NOTES_v0.1.7.md   # Historical release notes
 └── RELEASE_NOTES_v0.1.6.md   # Historical release notes
-```
+
+```text
 
 ### Workflow Steps Breakdown
 
@@ -212,6 +221,7 @@ Follow [Semantic Versioning](https://semver.org/):
 - **PATCH** (0.0.1): Backwards compatible bug fixes
 
 For this addon project (pre-1.0.0):
+
 - **MINOR** (0.1.x → 0.2.x): New features, improvements
 - **PATCH** (0.1.1 → 0.1.2): Bug fixes, small improvements
 
@@ -236,6 +246,7 @@ git commit -m "Fix bug"
 **Problem**: Pushed tag but no release created
 
 **Solutions**:
+
 1. Verify tag format matches `v*.*.*` pattern
 2. Check GitHub Actions page for errors
 3. Ensure `GITHUB_TOKEN` has write permissions
@@ -245,6 +256,7 @@ git commit -m "Fix bug"
 **Problem**: Release notes missing changelog section
 
 **Solutions**:
+
 1. Verify CHANGELOG.md has entry for this version
 2. Check version format matches: `## [X.Y.Z] - YYYY-MM-DD`
 3. Ensure CHANGELOG.md is in `vevor-weatherbridge/` directory
@@ -254,6 +266,7 @@ git commit -m "Fix bug"
 **Problem**: Contributors missing from release
 
 **Solutions**:
+
 1. Ensure commits have proper author information
 2. Check git config: `git config user.name` and `git config user.email`
 3. Verify commits are in the range between tags
@@ -263,14 +276,16 @@ git commit -m "Fix bug"
 ### Example Release v0.1.7
 
 **Tag**: `v0.1.7`
-**Release URL**: https://github.com/lenucksi/VevorWeatherbridge/releases/tag/v0.1.7
+**Release URL**: <https://github.com/lenucksi/VevorWeatherbridge/releases/tag/v0.1.7>
 
 This release fixed MQTT Discovery by:
+
 - Adding required `origin` field
 - Adding availability tracking
 - Configuring Last Will and Testament
 
 The automated workflow:
+
 1. Extracted changelog from CHANGELOG.md
 2. Listed commit: `cc325be`
 3. Credited contributors
@@ -279,7 +294,7 @@ The automated workflow:
 ### Example Release v0.1.6
 
 **Tag**: `v0.1.6`
-**Release URL**: https://github.com/lenucksi/VevorWeatherbridge/releases/tag/v0.1.6
+**Release URL**: <https://github.com/lenucksi/VevorWeatherbridge/releases/tag/v0.1.6>
 
 This release migrated to bashio library following HA best practices.
 

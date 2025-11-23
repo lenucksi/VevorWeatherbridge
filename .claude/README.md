@@ -4,7 +4,7 @@ This directory contains the Claude Code automation harness - a quality assurance
 
 ## What's Inside
 
-```
+```text
 .claude/
 ├── README.md              # This file
 ├── QUICKSTART.md          # Quick reference guide
@@ -27,6 +27,7 @@ This directory contains the Claude Code automation harness - a quality assurance
 ### 🎯 Purpose
 
 Provides automated quality assurance recommendations through:
+
 1. **Hooks** - Detect code changes and suggest checks
 2. **Skills** - Run comprehensive quality analysis
 3. **Safety** - Never modifies code without explicit approval
@@ -123,11 +124,12 @@ ruff format .
 
 ### Hook Workflow
 
-```
+```text
 You edit file → Hook detects → Shows recommendations → You decide to act
 ```
 
 **Example:**
+
 ```bash
 # You edit weatherstation.py
 # Claude Code hook triggers automatically and shows:
@@ -141,11 +143,12 @@ You edit file → Hook detects → Shows recommendations → You decide to act
 
 ### Skill Workflow
 
-```
+```text
 You invoke skill → Skill runs tools → Returns results → You review & apply
 ```
 
 **Example:**
+
 ```bash
 # You run: /skills run python-ci-skill
 # Skill executes: ruff, mypy, bandit
@@ -156,11 +159,13 @@ You invoke skill → Skill runs tools → Returns results → You review & apply
 ## Safety Principles
 
 ✅ **Safe:**
+
 - Hooks display recommendations only
 - Skills analyze and report findings
 - You review before applying changes
 
 ❌ **Never Does:**
+
 - Auto-modify code without approval
 - Execute destructive commands
 - Change files automatically
@@ -206,6 +211,7 @@ Edit individual `run.sh` scripts in skill directories.
 ### Add Custom Rules
 
 Create tool-specific config files:
+
 - `ruff.toml` - Ruff configuration
 - `.semgrep.yml` - Custom Semgrep rules
 - `pyproject.toml` - Python project metadata
@@ -229,7 +235,7 @@ Create tool-specific config files:
 ## Support
 
 - **Harness Issues:** Review documentation above
-- **Claude Code:** https://code.claude.com/docs/
+- **Claude Code:** <https://code.claude.com/docs/>
 - **Tool Docs:** See individual skill SKILL.md files
 - **Project:** See [../README.md](../README.md)
 

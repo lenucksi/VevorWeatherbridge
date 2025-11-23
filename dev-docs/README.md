@@ -4,7 +4,7 @@ This directory contains development-specific documentation, session notes, and t
 
 ## Directory Structure
 
-```
+```text
 dev-docs/
 ├── README.md                    # This file
 ├── project-rules/               # Project standards and guidelines
@@ -80,16 +80,20 @@ User documentation is in the project root:
 1. **Read project rules**: [project-rules/CLAUDE.md](project-rules/CLAUDE.md)
 2. **Make changes** to code
 3. **Run quality checks**:
+
    ```bash
    poetry run ruff check --fix .
    poetry run ruff format .
    poetry run mypy weatherstation.py
    ```
+
 4. **Validate with skills**:
+
    ```bash
    ../.claude/skills/python-ci-skill/run.sh
    ../.claude/skills/ha-addon-skill/run.sh
    ```
+
 5. **Review and commit** changes
 
 ## Contributing
@@ -122,5 +126,6 @@ Documents in this directory are generally not deleted but may be:
 - Referenced but not actively maintained
 
 Active documentation lives in:
+
 - Project root (README.md, DOCS.md, CHANGELOG.md)
 - `.claude/` directory (harness and skills)

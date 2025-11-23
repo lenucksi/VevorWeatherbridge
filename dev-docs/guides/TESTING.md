@@ -7,6 +7,7 @@ This document explains how to test the VevorWeatherbridge addon.
 The project includes comprehensive pytest-based tests:
 
 ### Test Files
+
 - `vevor-weatherbridge/test_weatherstation.py` - Tests for weatherstation.py (20 tests)
 - `vevor-weatherbridge/test_run_sh.py` - Tests for run.sh configuration logic (9 tests)
 - `vevor-weatherbridge/pytest.ini` - Pytest configuration
@@ -22,17 +23,20 @@ poetry run pytest -v
 ### Test Coverage
 
 **MQTT Callbacks** (test_weatherstation.py):
+
 - on_connect success/failure
 - on_disconnect handling
 - on_publish callback
 
 **Unit Conversions**:
+
 - Fahrenheit to Celsius
 - inHg to hPa
 - mph to km/h
 - inches to mm
 
 **HTTP Endpoint**:
+
 - Basic response
 - Minimal data handling
 - Full weather data processing
@@ -40,28 +44,33 @@ poetry run pytest -v
 - Connection state handling
 
 **Metric/Imperial Mode**:
+
 - Temperature conversions
 - Pressure conversions
 - Wind speed conversions
 - Rainfall conversions
 
 **Timezone Handling**:
+
 - UTC to local conversion
 - Timezone configuration
 
 **Weather Underground Forwarding**:
+
 - Enabled forwarding
 - Disabled forwarding
 - DNS resolution
 - HTTP requests
 
 **Error Handling**:
+
 - MQTT publish failures
 - Malformed timestamps
 - Missing sensor values
 - Resilience to errors
 
 **Configuration** (test_run_sh.py):
+
 - Config file parsing
 - MQTT auto-detection logic
 - Environment variable handling
@@ -72,13 +81,15 @@ poetry run pytest -v
 Use VS Code devcontainer for full Home Assistant environment:
 
 ### Setup
+
 1. Install "Remote - Containers" VS Code extension
 2. Open project in VS Code
 3. Click "Reopen in Container"
 4. Run task "Start Home Assistant"
-5. Access HA at http://localhost:7123/
+5. Access HA at <http://localhost:7123/>
 
 ### Available Tasks
+
 - **Start Home Assistant** - Launches full HA environment
 - **Run Addon Tests** - Executes pytest test suite
 - **Rebuild Addon** - Builds Docker image locally
@@ -86,7 +97,9 @@ Use VS Code devcontainer for full Home Assistant environment:
 ## Automated Testing
 
 ### Post-Edit Hook
+
 After editing Python files, the hook automatically:
+
 1. Runs ruff linter (with auto-fix)
 2. Runs ruff formatter
 3. Executes full test suite
@@ -95,7 +108,9 @@ After editing Python files, the hook automatically:
 Location: `.claude/hooks/post-edit-python.sh`
 
 ### Before Committing
+
 Always run:
+
 ```bash
 cd vevor-weatherbridge
 poetry run ruff check . --fix
@@ -111,10 +126,12 @@ poetry run pytest -v
 2. Configure or leave MQTT auto-detect enabled
 3. Set log_level to "DEBUG" in addon config
 4. Send test data to endpoint:
+
    ```bash
    curl "http://YOUR_HA_IP:8099/weatherstation/updateweatherstation.php?\
 ID=test&tempf=70&humidity=50&baromin=29.92"
    ```
+
 5. Check logs for:
    - MQTT connection success
    - Sensor publishing
@@ -128,11 +145,13 @@ ID=test&tempf=70&humidity=50&baromin=29.92"
 ### Testing MQTT Auto-Detection
 
 **With Mosquitto Broker addon installed:**
+
 - Addon should auto-detect via Supervisor API
 - No manual MQTT configuration needed
 - Check logs for "Using Home Assistant MQTT broker from Supervisor API"
 
 **Without Mosquitto or custom MQTT:**
+
 - Configure MQTT manually in addon settings
 - Provide host, port, username, password
 - Check logs for "Using external MQTT broker from configuration"
@@ -140,6 +159,7 @@ ID=test&tempf=70&humidity=50&baromin=29.92"
 ### Testing Callbacks
 
 To verify MQTT callback fixes (v0.1.3+):
+
 1. Enable DEBUG logging
 2. Send weather data
 3. Look for in logs:
@@ -152,16 +172,19 @@ To verify MQTT callback fixes (v0.1.3+):
 ### GitHub Actions Workflows
 
 **build-addon.yml**:
+
 - Triggers on: push to main, pull requests, tags
 - Builds for all 5 architectures
 - Tags with version from config.yaml
 
 **dependency-review.yml**:
+
 - Triggers on: PRs with dependencies label
 - Runs pip-audit for vulnerabilities
 - Runs bandit for security issues
 
 **release.yml**:
+
 - Triggers on: config.yaml version changes
 - Creates GitHub release
 - Extracts changelog
@@ -169,6 +192,7 @@ To verify MQTT callback fixes (v0.1.3+):
 ## Writing New Tests
 
 ### Test Structure
+
 ```python
 class TestFeature:
     """Test description."""
@@ -186,6 +210,7 @@ class TestFeature:
 ```
 
 ### Using Mocks
+
 ```python
 from unittest.mock import Mock, patch
 
@@ -202,6 +227,7 @@ def test_with_mock(mock_client):
 ```
 
 ### Fixtures
+
 ```python
 @pytest.fixture
 def mock_mqtt_client():
@@ -212,22 +238,26 @@ def mock_mqtt_client():
 
 ## Debugging Tests
 
-### Run specific test:
+### Run specific test
+
 ```bash
 poetry run pytest test_weatherstation.py::TestMQTTCallbacks::test_on_connect_success -v
 ```
 
-### Show print output:
+### Show print output
+
 ```bash
 poetry run pytest -v -s
 ```
 
-### Stop on first failure:
+### Stop on first failure
+
 ```bash
 poetry run pytest -x
 ```
 
-### Run with coverage:
+### Run with coverage
+
 ```bash
 poetry run pytest --cov=weatherstation --cov-report=html
 ```
@@ -235,16 +265,19 @@ poetry run pytest --cov=weatherstation --cov-report=html
 ## Common Issues
 
 ### "ModuleNotFoundError: No module named 'paho'"
+
 ```bash
 poetry install
 ```
 
 ### "SUPERVISOR_TOKEN not available" (local testing)
+
 - This is expected outside HA environment
 - Configure MQTT manually in options.json for local testing
 - Or use devcontainer with full HA stack
 
 ### Tests pass but addon fails in HA
+
 - Check HA logs in Settings → System → Logs
 - Enable DEBUG log level
 - Verify MQTT broker is running

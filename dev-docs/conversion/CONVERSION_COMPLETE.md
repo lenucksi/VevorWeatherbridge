@@ -7,6 +7,7 @@ Successfully converted VevorWeatherbridge from a standalone Docker container int
 ## Files Created
 
 ### Core Add-on Files
+
 - ✅ **[config.yaml](config.yaml)** - Add-on metadata and configuration schema
 - ✅ **[build.json](build.json)** - Multi-architecture build configuration
 - ✅ **[run.sh](run.sh)** - Entry point script with bashio integration
@@ -15,6 +16,7 @@ Successfully converted VevorWeatherbridge from a standalone Docker container int
 - ⚠️ **[ICON_PLACEHOLDER.md](ICON_PLACEHOLDER.md)** - Icon instructions (icon.png needed)
 
 ### Files Modified
+
 - ✅ **[weatherstation.py](weatherstation.py)** - Enhanced logging, better error handling
 - ✅ **[Dockerfile](Dockerfile)** - Adapted for HA base images with run.sh entrypoint
 - ✅ **[README.md](README.md)** - Updated with HA addon installation instructions
@@ -22,6 +24,7 @@ Successfully converted VevorWeatherbridge from a standalone Docker container int
 ## Features Implemented
 
 ### Configuration Management
+
 - ✅ Auto-detection of Home Assistant's internal MQTT broker
 - ✅ Support for external MQTT broker configuration
 - ✅ Device name, manufacturer, and model customization
@@ -30,10 +33,12 @@ Successfully converted VevorWeatherbridge from a standalone Docker container int
 - ✅ Optional Weather Underground forwarding
 
 ### Architecture Support
+
 - ✅ Multi-architecture builds: amd64, armv7, aarch64, armhf, i386
 - ✅ Home Assistant base images (Python 3.12 Alpine)
 
 ### Quality Assurance
+
 - ✅ All Python code passes Ruff linting (0 errors)
 - ✅ All code passes MyPy type checking
 - ✅ All code passes Bandit security scanning (0 issues)
@@ -43,16 +48,19 @@ Successfully converted VevorWeatherbridge from a standalone Docker container int
 ## What's Missing (Action Required)
 
 ### 1. Icon (Required for Add-on Store)
+
 Create or download a **256x256 PNG icon** named `icon.png` in the project root.
 
 See [ICON_PLACEHOLDER.md](ICON_PLACEHOLDER.md) for instructions and resources.
 
 Quick options:
-- Use Material Design Icons: https://pictogrammers.com/library/mdi/
-- Use Noun Project: https://thenounproject.com/search/icons/?q=weather+station
-- Use Flaticon: https://www.flaticon.com/search?word=weather%20station
+
+- Use Material Design Icons: <https://pictogrammers.com/library/mdi/>
+- Use Noun Project: <https://thenounproject.com/search/icons/?q=weather+station>
+- Use Flaticon: <https://www.flaticon.com/search?word=weather%20station>
 
 ### 2. Repository Setup
+
 To publish this add-on:
 
 1. **Push to GitHub** (if not already done)
@@ -107,6 +115,7 @@ wu_forward: false
 Users must redirect `rtupdate.wunderground.com` to their Home Assistant IP address.
 
 Methods documented in [DOCS.md](DOCS.md):
+
 - Pi-hole (recommended)
 - Router DNS override
 - Custom DNS server
@@ -141,12 +150,14 @@ Before releasing:
 ## Next Steps
 
 ### Immediate
+
 1. Create icon.png (see ICON_PLACEHOLDER.md)
 2. Test locally with Home Assistant
 3. Push to GitHub
 4. Create v0.1.0 release
 
 ### Future Enhancements
+
 - Historical data storage
 - Graphical dashboard
 - Configurable update intervals
@@ -156,9 +167,9 @@ Before releasing:
 
 ## Support
 
-- **Issues**: https://github.com/C9H13NO3-dev/VevorWeatherbridge/issues
+- **Issues**: <https://github.com/C9H13NO3-dev/VevorWeatherbridge/issues>
 - **Documentation**: [DOCS.md](DOCS.md)
-- **Home Assistant Community**: https://community.home-assistant.io/
+- **Home Assistant Community**: <https://community.home-assistant.io/>
 
 ## Credits
 

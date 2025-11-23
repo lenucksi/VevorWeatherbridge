@@ -14,28 +14,34 @@ An **icon.png** file (256x256 pixels) is required for the Home Assistant add-on 
 You can use a royalty-free icon from one of these sources:
 
 ### Option 1: Noun Project (Free with attribution)
-- https://thenounproject.com/search/icons/?q=weather+station
+
+- <https://thenounproject.com/search/icons/?q=weather+station>
 - Download a weather station icon
 - Resize to 256x256 pixels
 
 ### Option 2: Flaticon (Free with attribution)
-- https://www.flaticon.com/search?word=weather%20station
+
+- <https://www.flaticon.com/search?word=weather%20station>
 - Download PNG at 256x256 size
 
 ### Option 3: Material Design Icons
-- https://pictogrammers.com/library/mdi/
+
+- <https://pictogrammers.com/library/mdi/>
 - Search for "weather" or "weather-partly-cloudy"
 - Export as PNG at 256x256
 
 ### Option 4: Font Awesome (Free tier)
-- https://fontawesome.com/search?q=weather&o=r
+
+- <https://fontawesome.com/search?q=weather&o=r>
 - Use icons like `cloud-sun`, `temperature-half`, or `wind`
 
 ### Option 5: Create Your Own
+
 Use a tool like:
-- Canva (https://www.canva.com/)
-- GIMP (https://www.gimp.org/)
-- Inkscape (https://inkscape.org/)
+
+- Canva (<https://www.canva.com/>)
+- GIMP (<https://www.gimp.org/>)
+- Inkscape (<https://inkscape.org/>)
 
 ## Quick Command to Create Test Icon
 
