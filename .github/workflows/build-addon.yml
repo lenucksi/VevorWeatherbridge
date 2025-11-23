@@ -198,6 +198,7 @@ jobs:
   # Summary job
   build-summary:
     name: Build Summary
+    permissions: {}
     runs-on: ubuntu-latest
     needs: [build-python, build-go]
     if: always()
