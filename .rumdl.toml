@@ -15,7 +15,6 @@
 #    "README.md"
 # ]
 
-# List of file/directory patterns to exclude from linting
 exclude = [
     # Common directories to exclude
     ".git",
@@ -24,11 +23,12 @@ exclude = [
     "vendor",
     "dist",
     "build",
+    "dev-docs/**",
 
     # Specific files or patterns
-    "CHANGELOG.md",
-    "LICENSE.md",
-]
+    "vevor-weatherbridge/CHANGELOG.md",
+    "vevor-weatherbridge/LICENSE.md",
+] # List of file/directory patterns to exclude from linting
 
 # Respect .gitignore files when scanning directories (default: true)
 respect-gitignore = true
