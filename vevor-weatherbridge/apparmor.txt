@@ -1,0 +1,68 @@
+#include <tunables/global>
+
+profile vevor-weatherbridge flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+  #include <abstractions/python>
+
+  # Network access for HTTP server (receiving weather data) and MQTT client
+  network inet stream,
+  network inet dgram,
+  network inet6 stream,
+  network inet6 dgram,
+
+  # DNS resolution (for Weather Underground forwarding)
+  network inet udp,
+  network inet6 udp,
+
+  # Python interpreter execution
+  /usr/bin/python3* ix,
+  /usr/local/bin/python3* ix,
+  /usr/lib/python3*/** r,
+  /usr/local/lib/python3*/** r,
+
+  # Application directory (read-only for code)
+  /app/** r,
+  /app/weatherstation.py r,
+
+  # Startup script
+  /run.sh rx,
+
+  # Bashio and S6 overlay (Home Assistant addon framework)
+  /usr/bin/bashio rx,
+  /etc/s6-overlay/** r,
+  /run/s6/** rw,
+
+  # Temporary files (Python may need these)
+  /tmp/** rw,
+  /var/tmp/** rw,
+
+  # Proc filesystem (read-only, limited)
+  /proc/*/fd/ r,
+  /proc/*/stat r,
+  /proc/*/status r,
+  /proc/meminfo r,
+  /proc/cpuinfo r,
+  owner /proc/*/fd/* rw,
+
+  # Configuration access (Home Assistant options)
+  /data/** r,
+  /config/** r,
+
+  # SSL/TLS certificates (for HTTPS/MQTTS connections)
+  /etc/ssl/** r,
+  /usr/share/ca-certificates/** r,
+
+  # Timezone data
+  /usr/share/zoneinfo/** r,
+
+  # Deny dangerous operations
+  deny /proc/*/mem rw,
+  deny /proc/kcore rw,
+  deny /sys/** w,
+  deny /dev/** w,
+
+  # Allow stdout/stderr for logging
+  /dev/null rw,
+  /dev/tty rw,
+  /dev/pts/* rw,
+}
