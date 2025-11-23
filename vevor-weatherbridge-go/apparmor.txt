@@ -3,6 +3,11 @@
 profile vevor-weatherbridge-go flags=(attach_disconnected,mediate_deleted) {
   #include <abstractions/base>
 
+  # Capabilities required for container operation
+  capability,
+  file,
+  signal (receive) peer=*,
+
   # Network access for HTTP server (receiving weather data) and MQTT client
   network inet stream,
   network inet dgram,
@@ -13,6 +18,20 @@ profile vevor-weatherbridge-go flags=(attach_disconnected,mediate_deleted) {
   network inet udp,
   network inet6 udp,
 
+  # S6-Overlay and container init system
+  /bin/** ix,
+  /usr/bin/** ix,
+  /usr/lib/bashio/** ix,
+  /etc/s6/** rix,
+  /etc/s6-overlay/** rix,
+  /run/s6/** rwix,
+  /etc/services.d/** rwix,
+  /etc/cont-init.d/** rwix,
+  /etc/cont-finish.d/** rwix,
+  /init rix,
+  /var/run/** rwk,
+  /var/run/ rw,
+
   # Go binary execution (statically compiled)
   /app/vevor-weatherbridge ix,
 
@@ -20,24 +39,19 @@ profile vevor-weatherbridge-go flags=(attach_disconnected,mediate_deleted) {
   /app/** r,
 
   # Startup script
-  /run.sh rx,
+  /run.sh rix,
 
-  # Bashio and S6 overlay (Home Assistant addon framework)
-  /usr/bin/bashio rx,
-  /etc/s6-overlay/** r,
-  /run/s6/** rw,
-
-  # Proc filesystem (read-only, limited - Go runtime needs these)
+  # Proc filesystem (Go runtime needs these)
   /proc/*/fd/ r,
+  /proc/*/fd/* rw,
   /proc/*/stat r,
   /proc/*/status r,
   /proc/meminfo r,
   /proc/cpuinfo r,
   /proc/sys/net/core/somaxconn r,
-  owner /proc/*/fd/* rw,
 
   # Configuration access (Home Assistant options)
-  /data/** r,
+  /data/** rw,
   /config/** r,
 
   # SSL/TLS certificates (for HTTPS/MQTTS connections)
@@ -47,14 +61,21 @@ profile vevor-weatherbridge-go flags=(attach_disconnected,mediate_deleted) {
   # Timezone data
   /usr/share/zoneinfo/** r,
 
-  # Deny dangerous operations
-  deny /proc/*/mem rw,
-  deny /proc/kcore rw,
-  deny /sys/** w,
-  deny /dev/** w,
+  # Libraries and system files
+  /lib/** r,
+  /usr/lib/** r,
+  /etc/passwd r,
+  /etc/group r,
+  /etc/hosts r,
+  /etc/resolv.conf r,
+
+  # Temporary files
+  /tmp/** rw,
 
   # Allow stdout/stderr for logging
   /dev/null rw,
   /dev/tty rw,
   /dev/pts/* rw,
+  /dev/urandom r,
+  /dev/random r,
 }
