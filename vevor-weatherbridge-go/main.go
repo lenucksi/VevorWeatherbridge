@@ -52,13 +52,13 @@ func main() {
 	mux.Handle("/weatherstation/updateweatherstation.php", handler)
 
 	// Health check endpoint
-	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
 		if mqttClient.IsConnected() {
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("OK"))
+			_, _ = w.Write([]byte("OK"))
 		} else {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			w.Write([]byte("MQTT disconnected"))
+			_, _ = w.Write([]byte("MQTT disconnected"))
 		}
 	})
 
