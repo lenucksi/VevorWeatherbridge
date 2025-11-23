@@ -22,6 +22,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} GOARM=${TARGETVARIANT#v} \
     go build -ldflags="-s -w" -o weatherbridge .
 
 # Stage 2: Runtime image using Home Assistant base
+# hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 
 # Install CA certificates

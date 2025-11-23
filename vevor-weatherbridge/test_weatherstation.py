@@ -4,7 +4,6 @@ Test suite for weatherstation.py
 Run with: pytest test_weatherstation.py -v
 """
 
-import json
 from unittest.mock import MagicMock, Mock, patch
 
 import pytest
@@ -112,9 +111,7 @@ class TestWeatherEndpoint:
 
     def test_endpoint_responds(self, app, mock_mqtt_client):
         """Test endpoint returns success."""
-        response = app.get(
-            "/weatherstation/updateweatherstation.php?ID=test&tempf=70&humidity=50"
-        )
+        response = app.get("/weatherstation/updateweatherstation.php?ID=test&tempf=70&humidity=50")
         assert response.status_code == 200
         assert response.data == b"success"
 
@@ -159,9 +156,7 @@ class TestWeatherEndpoint:
         publish_result.mid = 123
         mock_client.publish.return_value = publish_result
 
-        response = app.get(
-            "/weatherstation/updateweatherstation.php?tempf=70&humidity=50"
-        )
+        response = app.get("/weatherstation/updateweatherstation.php?tempf=70&humidity=50")
 
         assert response.status_code == 200
         # Verify publish was called
@@ -207,10 +202,7 @@ class TestTimezoneHandling:
     @patch("weatherstation.TIMEZONE", "Europe/Berlin")
     def test_utc_to_local_timezone(self, app, mock_mqtt_client):
         """Test UTC timestamp converted to local timezone."""
-        response = app.get(
-            "/weatherstation/updateweatherstation.php?"
-            "dateutc=2025-11-10+12:00:00&tempf=70"
-        )
+        response = app.get("/weatherstation/updateweatherstation.php?dateutc=2025-11-10+12:00:00&tempf=70")
         assert response.status_code == 200
 
 
@@ -222,9 +214,7 @@ class TestWeatherUndergroundForwarding:
     @patch("weatherstation.WU_PASSWORD", "test_pass")
     @patch("weatherstation.requests.get")
     @patch("weatherstation.dns.resolver.Resolver")
-    def test_wu_forwarding_enabled(
-        self, mock_resolver, mock_requests, app, mock_mqtt_client
-    ):
+    def test_wu_forwarding_enabled(self, mock_resolver, mock_requests, app, mock_mqtt_client):
         """Test data forwarded to Weather Underground when enabled."""
         # Mock DNS resolution
         mock_resolver.return_value.resolve.return_value = [Mock(to_text=lambda: "1.2.3.4")]
@@ -272,10 +262,7 @@ class TestErrorHandling:
 
     def test_malformed_timestamp_handled(self, app, mock_mqtt_client):
         """Test invalid timestamp doesn't crash endpoint."""
-        response = app.get(
-            "/weatherstation/updateweatherstation.php?"
-            "dateutc=invalid_timestamp&tempf=70"
-        )
+        response = app.get("/weatherstation/updateweatherstation.php?dateutc=invalid_timestamp&tempf=70")
 
         # Should still succeed
         assert response.status_code == 200
