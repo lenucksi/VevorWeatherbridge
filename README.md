@@ -1,4 +1,5 @@
 # VEVOR Weather Station Bridge
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge?ref=badge_shield)
 
 [![CI](https://github.com/lenucksi/VevorWeatherbridge/actions/workflows/ci.yml/badge.svg)](https://github.com/lenucksi/VevorWeatherbridge/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -443,9 +444,12 @@ uv run bandit -r vevor-weatherbridge/
 
 This project is licensed under the [MIT License](LICENSE).
 
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge?ref=badge_large)
+
 ## Acknowledgements
 
-- Original concept inspired by [@vlovmx](https://github.com/vlovmx)
+- Original Weather Underground relay script inspiration by [@vlovmx](https://github.com/vlovmx)
+- Python rewrite and containerization by C9H13NO3-dev
 - Home Assistant Add-on framework by the Home Assistant team
 - Community contributions and feedback
 
