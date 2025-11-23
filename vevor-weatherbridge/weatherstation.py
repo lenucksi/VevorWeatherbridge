@@ -117,6 +117,52 @@ def inch_to_mm(inch):
     return round(float(inch) * 25.4, 1)
 
 
+def degrees_to_cardinal(degrees):
+    """Convert wind direction in degrees to cardinal direction.
+
+    Args:
+        degrees: Wind direction in degrees (0-359), where 0/360 is North
+
+    Returns:
+        Cardinal direction string (e.g., 'N', 'NNE', 'NE', etc.)
+        Returns None if degrees is None or invalid
+    """
+    if degrees is None:
+        return None
+
+    try:
+        degrees = float(degrees)
+        # Normalize to 0-360 range
+        degrees = degrees % 360
+
+        # 16-point compass rose with 22.5° segments
+        directions = [
+            "N",
+            "NNE",
+            "NE",
+            "ENE",
+            "E",
+            "ESE",
+            "SE",
+            "SSE",
+            "S",
+            "SSW",
+            "SW",
+            "WSW",
+            "W",
+            "WNW",
+            "NW",
+            "NNW",
+        ]
+
+        # Calculate index: add 11.25° offset so that N is centered at 0°
+        # then divide by 22.5° per segment
+        index = int((degrees + 11.25) / 22.5) % 16
+        return directions[index]
+    except (ValueError, TypeError):
+        return None
+
+
 def safe_get(key):
     return request.args.get(key, None)
 
@@ -162,7 +208,14 @@ def update():
             "unit": "mm" if UNITS == "metric" else "in",
             "device_class": "precipitation",
         },
-        "Wind Direction": {"value": safe_get("winddir"), "unit": "°", "device_class": None},
+        "Wind Direction": {
+            "value": safe_get("winddir"),
+            "unit": "°",
+            "device_class": None,
+            "attributes": {
+                "cardinal": degrees_to_cardinal(safe_get("winddir")),
+            },
+        },
         "Wind Speed": {
             "value": (
                 mph_to_kmh(safe_get("windspeedmph")) if UNITS == "metric" else round(float(safe_get("windspeedmph")), 1)
@@ -243,12 +296,23 @@ def update():
         if data["device_class"] is not None:
             config_payload["device_class"] = data["device_class"]
 
+        # Add icon for Wind Direction to indicate windrose compatibility
+        if name == "Wind Direction":
+            config_payload["icon"] = "mdi:compass-outline"
+            config_payload["suggested_display_precision"] = 0
+
         logger.debug(f"Publishing {name}: {data['value']} {data['unit']} to {state_topic}")
 
         try:
             mqtt_client.publish(config_topic, json.dumps(config_payload), retain=True)
             result_state = mqtt_client.publish(state_topic, str(data["value"]), retain=True)
-            mqtt_client.publish(attr_topic, json.dumps({"measured_on": local_time}), retain=True)
+
+            # Build attributes payload with default measured_on timestamp
+            attr_payload = {"measured_on": local_time}
+            # Add any sensor-specific attributes if defined
+            if "attributes" in data and data["attributes"]:
+                attr_payload.update(data["attributes"])
+            mqtt_client.publish(attr_topic, json.dumps(attr_payload), retain=True)
 
             if result_state.rc == mqtt.MQTT_ERR_SUCCESS:
                 published_count += 1

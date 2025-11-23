@@ -5,9 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Windrose Visualization Support**: Enhanced Wind Direction sensor for windrose display compatibility
+  - Added `degrees_to_cardinal()` function for 16-point compass direction conversion
+  - Wind Direction sensor now includes `cardinal` attribute (e.g., "N", "NNE", "NE")
+  - Added compass icon (`mdi:compass-outline`) to Wind Direction sensor
+  - Added `suggested_display_precision: 0` to Wind Direction for cleaner display
+  - Comprehensive windrose documentation in DOCS.md with installation and configuration guide
+  - Example Lovelace configurations (`lovelace-windrose-example.yaml`) with 5 ready-to-use layouts:
+    - Basic windrose with default settings
+    - Advanced configuration with custom speed ranges and colors
+    - Beaufort scale configuration
+    - Compact configuration for small spaces
+    - Real-time focus configuration with current conditions
+
+### Changed
+
+- Wind Direction sensor attributes now include both `measured_on` timestamp and `cardinal` direction
+- Sensor attribute publishing logic now supports sensor-specific attributes via `attributes` dict key
+- DOCS.md expanded with detailed windrose card setup instructions and compatibility information
+
 ## [0.1.7] - 2025-11-10
 
 ### Added
+
 - **MQTT Discovery Support**: Sensors now automatically appear in Home Assistant
   - Added required `origin` field with addon name, version, and support URL
   - Added `availability_topic` for online/offline status tracking
@@ -15,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Availability status published as "online" on connect, "offline" on disconnect
 
 ### Fixed
+
 - **CRITICAL**: Device-based MQTT discovery now works properly
   - Home Assistant will automatically create all weather sensors
   - Sensors grouped under single device in HA device registry
@@ -22,12 +47,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - All sensors now appear in HA UI without manual configuration
 
 ### Changed
+
 - Improved MQTT discovery payload structure per HA 2025 requirements
 - Better device availability tracking with retained messages
 
 ## [0.1.6] - 2025-11-10
 
 ### Changed
+
 - **BREAKING**: Migrated from manual jq/curl to bashio library for all addon operations
   - run.sh now uses `#!/usr/bin/with-contenv bashio` shebang
   - Configuration reading via `bashio::config` functions
@@ -38,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved logging with proper bashio log levels
 
 ### Fixed
+
 - **CRITICAL**: SUPERVISOR_TOKEN access now handled correctly by bashio
   - No more "SUPERVISOR_TOKEN not available" errors
   - Bashio automatically manages Supervisor API authentication
@@ -46,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.5] - 2025-11-10
 
 ### Added
+
 - Comprehensive test suite with 29 passing tests
 - test_run_sh.py for configuration and MQTT auto-detection tests
 - VS Code devcontainer setup for local Home Assistant testing
@@ -54,17 +83,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved post-edit hook that runs full test suite
 
 ### Fixed
+
 - SUPERVISOR_TOKEN detection with proper fallback handling
 - Debug logging for MQTT auto-detection process
 - Test runner hook now properly runs all tests before allowing commits
 
 ### Changed
+
 - Post-edit hook now runs both test files
 - Better error messages in run.sh for MQTT configuration
 
 ## [0.1.4] - 2025-11-10
 
 ### Fixed
+
 - **CRITICAL**: Fixed MQTT authentication using Supervisor Services API
   - Properly retrieve MQTT credentials from HA Supervisor instead of using empty auth
   - Added `services: - mqtt:need` to config.yaml to declare MQTT service usage
@@ -72,12 +104,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Extract host, port, username, password from Supervisor API response
 
 ### Changed
+
 - Removed broken ping-based MQTT discovery (was finding host but not credentials)
 - Improved error messages when MQTT broker not available
 
 ## [0.1.3] - 2025-11-10
 
 ### Fixed
+
 - **CRITICAL**: Fixed MQTT callback signatures for API v2 compatibility
   - Updated `on_connect` to accept 5 parameters (client, userdata, flags, reason_code, properties)
   - Updated `on_disconnect` to accept 5 parameters (client, userdata, flags, reason_code, properties)
@@ -85,6 +119,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Resolved TypeError that prevented MQTT connection from working
 
 ### Added
+
 - Comprehensive test suite with pytest (test_weatherstation.py)
 - Tests for MQTT callbacks, unit conversions, endpoint functionality
 - Tests for metric conversion, timezone handling, error scenarios
@@ -94,17 +129,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.2] - 2025-11-10
 
 ### Fixed
+
 - MQTT connection state tracking - data now publishes correctly to MQTT broker
 - MQTT callbacks now properly track connection status and handle reconnection
 - Enhanced error logging with detailed MQTT publish status information
 
 ### Added
+
 - Configurable log level via addon options (DEBUG, INFO, WARNING, ERROR)
 - MQTT connection state callbacks (on_connect, on_disconnect, on_publish)
 - Detailed debug logging for MQTT publish operations
 - Automatic MQTT reconnection attempts when disconnected
 
 ### Changed
+
 - Upgraded to MQTT Client API v2 to fix deprecation warnings
 - Improved logging with connection status and publish confirmations
 - Enhanced weather data processing logs with sensor counts
@@ -112,18 +150,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2025-11-10
 
 ### Fixed
+
 - MQTT broker auto-detection now works without bashio dependency
 - Replaced bashio calls with standard bash and jq for better compatibility
 - Added jq package to Docker image for JSON config parsing
 - Implemented multi-method MQTT broker detection (secrets, ping, fallback)
 
 ### Changed
+
 - Startup script now uses plain bash instead of bashio helpers
 - Improved logging format for better clarity in HA logs
 
 ## [0.1.0] - 2025-11-10
 
 ### Added
+
 - Initial release as Home Assistant Add-on
 - Automatic MQTT discovery for all weather sensors
 - Support for both metric and imperial units
@@ -138,6 +179,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced logging for add-on environment
 
 ### Features
+
 - Temperature sensor with device class
 - Humidity sensor with device class
 - Barometric pressure sensor with device class
@@ -151,6 +193,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Solar radiation sensor with device class
 
 ### Technical
+
 - Built on Home Assistant base Python Alpine images
 - Uses bashio for add-on configuration management
 - Flask HTTP server for weather station endpoint
@@ -161,6 +204,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
+
 - Historical data storage
 - Graphical weather dashboard
 - Configurable sensor update intervals

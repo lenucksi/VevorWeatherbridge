@@ -140,13 +140,13 @@ On the weather station itself, enable Weather Underground uploads with any stati
 
 The service listens for GET requests at:
 
-```
+```text
 /weatherstation/updateweatherstation.php
 ```
 
 With query parameters matching the WU format, e.g.:
 
-```
+```text
 http://<your-server-ip>/weatherstation/updateweatherstation.php?ID=XXXXX&PASSWORD=XXXXX&dateutc=xxxx-x-xx+xx:xx:xx&baromin=x&tempf=x&humidity=x&dewptf=x&rainin=x&dailyrainin=x&winddir=x&windspeedmph=x&windgustmph=x&UV=x&solarRadiation=x
 ```
 
@@ -178,7 +178,6 @@ The following sensors are created or updated and will appear under the device sp
 - `sensor.weather_station_solar_radiation` (W/m²)
 
 You can use these entities directly in your Home Assistant dashboards or automations.
-
 
 ---
 

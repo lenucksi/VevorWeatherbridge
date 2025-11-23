@@ -32,27 +32,27 @@ jobs:
           awk "/## \[$VERSION\]/{flag=1; next} /## \[/{flag=0} flag" "$CHANGELOG_FILE" > /tmp/changelog_entry.md
           cat > /tmp/release_notes.md << EOF
           # VEVOR Weatherbridge v$VERSION
-          
+
           $(cat /tmp/changelog_entry.md)
-          
+
           ## Installation
-          
+
           ### Home Assistant Addon
-          
+
           1. Update the addon to v$VERSION in Home Assistant
           2. Restart the addon
           3. Check the logs for any errors
-          
+
           ### Docker Image
-          
+
           \`\`\`bash
           docker pull ghcr.io/lenucksi/vevor-weatherbridge-amd64:$VERSION
           \`\`\`
-          
+
           Available architectures: \`amd64\`, \`armv7\`, \`aarch64\`, \`armhf\`, \`i386\`
-          
+
           ## Full Changelog
-          
+
           See [CHANGELOG.md](https://github.com/lenucksi/VevorWeatherbridge/blob/main/vevor-weatherbridge/CHANGELOG.md) for complete version history.
           EOF
 
@@ -65,24 +65,24 @@ jobs:
           else
             RANGE="${{ steps.get_version.outputs.TAG }}"
           fi
-          
+
           # Contributors
           git log $RANGE --format='%an' --no-merges | sort -u | sed 's/^/- @/' > /tmp/contributors.txt
-          
+
           # Commits
           git log $RANGE --pretty=format:"- %s (%h)" --no-merges > /tmp/commits.txt
-          
+
           # Append to release notes
           cat >> /tmp/release_notes.md << EOF
-          
+
           ## Contributors
-          
+
           $(cat /tmp/contributors.txt)
-          
+
           ## Commits
-          
+
           $(cat /tmp/commits.txt)
-          
+
           **Full Diff**: https://github.com/lenucksi/VevorWeatherbridge/compare/${PREV_TAG:-initial}...${{ steps.get_version.outputs.TAG }}
           EOF
 

@@ -47,7 +47,7 @@ dmypy.json
 .ruff_cache/
 
 # Claude Code
-.claude/
+#.claude/
 
 # Poetry
 poetry.lock
@@ -62,3 +62,6 @@ poetry.lock
 
 # Claude Dev-Docs
 dev-docs/
+
+# rumdl
+.rumdl_cache
