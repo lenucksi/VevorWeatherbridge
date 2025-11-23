@@ -1,208 +1,451 @@
 # VEVOR Weather Station Bridge
 
-This project provides a **Home Assistant Add-on** (and standalone Docker container) for ingesting weather data from a VEVOR 7-in-1 Wi-Fi Solar Self-Charging Weather Station (Model YT60234, or any station sending data in Weather Underground format) and forwarding it to Home Assistant via **MQTT**.
+[![CI](https://github.com/lenucksi/VevorWeatherbridge/actions/workflows/ci.yml/badge.svg)](https://github.com/lenucksi/VevorWeatherbridge/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
----
+A **Home Assistant Add-on** that intercepts weather data from VEVOR 7-in-1 Wi-Fi weather stations (or any station using Weather Underground format) and forwards it to Home Assistant via **MQTT Discovery**.
 
 ## Features
 
-- **Home Assistant Add-on**: One-click installation from the add-on store
-- Accepts Weather Underground (WU) station GET requests (as sent by the VEVOR weather station)
-- Converts measurements to **metric** or **imperial** units
-- Publishes sensor data to Home Assistant via MQTT using the auto-discovery format
-- All sensors appear under one device in Home Assistant
-- Automatic MQTT broker detection (works with HA's internal Mosquitto broker)
-- Optional Weather Underground forwarding
-- Multi-architecture support (amd64, armv7, aarch64, armhf, i386)
-- Responds with `success` so the weather station doesn't retry
+- **Home Assistant Add-on**: One-click installation from add-on repository
+- **MQTT Auto-Discovery**: Sensors automatically appear in Home Assistant
+- **Device Grouping**: All sensors grouped under one weather station device
+- **Unit Conversion**: Metric or imperial units
+- **16-Point Compass Rose**: Wind direction with cardinal directions (N, NNE, NE, etc.)
+- **Weather Underground Forwarding**: Optional - keep uploading to WU while also using locally
+- **Multi-Architecture**: amd64, armv7, aarch64, armhf, i386
+- **Auto MQTT Detection**: Works automatically with HA's Mosquitto broker
 
----
+## Quick Start
 
-## Installation
+### Prerequisites
 
-### Option 1: Home Assistant Add-on (Recommended)
+1. **Home Assistant OS** or **Home Assistant Supervised**
+2. **MQTT Broker** - [Mosquitto broker add-on](https://github.com/home-assistant/addons/tree/master/mosquitto) recommended
+3. **DNS Redirect** - Pi-hole, router DNS override, or similar
+4. **Port 80 Access** - Via [Nginx Proxy Manager add-on](#nginx-proxy-manager-setup-recommended) or direct port mapping
 
-1. **Add this repository to your Home Assistant**:
+### Installation
+
+1. **Add the repository** to Home Assistant:
    - Go to **Settings** → **Add-ons** → **Add-on Store**
-   - Click the **⋮** menu (top right) → **Repositories**
-   - Add: `https://github.com/C9H13NO3-dev/VevorWeatherbridge`
-   - Click **Add**
+   - Click **⋮** (top right) → **Repositories**
+   - Add: `https://github.com/lenucksi/VevorWeatherbridge`
 
-2. **Install the add-on**:
-   - Find "VEVOR Weather Station Bridge" in the add-on store
-   - Click on it and press **Install**
+2. **Install** "VEVOR Weather Station Bridge"
 
-3. **Configure the add-on**:
-   - Go to the **Configuration** tab
-   - Set your device name, units (metric/imperial), timezone
-   - If you have an external MQTT broker, configure it (otherwise it auto-detects HA's internal broker)
-   - Optionally enable Weather Underground forwarding
+3. **Configure** the add-on (see [Configuration](#configuration))
 
-4. **Start the add-on**:
-   - Click **Start**
-   - Check the **Log** tab to ensure it's running
+4. **Set up port 80** access (see [Nginx Proxy Manager Setup](#nginx-proxy-manager-setup-recommended))
 
-5. **Configure DNS redirect** (see [DNS Setup](#dns-setup) below)
+5. **Configure DNS redirect** (see [DNS Setup](#dns-setup))
 
-For detailed add-on documentation, see [DOCS.md](DOCS.md).
+6. **Start** the add-on
 
-### Option 2: Standalone Docker Container
+## Configuration
 
-If you prefer to run this outside of Home Assistant:
-
-#### 1. Clone the repository
-
-```bash
-git clone https://github.com/C9H13NO3-dev/VevorWeatherbridge.git
-cd VevorWeatherbridge
-```
-
-#### 2. Configure the environment
-
-Edit the `docker-compose.yml` file and set the following variables:
-
-- `MQTT_HOST`: Hostname or IP of your MQTT broker
-- `MQTT_PORT`: Broker port (default `1883`)
-- `MQTT_USER` / `MQTT_PASSWORD`: Credentials if required
-- `DEVICE_ID`: Unique identifier for the weather station device (default `weather_station`)
-- `DEVICE_NAME`: Display name for the device in Home Assistant (default `Weather Station`)
-- `DEVICE_MANUFACTURER`: (optional) Manufacturer name shown in Home Assistant (default `VEVOR`)
-- `DEVICE_MODEL`: (optional) Model name (default `7-in-1 Weather Station`)
-- `UNITS`: `metric` (default) or `imperial`
-- `WU_FORWARD`: Set to `true` to also forward data to Weather Underground (default `false`)
-- `WU_USERNAME` / `WU_PASSWORD`: Credentials for Weather Underground (optional)
-
-Example:
+### Basic Options
 
 ```yaml
-environment:
-  TZ: Europe/Berlin
-  MQTT_HOST: 192.168.1.100
-  MQTT_PORT: 1883
-  MQTT_USER: youruser
-  MQTT_PASSWORD: yourpass
-  DEVICE_ID: weather_station
-  DEVICE_NAME: "Backyard Weather"
-  DEVICE_MANUFACTURER: VEVOR
-  DEVICE_MODEL: "7-in-1 Weather Station"
-  # optional: "metric" (default) or "imperial"
-  UNITS: metric
-  # forward data to Weather Underground
-  WU_FORWARD: "false"
-  # credentials if forwarding
-  WU_USERNAME: yourWUuser
-  WU_PASSWORD: yourWUpass
+device_name: "Weather Station"
+device_manufacturer: "VEVOR"
+device_model: "7-in-1 Weather Station"
+units: "metric"
+timezone: "Europe/Berlin"
+log_level: "INFO"
 ```
 
-#### 3. Build and run
+### MQTT Options
+
+Leave empty for auto-detection (recommended with Mosquitto add-on):
+
+```yaml
+mqtt_host: ""
+mqtt_port: 1883
+mqtt_user: ""
+mqtt_password: ""
+mqtt_prefix: "homeassistant"
+```
+
+### Weather Underground Forwarding (Optional)
+
+```yaml
+wu_forward: true
+wu_username: "YOUR_STATION_ID"
+wu_password: "YOUR_STATION_KEY"
+```
+
+## Network Setup
+
+### Nginx Proxy Manager Setup (Recommended)
+
+The weather station sends data to port 80. Since Home Assistant uses port 80 for other services (emulated Hue), we recommend using [Nginx Proxy Manager](https://github.com/hassio-addons/addon-nginx-proxy-manager) to handle the routing.
+
+#### Step 1: Install Nginx Proxy Manager Add-on
+
+1. Add the community add-ons repository:
+   - **Settings** → **Add-ons** → **Add-on Store** → **⋮** → **Repositories**
+   - Add: `https://github.com/hassio-addons/repository`
+
+2. Install **Nginx Proxy Manager** from the add-on store
+
+3. Configure the add-on port:
+   - Set the admin interface to port 81
+   - Set HTTP port to 80
+   - Set HTTPS port to 443
+
+4. Start the add-on and access admin at `http://your-ha-ip:81`
+   - Default login: `admin@example.com` / `changeme`
+
+#### Step 2: Create Proxy Host for Weather Station
+
+In Nginx Proxy Manager admin interface:
+
+1. Go to **Proxy Hosts** → **Add Proxy Host**
+
+2. Configure the **Details** tab:
+
+   | Field | Value |
+   |-------|-------|
+   | Domain Names | `rtupdate.wunderground.com` |
+   | Scheme | `http` |
+   | Forward Hostname/IP | `172.30.32.1` (HA internal IP) or `localhost` |
+   | Forward Port | `8099` (the port VevorWeatherbridge listens on) |
+
+3. Enable **Block Common Exploits**
+
+4. Click **Save**
+
+#### Step 3: Update Home Assistant Configuration
+
+Add to your `configuration.yaml`:
+
+```yaml
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.16.0.0/12    # Docker network range
+    - 127.0.0.1        # Localhost
+```
+
+Restart Home Assistant after this change.
+
+#### Alternative: Direct Port Mapping
+
+If you don't want to use Nginx Proxy Manager, you can map port 80 directly to the add-on. However, this may conflict with other services.
+
+In the add-on configuration:
+```yaml
+# Network configuration
+ports:
+  80/tcp: 80  # Direct mapping instead of default 8099
+```
+
+> **Note:** This will prevent Home Assistant's emulated Hue from working on port 80.
+
+### DNS Setup
+
+The weather station connects to `rtupdate.wunderground.com`. You must redirect this domain to your Home Assistant IP.
+
+#### Using Pi-hole (Recommended)
+
+1. Go to **Local DNS** → **DNS Records**
+2. Add record:
+   - **Domain**: `rtupdate.wunderground.com`
+   - **IP**: Your Home Assistant IP (e.g., `192.168.1.50`)
+
+#### Using AdGuard Home
+
+```yaml
+# In AdGuard Home DNS rewrites
+- domain: rtupdate.wunderground.com
+  answer: 192.168.1.50
+```
+
+#### Using Router DNS
+
+Most routers have a "Local DNS" or "DNS Override" feature:
+
+1. Find DNS settings in your router admin
+2. Add: `rtupdate.wunderground.com` → `192.168.1.50`
+
+#### Verify DNS Setup
 
 ```bash
-docker-compose up --build -d
+# Should return your Home Assistant IP
+nslookup rtupdate.wunderground.com
 ```
-
-The service now listens on port `80` for requests to `/weatherstation/updateweatherstation.php`.
-
----
-
-## DNS Setup
-
-**Critical Step**: Your weather station needs to connect to this service instead of Weather Underground. You must configure your network to redirect Weather Underground traffic to your Home Assistant (or Docker host) IP address.
-
-The weather station connects to: `rtupdate.wunderground.com`
-
-### Using Pi-hole (Recommended)
-
-1. Log into your Pi-hole admin interface
-2. Go to **Local DNS** → **DNS Records**
-3. Add a new record:
-   - **Domain**: `rtupdate.wunderground.com`
-   - **IP Address**: Your Home Assistant IP (e.g., `192.168.1.50`)
-4. Save the record
-
-### Using Router DNS Override
-
-Many routers support local DNS overrides:
-
-1. Log into your router admin interface
-2. Look for **DNS Settings**, **Local DNS**, or **Host Name Mapping**
-3. Add an entry mapping `rtupdate.wunderground.com` to your Home Assistant IP
-4. Save and restart router if needed
-
-**Note:** If your router has DNS rebind protection enabled, you must allow this domain in your router settings when overriding DNS with Pi-hole.
 
 ### Weather Station Configuration
 
-On the weather station itself, enable Weather Underground uploads with any station ID/key. The DNS redirect will automatically route this traffic to your local service.
+On your VEVOR weather station:
 
----
+1. Open the weather station app (WS View or similar)
+2. Enable **Weather Underground** uploads
+3. Enter any Station ID and Key (these are captured but optional)
+4. The DNS redirect will route traffic to your local add-on
 
-## Endpoints
+## Sensors Created
 
-The service listens for GET requests at:
+All sensors appear under a single device in Home Assistant:
 
-```text
-/weatherstation/updateweatherstation.php
+| Sensor | Device Class | Unit (Metric) | Unit (Imperial) |
+|--------|--------------|---------------|-----------------|
+| Temperature | `temperature` | °C | °F |
+| Humidity | `humidity` | % | % |
+| Dew Point | `temperature` | °C | °F |
+| Barometric Pressure | `pressure` | hPa | inHg |
+| Wind Speed | `wind_speed` | km/h | mph |
+| Wind Gust Speed | `wind_speed` | km/h | mph |
+| Wind Direction | - | ° | ° |
+| Rainfall (hourly) | `precipitation` | mm | in |
+| Daily Rainfall | `precipitation` | mm | in |
+| UV Index | - | index | index |
+| Solar Radiation | `irradiance` | W/m² | W/m² |
+
+### Wind Direction Cardinal Attribute
+
+The Wind Direction sensor includes a `cardinal` attribute with the 16-point compass direction:
+
+```yaml
+# Example sensor attributes
+state: 225
+cardinal: "SW"
+measured_on: "2024-01-15T14:30:00+01:00"
 ```
 
-With query parameters matching the WU format, e.g.:
+## Dashboard Examples
 
-```text
-http://<your-server-ip>/weatherstation/updateweatherstation.php?ID=XXXXX&PASSWORD=XXXXX&dateutc=xxxx-x-xx+xx:xx:xx&baromin=x&tempf=x&humidity=x&dewptf=x&rainin=x&dailyrainin=x&winddir=x&windspeedmph=x&windgustmph=x&UV=x&solarRadiation=x
+### Windrose Card
+
+For wind visualization, install the [Lovelace Windrose Card](https://github.com/aukedejong/lovelace-windrose-card) via HACS:
+
+```yaml
+type: custom:windrose-card
+title: Wind Rose
+data_period:
+  hours_to_show: 24
+wind_direction_entity: sensor.weather_station_wind_direction
+windspeed_entities:
+  - entity: sensor.weather_station_wind_speed
+  - entity: sensor.weather_station_wind_gust_speed
+refresh_interval: 300
+wind_direction_count: 16
+center_calm_percentage: true
 ```
 
----
+See [vevor-weatherbridge/lovelace-windrose-example.yaml](vevor-weatherbridge/lovelace-windrose-example.yaml) for a complete example.
 
-## How it Works
+### Weather Card
 
-1. The weather station uploads data to this endpoint.
-2. The service converts units to metric or keeps imperial values depending on `UNITS`.
-3. Each value is published to Home Assistant via MQTT, auto-discovered as a sensor, and grouped under the configured device.
-4. The endpoint returns `success` to acknowledge the update.
+```yaml
+type: weather-forecast
+entity: weather.home  # Your weather entity
+show_current: true
+show_forecast: false
+```
 
-### Home Assistant Sensor Entities
+### Sensor Cards
 
-The following sensors are created or updated and will appear under the device specified by `DEVICE_NAME`:
+```yaml
+type: entities
+title: Weather Station
+entities:
+  - entity: sensor.weather_station_temperature
+  - entity: sensor.weather_station_humidity
+  - entity: sensor.weather_station_barometric_pressure
+  - entity: sensor.weather_station_wind_speed
+  - entity: sensor.weather_station_wind_direction
+```
 
-*Units in parentheses assume `UNITS=metric`; values switch to imperial when `UNITS=imperial`.*
+## Automation Examples
 
-- `sensor.weather_station_barometric_pressure` (hPa)
-- `sensor.weather_station_temperature` (°C)
-- `sensor.weather_station_humidity` (%)
-- `sensor.weather_station_dew_point` (°C)
-- `sensor.weather_station_rainfall` (mm)
-- `sensor.weather_station_daily_rainfall` (mm)
-- `sensor.weather_station_wind_direction` (°)
-- `sensor.weather_station_wind_speed` (km/h)
-- `sensor.weather_station_wind_gust_speed` (km/h)
-- `sensor.weather_station_uv_index` (index)
-- `sensor.weather_station_solar_radiation` (W/m²)
+### High Wind Alert
 
-You can use these entities directly in your Home Assistant dashboards or automations.
+```yaml
+automation:
+  - alias: "High Wind Alert"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.weather_station_wind_gust_speed
+        above: 50
+    action:
+      - service: notify.mobile_app
+        data:
+          title: "Weather Alert"
+          message: "Wind gusts exceeding 50 km/h!"
+```
 
----
+### Rain Detected
+
+```yaml
+automation:
+  - alias: "Rain Detected"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.weather_station_rainfall
+        above: 0
+    action:
+      - service: cover.close_cover
+        target:
+          entity_id: cover.patio_awning
+```
 
 ## Troubleshooting
 
-- Ensure the container is reachable on port 80 from your network.
-- Check that your DNS or Pi-hole setup correctly redirects the WU domain.
-- Verify your MQTT broker settings.
-- Review logs with:
+### No Data Received
 
-```bash
-docker-compose logs -f
+1. **Check DNS redirect**:
+   ```bash
+   nslookup rtupdate.wunderground.com
+   # Should return your HA IP
+   ```
+
+2. **Check Nginx Proxy Manager** (if using):
+   - Verify proxy host is configured correctly
+   - Check NPM logs for incoming requests
+
+3. **Check add-on logs**:
+   - Settings → Add-ons → VEVOR Weather Station Bridge → Log
+
+4. **Verify port is accessible**:
+   ```bash
+   curl http://your-ha-ip:8099/weatherstation/updateweatherstation.php?test=1
+   # Should return "success"
+   ```
+
+### MQTT Connection Failed
+
+1. Ensure Mosquitto broker add-on is running
+2. Check MQTT credentials if using external broker
+3. Restart both Mosquitto and this add-on
+
+### Sensors Not Appearing
+
+1. Verify MQTT integration is configured
+2. Check MQTT for discovery messages:
+   - Developer Tools → MQTT → Listen to `homeassistant/sensor/#`
+3. Wait 1-2 minutes for auto-discovery
+4. Restart Home Assistant if needed
+
+## Architecture
+
+```
+┌─────────────────────┐
+│   Weather Station   │
+│    (VEVOR 7-in-1)   │
+└──────────┬──────────┘
+           │ HTTP POST to rtupdate.wunderground.com
+           ▼
+┌─────────────────────┐
+│   DNS Redirect      │
+│   (Pi-hole/Router)  │
+└──────────┬──────────┘
+           │ Redirected to Home Assistant IP
+           ▼
+┌─────────────────────────────────────────────────────┐
+│                 Home Assistant                       │
+│  ┌───────────────────────────────────────────────┐  │
+│  │        Nginx Proxy Manager (port 80)          │  │
+│  └───────────────────┬───────────────────────────┘  │
+│                      │ Proxy to port 8099            │
+│  ┌───────────────────▼───────────────────────────┐  │
+│  │     VevorWeatherbridge Add-on (port 8099)     │  │
+│  └───────────────────┬───────────────────────────┘  │
+│                      │ MQTT Publish                  │
+│  ┌───────────────────▼───────────────────────────┐  │
+│  │          Mosquitto Broker Add-on              │  │
+│  └───────────────────┬───────────────────────────┘  │
+│                      │ MQTT Discovery                │
+│  ┌───────────────────▼───────────────────────────┐  │
+│  │          Home Assistant Core                  │  │
+│  │          (Sensors & Entities)                 │  │
+│  └───────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────┘
+           │
+           │ Optional: WU Forward
+           ▼
+┌─────────────────────┐
+│  Weather Underground│
+│  (rtupdate.wunder..│
+│   ground.com)       │
+└─────────────────────┘
 ```
 
-Add logging or print statements to `weatherstation.py` for further debugging.
+## Related Projects & Links
 
----
+### Home Assistant Add-ons
+
+- [Mosquitto Broker](https://github.com/home-assistant/addons/tree/master/mosquitto) - MQTT broker for Home Assistant
+- [Nginx Proxy Manager](https://github.com/hassio-addons/addon-nginx-proxy-manager) - Easy reverse proxy management
+
+### Visualization
+
+- [Lovelace Windrose Card](https://github.com/aukedejong/lovelace-windrose-card) - Wind direction visualization
+
+### Documentation
+
+- [Home Assistant MQTT Discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery)
+- [Nginx Proxy Manager Guide](https://nginxproxymanager.com/guide/)
+- [Add-on Documentation](vevor-weatherbridge/DOCS.md)
+
+## Development
+
+### Project Structure
+
+```
+VevorWeatherbridge/
+├── vevor-weatherbridge/          # Home Assistant Add-on
+│   ├── config.yaml               # Add-on configuration
+│   ├── Dockerfile                # Multi-stage Docker build
+│   ├── weatherstation.py         # Main application
+│   ├── run.sh                    # Entry point (bashio)
+│   ├── tests/                    # Test suite (64 tests)
+│   ├── DOCS.md                   # Add-on documentation
+│   └── CHANGELOG.md              # Version history
+├── repository.yaml               # Add-on repository metadata
+├── pyproject.toml                # UV/PEP 621 project config
+├── uv.lock                       # Dependency lock file
+└── dev-docs/                     # Development documentation
+```
+
+### Running Tests
+
+```bash
+# Install dependencies
+uv sync
+
+# Run tests
+uv run pytest vevor-weatherbridge/tests/ -v
+
+# Run with coverage
+uv run pytest vevor-weatherbridge/tests/ --cov=vevor-weatherbridge
+```
+
+### Code Quality
+
+```bash
+# Linting
+uv run ruff check .
+uv run ruff format .
+
+# Type checking
+uv run mypy vevor-weatherbridge/weatherstation.py
+
+# Security scan
+uv run bandit -r vevor-weatherbridge/
+```
 
 ## License
 
-This project is licensed under the [CC0 1.0 Universal](LICENSE).
-
----
+This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgements
 
-- Original Weather Underground relay script inspiration by [@vlovmx](https://github.com/vlovmx)
-- Python rewrite and containerization by C9H13NO3-dev
+- Original concept inspired by [@vlovmx](https://github.com/vlovmx)
+- Home Assistant Add-on framework by the Home Assistant team
+- Community contributions and feedback
+
+---
+
+**Questions or issues?** [Open an issue](https://github.com/lenucksi/VevorWeatherbridge/issues)
