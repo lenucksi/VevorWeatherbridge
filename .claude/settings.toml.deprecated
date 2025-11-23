@@ -1,0 +1,19 @@
+# Claude Code Project Configuration
+# This file defines hooks that trigger on tool usage to maintain code quality
+
+[hooks]
+# Python file edits trigger linting and testing recommendations
+"on.edit_file:*.py" = { command = "./.claude/hooks/python_quality_check.sh" }
+"on.write:*.py" = { command = "./.claude/hooks/python_quality_check.sh" }
+
+# Dockerfile edits trigger hadolint recommendations
+"on.edit_file:Dockerfile" = { command = "./.claude/hooks/dockerfile_check.sh" }
+"on.write:Dockerfile" = { command = "./.claude/hooks/dockerfile_check.sh" }
+
+# YAML/config file edits (for HA addon config)
+"on.edit_file:config.yaml" = { command = "./.claude/hooks/ha_config_check.sh" }
+"on.write:config.yaml" = { command = "./.claude/hooks/ha_config_check.sh" }
+
+# requirements.txt changes trigger dependency security check
+"on.edit_file:requirements.txt" = { command = "./.claude/hooks/security_check.sh" }
+"on.write:requirements.txt" = { command = "./.claude/hooks/security_check.sh" }
