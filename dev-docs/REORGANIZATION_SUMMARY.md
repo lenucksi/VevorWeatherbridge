@@ -10,12 +10,15 @@
 All transitional and development-specific markdown files have been moved to organized subdirectories:
 
 #### → dev-docs/project-rules/
+
 - `CLAUDE.md` - Project rules, coding standards, automation configuration
 
 #### → dev-docs/harness/
+
 - `HARNESS_SUMMARY.md` - Quality assurance harness overview
 
 #### → dev-docs/conversion/
+
 - `CONVERSION_COMPLETE.md` - Add-on conversion completion summary
 - `NEXT_SESSION_START.md` - Session continuation guide (historical)
 - `SESSION_SUMMARY.md` - Development session notes
@@ -27,28 +30,32 @@ All transitional and development-specific markdown files have been moved to orga
 **User-facing and required add-on files only:**
 
 ### Home Assistant Add-on Files (Required)
+
 - `config.yaml` - Add-on configuration and schema
 - `build.json` - Multi-architecture build configuration
 - `run.sh` - Add-on entry point script
 - `Dockerfile` - Container build instructions
 
 ### User Documentation
+
 - `README.md` - Main project documentation with installation instructions
 - `DOCS.md` - Comprehensive user guide for the add-on
 - `CHANGELOG.md` - Version history and release notes
 
 ### Application Code
+
 - `weatherstation.py` - Main Python application
 - `requirements.txt` - Python dependencies
 - `docker-compose.yml` - Standalone Docker deployment
 
 ### Development Configuration
+
 - `pyproject.toml` - Poetry and Python tool configuration
 - `.gitignore` - Git ignore patterns (updated to track dev-docs)
 
 ## New Directory Structure
 
-```
+```text
 VevorWeatherbridge/
 ├── README.md                    # Main user documentation
 ├── DOCS.md                      # Add-on user guide
@@ -94,17 +101,20 @@ VevorWeatherbridge/
 ## Benefits of This Organization
 
 ### For Users
+
 - **Cleaner root directory** - Only essential files visible
 - **Clear documentation** - README.md and DOCS.md are easy to find
 - **Professional appearance** - No clutter from development notes
 
 ### For Developers
+
 - **Organized documentation** - Related docs grouped logically
 - **Historical preservation** - Conversion process documented
 - **Easy navigation** - Clear directory structure with README files
 - **Searchable** - All dev docs tracked in git for full history
 
 ### For the Project
+
 - **Better maintainability** - Clear separation of concerns
 - **Onboarding friendly** - New developers can navigate easily
 - **Professional structure** - Follows best practices
@@ -113,18 +123,21 @@ VevorWeatherbridge/
 ## Access Patterns
 
 ### As a User
+
 1. Start with `README.md`
 2. Install following instructions
 3. Configure using `DOCS.md`
 4. Check `CHANGELOG.md` for updates
 
 ### As a Developer
+
 1. Read `dev-docs/README.md` for overview
 2. Follow standards in `dev-docs/project-rules/CLAUDE.md`
 3. Use skills in `.claude/skills/` for quality checks
 4. Reference `dev-docs/conversion/` for historical context
 
 ### As a Contributor
+
 1. Fork the repository
 2. Read `dev-docs/project-rules/CLAUDE.md`
 3. Make changes following standards
@@ -144,6 +157,7 @@ All dev-docs are now tracked in git (previously ignored):
 ```
 
 This ensures:
+
 - Full project history is preserved
 - Development decisions are documented
 - New developers can understand context
@@ -154,11 +168,13 @@ This ensures:
 To work with this structure:
 
 1. **Read the dev-docs index**:
+
    ```bash
    cat dev-docs/README.md
    ```
 
 2. **Navigate documentation**:
+
    ```bash
    ls dev-docs/*/
    ```

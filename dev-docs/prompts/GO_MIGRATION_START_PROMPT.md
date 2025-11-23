@@ -13,13 +13,14 @@ Read `dev-docs/go-rust-migration-analysis.md` for the complete analysis and effo
 ## Goal
 
 Implement a Go version of the weatherstation bridge that:
+
 1. Can coexist with the Python version in the same repository
 2. Will appear as a **separate add-on** when the repo is added to Home Assistant
 3. Maintains 100% feature parity with the Python version
 
 ## Repository Structure Target
 
-```
+```text
 VevorWeatherbridge/
 ├── repository.yaml                    # Lists both add-ons
 ├── vevor-weatherbridge/               # Python version (existing)
@@ -52,6 +53,7 @@ VevorWeatherbridge/
 ### 1. Feature Parity
 
 The Go version MUST implement:
+
 - HTTP endpoint at `/weatherstation/updateweatherstation.php`
 - All unit conversions (F→C, inHg→hPa, mph→km/h, in→mm)
 - 16-point compass rose conversion (`degrees_to_cardinal`)
@@ -65,6 +67,7 @@ The Go version MUST implement:
 ### 2. Add-on Configuration
 
 Create `vevor-weatherbridge-go/config.yaml` with:
+
 - `name: "VEVOR Weather Station Bridge (Go)"`
 - `slug: "vevor-weatherbridge-go"`
 - `version: "0.1.0"`
@@ -74,6 +77,7 @@ Create `vevor-weatherbridge-go/config.yaml` with:
 ### 3. Dockerfile
 
 Use multi-stage build:
+
 ```dockerfile
 # Stage 1: Build
 FROM golang:1.22-alpine AS builder
@@ -95,6 +99,7 @@ ENTRYPOINT ["/weatherbridge"]
 ### 4. Build Configuration
 
 Create `vevor-weatherbridge-go/build.json`:
+
 ```json
 {
   "build_from": {
@@ -115,6 +120,7 @@ The existing `repository.yaml` should automatically discover both add-ons since 
 ### 6. MQTT Discovery Format
 
 Match the Python implementation exactly:
+
 ```go
 // Config topic: {prefix}/sensor/{device_id}_{sensor_id}/config
 // State topic: {prefix}/sensor/{device_id}_{sensor_id}/state
@@ -139,13 +145,17 @@ type DiscoveryPayload struct {
 ### 7. Testing
 
 Create tests in the Go package:
+
 - `convert_test.go` - Unit conversion tests
 - `compass_test.go` - Cardinal direction tests
 - `mqtt_test.go` - MQTT payload structure tests
 
+Build the new code TDD style with red/green/refactor approach.
+
 ## Reference Files
 
 Read these files to understand the current implementation:
+
 - `vevor-weatherbridge/weatherstation.py` - Main Python implementation
 - `vevor-weatherbridge/config.yaml` - Add-on configuration schema
 - `vevor-weatherbridge/run.sh` - Bashio option parsing (for env var names)
@@ -169,6 +179,7 @@ Read these files to understand the current implementation:
 ---
 
 **Start by reading the reference files, then implement in this order:**
+
 1. `go.mod` and basic project structure
 2. `config.go` - Environment variable parsing
 3. `convert.go` - Unit conversion functions with tests

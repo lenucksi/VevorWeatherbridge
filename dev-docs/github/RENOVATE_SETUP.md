@@ -4,9 +4,10 @@ This guide explains how to enable Renovate Bot for automated dependency manageme
 
 ## Option 1: GitHub App (Recommended)
 
-### Steps:
+### Steps
+
 1. **Install the Renovate GitHub App**
-   - Visit: https://github.com/apps/renovate
+   - Visit: <https://github.com/apps/renovate>
    - Click "Install" or "Configure"
    - Select the repository: `lenucksi/VevorWeatherbridge`
    - Grant permissions (read/write to code, PRs, issues)
@@ -20,7 +21,8 @@ This guide explains how to enable Renovate Bot for automated dependency manageme
    - Configuration is already in `.github/renovate.json`
    - You can modify schedule, grouping, automerge settings
 
-### Permissions Required:
+### Permissions Required
+
 - ✅ Read access to code
 - ✅ Write access to pull requests
 - ✅ Write access to issues
@@ -30,7 +32,8 @@ This guide explains how to enable Renovate Bot for automated dependency manageme
 
 If you prefer to run Renovate yourself:
 
-### Using GitHub Actions:
+### Using GitHub Actions
+
 ```yaml
 # .github/workflows/renovate.yml
 name: Renovate
@@ -53,14 +56,16 @@ jobs:
           token: ${{ secrets.RENOVATE_TOKEN }}
 ```
 
-### Required Secrets:
+### Required Secrets
+
 - `RENOVATE_TOKEN`: GitHub Personal Access Token with repo permissions
 
 ## Configuration Overview
 
 The repository is pre-configured with `.github/renovate.json`:
 
-### Key Settings:
+### Key Settings
+
 - **Schedule**: Every weekend (Sunday)
 - **Timezone**: Europe/Berlin
 - **Concurrent PRs**: Max 5 at a time
@@ -68,14 +73,16 @@ The repository is pre-configured with `.github/renovate.json`:
 - **Dependency Dashboard**: Enabled
 - **Security Alerts**: Enabled with `security` label
 
-### Package Management:
+### Package Management
+
 - **Python (requirements.txt)**: Grouped minor/patch updates, separate major updates
 - **Docker (Dockerfile)**: Tracks Home Assistant base images
 - **GitHub Actions**: Automatic version updates
 
 ## After Installation
 
-### What Happens Next:
+### What Happens Next
+
 1. **Onboarding PR** (first time only)
    - Reviews current dependencies
    - Proposes configuration
@@ -91,7 +98,8 @@ The repository is pre-configured with `.github/renovate.json`:
    - Grouped by update type
    - Include changelog links
 
-### First Actions:
+### First Actions
+
 1. ✅ Review and merge onboarding PR
 2. ✅ Check Dependency Dashboard
 3. ✅ Review any immediate security updates
@@ -114,13 +122,16 @@ To test immediately after installation:
 ## Troubleshooting
 
 ### No PRs Created
+
 - ✅ Check repository permissions
 - ✅ Verify `.github/renovate.json` is valid JSON
 - ✅ Look for errors in Dependency Dashboard
 - ✅ Check GitHub Actions logs (if self-hosted)
 
 ### Too Many PRs
+
 Adjust in `.github/renovate.json`:
+
 ```json
 {
   "prConcurrentLimit": 2,
@@ -129,20 +140,23 @@ Adjust in `.github/renovate.json`:
 ```
 
 ### Renovate Stops Working
+
 - ✅ Check if GitHub App is still installed
 - ✅ Verify repository permissions
 - ✅ Look for rate limiting in Dependency Dashboard
 
 ## Monitoring
 
-### Weekly Checklist:
+### Weekly Checklist
+
 - [ ] Check Dependency Dashboard for updates
 - [ ] Review security-labeled PRs (high priority)
 - [ ] Merge dependency update PRs
 - [ ] Test major version updates locally
 - [ ] Update addon version if dependencies changed
 
-### Dashboard Sections:
+### Dashboard Sections
+
 - **Awaiting Schedule**: Updates waiting for next run
 - **Rate Limited**: PRs delayed due to limits
 - **Errored**: Failed updates (needs investigation)
@@ -165,7 +179,8 @@ Adjust in `.github/renovate.json`:
 
 ## Customization Examples
 
-### Enable Auto-merge for Patch Updates:
+### Enable Auto-merge for Patch Updates
+
 ```json
 {
   "packageRules": [
@@ -177,14 +192,16 @@ Adjust in `.github/renovate.json`:
 }
 ```
 
-### Ignore Specific Packages:
+### Ignore Specific Packages
+
 ```json
 {
   "ignoreDeps": ["Flask", "paho-mqtt"]
 }
 ```
 
-### Change Schedule:
+### Change Schedule
+
 ```json
 {
   "schedule": ["every 2 weeks on Monday"]
@@ -193,14 +210,15 @@ Adjust in `.github/renovate.json`:
 
 ## Support
 
-- **Renovate Docs**: https://docs.renovatebot.com/
-- **GitHub App**: https://github.com/apps/renovate
-- **Community**: https://github.com/renovatebot/renovate/discussions
+- **Renovate Docs**: <https://docs.renovatebot.com/>
+- **GitHub App**: <https://github.com/apps/renovate>
+- **Community**: <https://github.com/renovatebot/renovate/discussions>
 - **Project Docs**: [DEPENDENCY_MANAGEMENT.md](DEPENDENCY_MANAGEMENT.md)
 
 ## Next Steps
 
 After setting up Renovate:
+
 1. Read [DEPENDENCY_MANAGEMENT.md](DEPENDENCY_MANAGEMENT.md) for workflow details
 2. Review [CLAUDE.md](../dev-docs/project-rules/CLAUDE.md) for project guidelines
 3. Set up notifications for `dependencies` and `security` labels

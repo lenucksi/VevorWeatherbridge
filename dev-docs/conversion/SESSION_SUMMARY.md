@@ -9,6 +9,7 @@
 Built a production-ready automation harness following 2025 best practices:
 
 **Documentation Created:**
+
 - [CLAUDE.md](CLAUDE.md) - Project rules, standards, automation rules
 - [.claude/MANIFEST.md](.claude/MANIFEST.md) - Complete harness documentation
 - [.claude/QUICKSTART.md](.claude/QUICKSTART.md) - Quick reference guide
@@ -17,6 +18,7 @@ Built a production-ready automation harness following 2025 best practices:
 - [HARNESS_SUMMARY.md](HARNESS_SUMMARY.md) - Implementation summary
 
 **Infrastructure Created:**
+
 - 4 hooks for automated quality recommendations
 - 3 skills for comprehensive quality checks
 - Proper `.gitignore` for generated files
@@ -26,8 +28,10 @@ Built a production-ready automation harness following 2025 best practices:
 **Issue Found:** Documentation claimed hooks use TOML format, but Claude Code actually uses **JSON format**.
 
 **Solution Implemented:**
+
 - ✅ Converted `.claude/settings.toml` → `.claude/settings.local.json`
 - ✅ Used proper Claude Code hook syntax:
+
   ```json
   {
     "hooks": {
@@ -40,6 +44,7 @@ Built a production-ready automation harness following 2025 best practices:
     }
   }
   ```
+
 - ✅ Created `post_edit_dispatch.sh` hook dispatcher that routes based on file type
 - ✅ Deprecated old `settings.toml` file
 
@@ -50,6 +55,7 @@ Built a production-ready automation harness following 2025 best practices:
 **Created:** [pyproject.toml](pyproject.toml) with complete dependency management
 
 **Installed Tools (via Poetry):**
+
 - `ruff` (0.8.6) - Linting + formatting
 - `mypy` (1.18.2) - Type checking
 - `bandit` (1.8.6) - Security scanning
@@ -59,6 +65,7 @@ Built a production-ready automation harness following 2025 best practices:
 - Type stubs: `types-requests`, `types-pytz`
 
 **Benefits:**
+
 - No global tool installation required
 - Isolated environment (`.venv`)
 - Reproducible builds
@@ -67,11 +74,13 @@ Built a production-ready automation harness following 2025 best practices:
 ### 4. ✅ Updated All Skills and Hooks for Poetry
 
 **Modified Files:**
+
 - [.claude/skills/python-ci-skill/run.sh](.claude/skills/python-ci-skill/run.sh) - Uses `poetry run` for all tools
 - [.claude/skills/security-scan-skill/run.sh](.claude/skills/security-scan-skill/run.sh) - Uses `poetry run` for all tools
 - [.claude/hooks/python_quality_check.sh](.claude/hooks/python_quality_check.sh) - Recommends `poetry run` commands
 
 **Pattern Used:**
+
 ```bash
 POETRY_RUN="poetry run"
 if ! command -v poetry >/dev/null 2>&1; then
@@ -86,6 +95,7 @@ $POETRY_RUN ruff check . || echo "Tool not available"
 **Created:** [NEXT_SESSION_START.md](NEXT_SESSION_START.md)
 
 **Contains:**
+
 - Complete project context and status
 - Ultimate goal clearly stated
 - All missing HA addon files listed
@@ -102,6 +112,7 @@ $POETRY_RUN ruff check . || echo "Tool not available"
 ## Current Project State
 
 ### ✅ Working
+
 - Standalone Docker container
 - MQTT integration with HA auto-discovery
 - Weather Underground data interception
@@ -109,6 +120,7 @@ $POETRY_RUN ruff check . || echo "Tool not available"
 - Poetry development environment
 
 ### ❌ Missing (Next Phase)
+
 - `config.yaml` - HA addon configuration
 - `build.json` - Multi-arch build config
 - `DOCS.md` - User documentation
@@ -120,7 +132,7 @@ $POETRY_RUN ruff check . || echo "Tool not available"
 
 ## Directory Structure
 
-```
+```text
 VevorWeatherbridge/
 ├── CLAUDE.md                           # Project rules
 ├── NEXT_SESSION_START.md              # ✨ Start here next session
@@ -164,6 +176,7 @@ VevorWeatherbridge/
 ## How to Use (Quick Reference)
 
 ### Run Quality Checks
+
 ```bash
 # Python quality
 ./.claude/skills/python-ci-skill/run.sh
@@ -176,6 +189,7 @@ VevorWeatherbridge/
 ```
 
 ### Use Quality Tools Directly
+
 ```bash
 # Via Poetry (recommended)
 poetry run ruff check --fix .
@@ -190,6 +204,7 @@ uv run ruff check --fix .
 ```
 
 ### Hook System
+
 - Hooks trigger automatically on file edits via Claude Code
 - Display recommendations only (never auto-execute)
 - See recommendations in Claude Code output
@@ -197,21 +212,25 @@ uv run ruff check --fix .
 ## Key Decisions Made
 
 ### 1. JSON vs TOML for Hooks
+
 - **Decision:** Use JSON (`.claude/settings.local.json`)
 - **Reason:** Official Claude Code format is JSON, not TOML
-- **Source:** https://code.claude.com/docs/en/hooks
+- **Source:** <https://code.claude.com/docs/en/hooks>
 
 ### 2. Poetry vs pip/requirements.txt
+
 - **Decision:** Use Poetry for development tools
 - **Reason:** Isolated environment, better dependency management, reproducible
 - **Note:** `requirements.txt` kept for Docker compatibility
 
 ### 3. Hook Dispatcher Pattern
+
 - **Decision:** Single dispatcher hook + file-type routing
 - **Reason:** Cleaner than individual file-pattern hooks, easier to maintain
 - **Implementation:** `post_edit_dispatch.sh` routes to appropriate check script
 
 ### 4. Poetry Fallback Strategy
+
 - **Decision:** Skills gracefully fall back to system tools if Poetry not available
 - **Reason:** Flexibility for different development environments
 - **Implementation:** Check `command -v poetry`, use `$POETRY_RUN` variable
@@ -229,16 +248,19 @@ This harness is designed for minimal token usage:
 ## Issues Resolved
 
 ### Issue 1: TOML Configuration Not Working
+
 **Problem:** Created `.claude/settings.toml` but hooks weren't triggering
 **Root Cause:** Claude Code uses JSON format, not TOML
 **Solution:** Created `.claude/settings.local.json` with proper JSON syntax
 
 ### Issue 2: Missing Poetry Environment
+
 **Problem:** Skills recommended `pip install` globally
 **Root Cause:** No project dependency management
 **Solution:** Created `pyproject.toml` and installed full development environment
 
 ### Issue 3: Fragmented Hook Scripts
+
 **Problem:** Multiple hook configurations needed for different file types
 **Root Cause:** Limited pattern matching in hook config
 **Solution:** Created dispatcher hook that routes based on filename/extension
@@ -258,20 +280,23 @@ This harness is designed for minimal token usage:
 ## References for Next Session
 
 ### Essential Reading
+
 - [NEXT_SESSION_START.md](NEXT_SESSION_START.md) - Start here!
 - [CLAUDE.md](CLAUDE.md) - Project rules
 - [.claude/MANIFEST.md](.claude/MANIFEST.md) - How harness works
 
 ### HA Addon Documentation
-- Addon Dev Guide: https://developers.home-assistant.io/docs/add-ons
-- Configuration Reference: https://developers.home-assistant.io/docs/add-ons/configuration
-- MQTT Discovery: https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery
+
+- Addon Dev Guide: <https://developers.home-assistant.io/docs/add-ons>
+- Configuration Reference: <https://developers.home-assistant.io/docs/add-ons/configuration>
+- MQTT Discovery: <https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery>
 
 ### Tool Documentation
-- Ruff: https://docs.astral.sh/ruff/
-- Hadolint: https://github.com/hadolint/hadolint
-- Semgrep: https://semgrep.dev/docs/
-- Bandit: https://bandit.readthedocs.io/
+
+- Ruff: <https://docs.astral.sh/ruff/>
+- Hadolint: <https://github.com/hadolint/hadolint>
+- Semgrep: <https://semgrep.dev/docs/>
+- Bandit: <https://bandit.readthedocs.io/>
 
 ## Statistics
 
@@ -287,6 +312,7 @@ This harness is designed for minimal token usage:
 ## Validation Status
 
 ### ✅ Completed
+
 - Harness structure validated
 - Poetry environment installed successfully
 - All skills executable
@@ -295,6 +321,7 @@ This harness is designed for minimal token usage:
 - Settings format corrected
 
 ### ⏳ Pending (Next Session)
+
 - HA addon file creation
 - Application adaptation for HA addon environment
 - Multi-architecture build testing
@@ -311,6 +338,7 @@ This harness is designed for minimal token usage:
 ## Success Indicators
 
 This session is considered successful because:
+
 - ✅ Complete, documented harness implemented
 - ✅ Proper hook configuration (JSON, not TOML)
 - ✅ Poetry environment with all tools

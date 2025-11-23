@@ -7,6 +7,7 @@ This manifest describes the Claude Code automation harness for the VevorWeatherb
 ## Purpose
 
 The harness automates and orchestrates development quality checks without executing them automatically. Instead, it:
+
 1. Detects code/config changes via hooks
 2. Recommends appropriate quality checks
 3. Provides skills that can be manually invoked for comprehensive analysis
@@ -14,7 +15,7 @@ The harness automates and orchestrates development quality checks without execut
 
 ## Directory Structure
 
-```
+```text
 .claude/
 ├── settings.toml                 # Hook configuration
 ├── MANIFEST.md                   # This file
@@ -41,7 +42,7 @@ The harness automates and orchestrates development quality checks without execut
 
 ### Typical Developer Flow
 
-```
+```text
 Developer edits Python file (e.g., weatherstation.py)
               ↓
 Hook detects edit (via settings.toml: on.edit_file:*.py)
@@ -80,6 +81,7 @@ Hooks are defined in [.claude/settings.toml](.claude/settings.toml) and trigger 
 ### Hook Behavior
 
 **Important:** Hooks in this project are **non-executing**. They:
+
 - Display recommended commands
 - Do NOT run linters/formatters automatically
 - Suggest skill invocations
@@ -96,11 +98,13 @@ Skills are reusable, encapsulated automation modules that Claude can invoke.
 **Purpose:** Comprehensive Python code quality checks
 
 **Tools Used:**
+
 - `ruff` - Linting and formatting
 - `mypy` - Type checking
 - `bandit` - Security scanning
 
 **Invocation:**
+
 ```bash
 # Basic usage
 /skills run python-ci-skill
@@ -125,12 +129,14 @@ Skills are reusable, encapsulated automation modules that Claude can invoke.
 **Purpose:** Home Assistant addon structure validation and compliance
 
 **Tools Used:**
+
 - `yamllint` - YAML validation
 - `jq` - JSON validation
 - `hadolint` - Dockerfile linting
 - HA addon schema knowledge
 
 **Invocation:**
+
 ```bash
 # Check addon structure
 /skills run ha-addon-skill
@@ -155,12 +161,14 @@ Skills are reusable, encapsulated automation modules that Claude can invoke.
 **Purpose:** Security analysis and vulnerability detection
 
 **Tools Used:**
+
 - `semgrep` - SAST pattern matching
 - `bandit` - Python security
 - `pip-audit` - Dependency vulnerabilities
 - `trivy` - Container scanning
 
 **Invocation:**
+
 ```bash
 # Full security scan
 /skills run security-scan-skill
@@ -247,6 +255,7 @@ When invoking skills or working with large files, use MCP references to avoid to
 ```
 
 ### Benefits
+
 - Reduced token usage
 - Faster processing
 - Access to exact file content
@@ -268,6 +277,7 @@ When invoking skills or working with large files, use MCP references to avoid to
 ### Best Practices
 
 1. **Use Task Tool for Exploration**
+
    ```bash
    # Instead of multiple Grep/Glob calls
    /task explore "Find all MQTT publishing logic" --thoroughness medium
@@ -316,12 +326,14 @@ pip install trufflehog
 ## Safety Notes
 
 ### Hook Safety
+
 - All hooks are **read-only and recommendation-based**
 - No automatic code modifications
 - No automatic command execution
 - Generated artifacts stored in `.claude/generated-hooks/` for review
 
 ### Skill Safety
+
 - Skills run analysis and return results
 - Code changes require manual application
 - Patches are generated as diffs for review
@@ -364,6 +376,7 @@ To add new skills:
 ### Feedback Loop
 
 The harness evolves based on:
+
 - Actual findings from tools
 - Developer pain points
 - New best practices
@@ -372,26 +385,30 @@ The harness evolves based on:
 ## Reference Documentation
 
 ### Official Docs
-- **Claude Code Hooks:** https://code.claude.com/docs/en/hooks
-- **Claude Code Skills:** https://code.claude.com/docs/en/skills
-- **Home Assistant Addons:** https://developers.home-assistant.io/docs/add-ons
+
+- **Claude Code Hooks:** <https://code.claude.com/docs/en/hooks>
+- **Claude Code Skills:** <https://code.claude.com/docs/en/skills>
+- **Home Assistant Addons:** <https://developers.home-assistant.io/docs/add-ons>
 
 ### Tool Documentation
-- **Ruff:** https://docs.astral.sh/ruff/
-- **Hadolint:** https://github.com/hadolint/hadolint
-- **Semgrep:** https://semgrep.dev/docs/
-- **Bandit:** https://bandit.readthedocs.io/
-- **pip-audit:** https://github.com/pypa/pip-audit
+
+- **Ruff:** <https://docs.astral.sh/ruff/>
+- **Hadolint:** <https://github.com/hadolint/hadolint>
+- **Semgrep:** <https://semgrep.dev/docs/>
+- **Bandit:** <https://bandit.readthedocs.io/>
+- **pip-audit:** <https://github.com/pypa/pip-audit>
 
 ### Project Docs
+
 - **Main Rules:** [CLAUDE.md](../CLAUDE.md)
 - **README:** [README.md](../README.md)
 
 ## Support
 
 For issues with:
+
 - **Harness itself:** Review this manifest and skill documentation
-- **Claude Code:** https://code.claude.com/docs/
+- **Claude Code:** <https://code.claude.com/docs/>
 - **Tools:** Refer to individual tool documentation above
 - **Project code:** See README.md
 

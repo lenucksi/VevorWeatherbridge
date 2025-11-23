@@ -135,6 +135,7 @@ Restart Home Assistant after this change.
 If you don't want to use Nginx Proxy Manager, you can map port 80 directly to the add-on. However, this may conflict with other services.
 
 In the add-on configuration:
+
 ```yaml
 # Network configuration
 ports:
@@ -296,6 +297,7 @@ automation:
 ### No Data Received
 
 1. **Check DNS redirect**:
+
    ```bash
    nslookup rtupdate.wunderground.com
    # Should return your HA IP
@@ -309,6 +311,7 @@ automation:
    - Settings → Add-ons → VEVOR Weather Station Bridge → Log
 
 4. **Verify port is accessible**:
+
    ```bash
    curl http://your-ha-ip:8099/weatherstation/updateweatherstation.php?test=1
    # Should return "success"
@@ -330,7 +333,7 @@ automation:
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────┐
 │   Weather Station   │
 │    (VEVOR 7-in-1)   │
@@ -393,7 +396,7 @@ automation:
 
 ### Project Structure
 
-```
+```text
 VevorWeatherbridge/
 ├── vevor-weatherbridge/          # Home Assistant Add-on
 │   ├── config.yaml               # Add-on configuration

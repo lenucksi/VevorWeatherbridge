@@ -126,7 +126,8 @@ ruff format .
 ### When You Edit Python Files
 
 Hook triggers automatically and displays:
-```
+
+```text
 📋 Python file modified - Quality checks recommended:
 
 Recommended actions:
@@ -153,7 +154,7 @@ Hook displays security scan recommendations.
 
 ### Python CI Skill Output
 
-```
+```text
 🐍 Python CI Skill - Running quality checks
 ==================================================
 
@@ -176,7 +177,7 @@ Hook displays security scan recommendations.
 
 ### HA Addon Skill Output
 
-```
+```text
 🏠 Home Assistant Addon Skill
 ==================================================
 
@@ -194,7 +195,7 @@ Missing files (needed for HA addon):
 
 ### Security Scan Skill Output
 
-```
+```text
 🔒 Security Scan Skill
 ==================================================
 
@@ -222,6 +223,7 @@ Missing files (needed for HA addon):
 ### Tool Not Found Errors
 
 Install missing tools:
+
 ```bash
 pip install ruff mypy bandit pip-audit semgrep yamllint
 ```
@@ -231,6 +233,7 @@ Skills will show which tools are missing and skip those checks gracefully.
 ### Permission Denied
 
 Make scripts executable:
+
 ```bash
 chmod +x .claude/hooks/*.sh
 chmod +x .claude/skills/*/run.sh
@@ -252,12 +255,14 @@ Edit skill `run.sh` files to customize tool parameters.
 ### Adding Custom Rules
 
 For Semgrep, add custom rules:
+
 ```bash
 # Create .semgrep.yml in project root
 # See: https://semgrep.dev/docs/writing-rules/overview/
 ```
 
 For Ruff, add configuration:
+
 ```bash
 # Create ruff.toml or pyproject.toml
 # See: https://docs.astral.sh/ruff/configuration/
@@ -267,11 +272,13 @@ For Ruff, add configuration:
 
 1. **Install recommended tools** (see Installation above)
 2. **Run initial audit:**
+
    ```bash
    /skills run python-ci-skill
    /skills run ha-addon-skill
    /skills run security-scan-skill
    ```
+
 3. **Review and fix issues** identified
 4. **Read full documentation:**
    - [MANIFEST.md](MANIFEST.md) - Complete harness documentation
@@ -282,7 +289,7 @@ For Ruff, add configuration:
 
 - **Harness usage:** Read [MANIFEST.md](MANIFEST.md)
 - **Project rules:** Read [CLAUDE.md](../CLAUDE.md)
-- **Claude Code:** https://code.claude.com/docs/
+- **Claude Code:** <https://code.claude.com/docs/>
 - **Tools:** See individual tool documentation links in skill SKILL.md files
 
 ---

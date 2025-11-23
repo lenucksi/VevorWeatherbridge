@@ -2,7 +2,7 @@
 
 ## System Overview
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                     Claude Code IDE                          │
 │  ┌────────────────────────────────────────────────────────┐ │
@@ -90,13 +90,15 @@
 **Purpose:** Detect file changes and recommend actions
 
 **Characteristics:**
+
 - Triggered automatically by Claude Code
 - Read-only, non-destructive
 - Fast execution (shell scripts)
 - Zero token usage for detection
 
 **Files:**
-```
+
+```text
 .claude/hooks/
 ├── python_quality_check.sh    # Python file edits
 ├── dockerfile_check.sh         # Dockerfile edits
@@ -109,6 +111,7 @@
 **Purpose:** Comprehensive quality analysis and recommendations
 
 **Characteristics:**
+
 - Manually invoked (safe)
 - Token-efficient (use Haiku when possible)
 - Modular and reusable
@@ -116,7 +119,7 @@
 
 **Skills:**
 
-```
+```text
 python-ci-skill
 ├── Purpose: Python code quality
 ├── Tools: ruff, mypy, bandit
@@ -143,17 +146,20 @@ security-scan-skill
 **Categories:**
 
 **Python Quality:**
+
 - `ruff` - Fast linter/formatter (2025 standard)
 - `mypy` - Static type checker
 - `black` - Alternative formatter (deprecated in favor of ruff)
 
 **Security:**
+
 - `bandit` - Python AST security scanner
 - `semgrep` - Pattern-based SAST
 - `pip-audit` - Dependency vulnerability scanner
 - `trivy` - Container security scanner
 
 **Config/Infrastructure:**
+
 - `yamllint` - YAML linter
 - `hadolint` - Dockerfile linter
 - `jq` - JSON processor
@@ -162,7 +168,7 @@ security-scan-skill
 
 ### Hook Trigger Flow
 
-```
+```text
 File Edit Event
     ↓
 settings.toml matches pattern
@@ -176,7 +182,7 @@ No further action (waits for human)
 
 ### Skill Invocation Flow
 
-```
+```text
 Developer command: /skills run <skill-name>
     ↓
 Claude Code resolves skill path
@@ -205,7 +211,7 @@ Developer reviews and acts
 
 ### Model Selection Decision Tree
 
-```
+```text
 Task Required?
     ├─ File search / pattern matching
     │  └─> Use Task tool (Explore agent) with Haiku
@@ -249,6 +255,7 @@ Analyze
 ```
 
 **Benefit:**
+
 - 90%+ token reduction for file operations
 - Faster execution
 - Exact file content (no copy-paste errors)
@@ -257,7 +264,7 @@ Analyze
 
 ### Multi-Layer Safety
 
-```
+```text
 Layer 1: Hook Scripts
     → Read-only
     → No code modification
@@ -281,7 +288,7 @@ Layer 4: Human Review
 
 ### Generated Artifacts
 
-```
+```text
 .claude/generated-hooks/
     ├── python-edit.hook.sh         # Generated but not executed
     ├── dockerfile-edit.hook.sh     # Safe stubs for review
@@ -296,7 +303,7 @@ Layer 4: Human Review
 
 ### Claude Code Integration
 
-```
+```text
 Claude Code Editor
     ↓
     ├─> Watches file edits (via LSP/filesystem)
@@ -307,7 +314,7 @@ Claude Code Editor
 
 ### External Tool Integration
 
-```
+```text
 Skills
     ↓
     ├─> Checks if tool available (command -v)
@@ -325,3 +332,4 @@ Skills
 cat > .claude/hooks/new_hook.sh << 'EOF'
 #!/usr/bin/env bash
 echo "Recommendation for this file type..."
+```
