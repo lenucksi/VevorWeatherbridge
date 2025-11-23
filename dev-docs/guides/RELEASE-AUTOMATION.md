@@ -149,7 +149,9 @@ See [CHANGELOG.md](link) for complete version history.
 - Commit message 1 (hash1)
 - Commit message 2 (hash2)
 
-**Full Diff**: https://github.com/lenucksi/VevorWeatherbridge/compare/v0.1.X-1...v0.1.X
+**Full Diff**: <https://github.com/lenucksi/VevorWeatherbridge/compare/v0.1.X-1...v0.1.X>
+
+```text
 
 ```text
 
@@ -208,7 +210,9 @@ Follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format:
 
 Mark critical changes:
 ```markdown
+
 ### Fixed
+
 - **CRITICAL**: Description of critical fix
 ```
 
@@ -229,12 +233,23 @@ For this addon project (pre-1.0.0):
 
 Good commit messages help generate useful release notes:
 
+```
+
+```text
+
+```text
+
+```text
+
 ```bash
-# Good
+
+## Good
+
 git commit -m "Add MQTT discovery support for automatic sensor detection"
 git commit -m "Fix SUPERVISOR_TOKEN handling in bashio integration"
 
-# Less helpful
+## Less helpful
+
 git commit -m "Update code"
 git commit -m "Fix bug"
 ```

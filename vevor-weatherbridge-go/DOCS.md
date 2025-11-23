@@ -60,12 +60,14 @@ Your weather station sends data to `rtupdate.wunderground.com`. You need to redi
 ### Using Pi-hole / AdGuard Home
 
 Add a DNS rewrite/local DNS entry:
+
 - Domain: `rtupdate.wunderground.com`
 - IP: Your Home Assistant IP address
 
 ### Using Router DNS
 
 Most routers support custom DNS entries. Add:
+
 - Hostname: `rtupdate.wunderground.com`
 - IP: Your Home Assistant IP
 
@@ -107,9 +109,10 @@ Both versions produce identical MQTT messages and are fully compatible.
 ### Health Check
 
 The add-on exposes a health endpoint at `/health` which returns:
+
 - `200 OK` - MQTT connected and operational
 - `503 Service Unavailable` - MQTT disconnected
 
 ## Support
 
-Report issues at: https://github.com/lenucksi/VevorWeatherbridge
+Report issues at: <https://github.com/lenucksi/VevorWeatherbridge>
