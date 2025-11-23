@@ -5,9 +5,6 @@ Tests MQTT auto-detection and configuration parsing
 """
 
 import json
-import subprocess
-from pathlib import Path
-from unittest.mock import Mock, patch
 
 import pytest
 
@@ -45,7 +42,7 @@ class TestMQTTAutoDetection:
         monkeypatch.setenv("SUPERVISOR_TOKEN", "test-token-123")
 
         # Mock supervisor API response
-        mock_response = {
+        mock_response = {  # noqa: F841
             "data": {
                 "host": "core-mosquitto",
                 "port": 1883,
@@ -68,7 +65,7 @@ class TestMQTTAutoDetection:
         config_data = json.loads(temp_config.read_text())
         config_data["mqtt_host"] = "custom.mqtt.server"
         config_data["mqtt_user"] = "custom_user"
-        config_data["mqtt_password"] = "custom_pass"
+        config_data["mqtt_password"] = "custom_pass"  # noqa: S105
         temp_config.write_text(json.dumps(config_data))
 
         # Verify config parsing works

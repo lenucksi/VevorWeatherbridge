@@ -1,6 +1,7 @@
 ARG BUILD_FROM
 
 # Stage 1: Install dependencies
+# hadolint ignore=DL3006
 FROM ${BUILD_FROM} AS builder
 
 WORKDIR /build
@@ -10,6 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --target=/install -r requirements.txt
 
 # Stage 2: Runtime image
+# hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 
 # Set shell for pipefail
