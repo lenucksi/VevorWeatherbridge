@@ -5,6 +5,21 @@ All notable changes to the VEVOR Weather Station Bridge (Go) will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-go-v0.1.0...vevor-weatherbridge-go-v0.1.1) (2025-11-23)
+
+
+### Features
+
+* add Go implementation of VEVOR Weather Station Bridge ([569ea2f](https://github.com/lenucksi/VevorWeatherbridge/commit/569ea2fafa92d5e78547388147fe8a1aabe2676e))
+* **go:** add AppArmor security profile for Go addon ([6c9494c](https://github.com/lenucksi/VevorWeatherbridge/commit/6c9494c8b1ce436f008a59d31ad97690e7f8f0b3))
+
+
+### Bug Fixes
+
+* **go:** resolve golangci-lint errcheck warnings ([d1bd6be](https://github.com/lenucksi/VevorWeatherbridge/commit/d1bd6be799d6a2bdfc39ab096283dbf0fa877f47))
+* **linter:** codelinting changes Docker,Py,GHA ([dd6a8d9](https://github.com/lenucksi/VevorWeatherbridge/commit/dd6a8d95e16a102d8aa0e62794de73c7f445cbfb))
+* **markdown:** markdown linting fixes ([d800575](https://github.com/lenucksi/VevorWeatherbridge/commit/d8005750dfc4dac90ad400db5e9c54129fd5044b))
+
 ## [0.1.0] - 2024-XX-XX
 
 ### Added
