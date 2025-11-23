@@ -1,0 +1,60 @@
+#include <tunables/global>
+
+profile vevor-weatherbridge-go flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+
+  # Network access for HTTP server (receiving weather data) and MQTT client
+  network inet stream,
+  network inet dgram,
+  network inet6 stream,
+  network inet6 dgram,
+
+  # DNS resolution (for Weather Underground forwarding)
+  network inet udp,
+  network inet6 udp,
+
+  # Go binary execution (statically compiled)
+  /app/vevor-weatherbridge ix,
+
+  # Application directory (read-only)
+  /app/** r,
+
+  # Startup script
+  /run.sh rx,
+
+  # Bashio and S6 overlay (Home Assistant addon framework)
+  /usr/bin/bashio rx,
+  /etc/s6-overlay/** r,
+  /run/s6/** rw,
+
+  # Proc filesystem (read-only, limited - Go runtime needs these)
+  /proc/*/fd/ r,
+  /proc/*/stat r,
+  /proc/*/status r,
+  /proc/meminfo r,
+  /proc/cpuinfo r,
+  /proc/sys/net/core/somaxconn r,
+  owner /proc/*/fd/* rw,
+
+  # Configuration access (Home Assistant options)
+  /data/** r,
+  /config/** r,
+
+  # SSL/TLS certificates (for HTTPS/MQTTS connections)
+  /etc/ssl/** r,
+  /usr/share/ca-certificates/** r,
+
+  # Timezone data
+  /usr/share/zoneinfo/** r,
+
+  # Deny dangerous operations
+  deny /proc/*/mem rw,
+  deny /proc/kcore rw,
+  deny /sys/** w,
+  deny /dev/** w,
+
+  # Allow stdout/stderr for logging
+  /dev/null rw,
+  /dev/tty rw,
+  /dev/pts/* rw,
+}
