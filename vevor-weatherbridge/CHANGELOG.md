@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.8](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-v0.1.7...vevor-weatherbridge-v0.1.8) (2025-11-23)
+
+
+### Features
+
+* **addon:** add multi-stage Dockerfile, AppArmor profile, and logo ([d118c6a](https://github.com/lenucksi/VevorWeatherbridge/commit/d118c6af88804c3bdf834abf3b07a21172cd6cd9))
+
+
+### Bug Fixes
+
+* **linter:** codelinting changes Docker,Py,GHA ([dd6a8d9](https://github.com/lenucksi/VevorWeatherbridge/commit/dd6a8d95e16a102d8aa0e62794de73c7f445cbfb))
+
 ## [Unreleased]
 
 ### Added
