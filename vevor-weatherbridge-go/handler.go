@@ -109,7 +109,7 @@ func (h *WeatherHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Always return success to the weather station
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "success")
+	_, _ = fmt.Fprint(w, "success")
 }
 
 // convertValue applies unit conversion based on sensor type and configured units.
