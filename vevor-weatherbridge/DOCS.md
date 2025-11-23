@@ -120,7 +120,7 @@ Many routers support local DNS overrides:
 
 For quick testing, you can modify the hosts file on a computer:
 
-```
+```text
 # Linux/Mac: /etc/hosts
 # Windows: C:\Windows\System32\drivers\etc\hosts
 
@@ -170,16 +170,116 @@ The add-on creates the following sensors in Home Assistant:
 
 All sensors include a `measured_on` attribute with the local timestamp.
 
+The **Wind Direction** sensor also includes a `cardinal` attribute with the compass direction (e.g., "N", "NNE", "NE").
+
+## Windrose Visualization
+
+The Wind Direction sensor is optimized for use with windrose cards that display wind patterns visually. A windrose shows the frequency and intensity of wind from different directions.
+
+### Recommended: Lovelace Windrose Card
+
+The community-standard solution is the **[Lovelace Windrose Card](https://github.com/aukedejong/lovelace-windrose-card)** - an actively maintained custom card that creates beautiful windrose visualizations.
+
+**Features:**
+
+- Historical wind direction frequency display
+- Color-coded wind speed ranges (Beaufort scale or custom)
+- Current wind direction indicator (red arrow)
+- Support for both wind speed and wind gust sensors
+- Highly customizable appearance
+- Multiple unit options (m/s, km/h, mph, knots)
+
+### Installation
+
+1. **Install via HACS** (Home Assistant Community Store):
+   - Open HACS → Frontend
+   - Click the three dots menu → Custom repositories
+   - Add URL: `https://github.com/aukedejong/lovelace-windrose-card`
+   - Category: Lovelace
+   - Click "Add"
+   - Install "Windrose Card"
+
+2. **Restart Home Assistant** to load the card
+
+3. **Add to Dashboard**:
+   - Edit your dashboard
+   - Add card → Search for "Custom: Windrose Card"
+   - Configure using the UI or YAML (see example below)
+
+### Example Configuration
+
+Add this to your Lovelace dashboard (see `lovelace-windrose-example.yaml` for full example):
+
+```yaml
+type: custom:windrose-card
+title: Wind Rose
+data_period:
+  hours_to_show: 24
+wind_direction_entity: sensor.weather_station_wind_direction
+windspeed_entities:
+  - entity: sensor.weather_station_wind_speed
+  - entity: sensor.weather_station_wind_gust_speed
+refresh_interval: 300
+cardinal_direction_letters: NESW
+matching_strategy: direction-first
+windspeed_bar_location: bottom
+wind_direction_count: 16
+center_calm_percentage: true
+```
+
+**Configuration Options:**
+
+- `data_period.hours_to_show`: How many hours of historical data to display (default: 24)
+- `wind_direction_entity`: Your wind direction sensor (in degrees)
+- `windspeed_entities`: One or more wind speed sensors
+- `refresh_interval`: Update frequency in seconds (default: 300)
+- `wind_direction_count`: Number of compass segments (4-32, default: 16)
+- `cardinal_direction_letters`: Compass labels (e.g., "NESW" or custom)
+- `center_calm_percentage`: Show calm wind percentage in center
+- `windspeed_bar_location`: Position bars at "bottom" or "right"
+
+### Speed Ranges and Colors
+
+You can customize speed ranges and colors to match your preferences:
+
+```yaml
+speed_range_beaufort: true  # Use Beaufort scale (default)
+# OR define custom ranges:
+speed_ranges:
+  - from_value: 0
+    to_value: 5
+    color: '#d4d4d4'
+  - from_value: 5
+    to_value: 10
+    color: '#a3d4d4'
+  - from_value: 10
+    to_value: 20
+    color: '#4fa8d4'
+```
+
+### Compatible Sensors
+
+This add-on publishes sensors that are fully compatible with the windrose card:
+
+- ✅ **Wind Direction**: Degrees (0-359°) with compass icon
+- ✅ **Wind Speed**: Metric (km/h) or Imperial (mph)
+- ✅ **Wind Gust Speed**: For maximum wind display
+- ✅ **Cardinal Direction**: Available as sensor attribute
+
+See the included `lovelace-windrose-example.yaml` file for a complete ready-to-use configuration.
+
 ## Troubleshooting
 
 ### No data received
 
 1. Check add-on logs for errors
 2. Verify DNS redirect is working:
+
    ```bash
    nslookup rtupdate.wunderground.com
    # Should return your Home Assistant IP
    ```
+
 3. Ensure weather station is powered on and connected to WiFi
 4. Verify firewall allows traffic on port 8099 (or your configured port)
 
@@ -221,8 +321,8 @@ No data is sent to any other third parties.
 
 For issues, feature requests, or questions:
 
-- GitHub Issues: https://github.com/C9H13NO3-dev/VevorWeatherbridge/issues
-- Home Assistant Community: https://community.home-assistant.io/
+- GitHub Issues: <https://github.com/C9H13NO3-dev/VevorWeatherbridge/issues>
+- Home Assistant Community: <https://community.home-assistant.io/>
 
 ## Credits
 

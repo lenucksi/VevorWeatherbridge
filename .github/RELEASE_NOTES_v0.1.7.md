@@ -7,6 +7,7 @@ This release fixes the issue where sensor data was being published to MQTT but *
 ## What's New
 
 ### Added
+
 - **MQTT Discovery Support**: Sensors now automatically appear in Home Assistant
   - Added required `origin` field with addon name, version, and support URL
   - Added `availability_topic` for online/offline status tracking
@@ -14,6 +15,7 @@ This release fixes the issue where sensor data was being published to MQTT but *
   - Availability status published as "online" on connect, "offline" on disconnect
 
 ### Fixed
+
 - **CRITICAL**: Device-based MQTT discovery now works properly
   - Home Assistant will automatically create all 11 weather sensors
   - Sensors grouped under single device in HA device registry
@@ -21,6 +23,7 @@ This release fixes the issue where sensor data was being published to MQTT but *
   - All sensors now appear in HA UI without manual configuration
 
 ### Changed
+
 - Improved MQTT discovery payload structure per HA 2025 requirements
 - Better device availability tracking with retained messages
 
@@ -77,4 +80,4 @@ See [CHANGELOG.md](https://github.com/lenucksi/VevorWeatherbridge/blob/main/vevo
 
 ---
 
-**Full Commit**: https://github.com/lenucksi/VevorWeatherbridge/commit/cc325be
+**Full Commit**: <https://github.com/lenucksi/VevorWeatherbridge/commit/cc325be>
