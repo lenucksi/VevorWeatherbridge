@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.10](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-v0.1.9...vevor-weatherbridge-v0.1.10) (2025-11-24)
+
+
+### Bug Fixes
+
+* **security:** remove AppArmor profiles blocking Supervisor API ([6978c05](https://github.com/lenucksi/VevorWeatherbridge/commit/6978c0525cbb747bc7cb242ae33ccd9040716b89))
+
 ## [0.1.9](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-v0.1.8...vevor-weatherbridge-v0.1.9) (2025-11-24)
 
 
