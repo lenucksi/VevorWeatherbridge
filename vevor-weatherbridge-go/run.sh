@@ -31,12 +31,26 @@ else
 fi
 
 # MQTT Configuration
-# Try to use Home Assistant's internal MQTT broker first
-if ! bashio::config.has_value 'mqtt_host'; then
-    # Use bashio to get MQTT service credentials
+# Check if user provided manual MQTT configuration
+CONFIGURED_HOST=$(bashio::config 'mqtt_host')
+CONFIGURED_PORT=$(bashio::config 'mqtt_port')
+CONFIGURED_USER=$(bashio::config 'mqtt_user')
+CONFIGURED_PASSWORD=$(bashio::config 'mqtt_password')
+
+if bashio::var.has_value "${CONFIGURED_HOST}"; then
+    # Use user-provided MQTT configuration
+    bashio::log.info "Using manually configured MQTT broker"
+    export MQTT_HOST="${CONFIGURED_HOST}"
+    export MQTT_PORT="${CONFIGURED_PORT}"
+    export MQTT_USER="${CONFIGURED_USER}"
+    export MQTT_PASSWORD="${CONFIGURED_PASSWORD}"
+else
+    # Try to auto-detect Home Assistant's internal MQTT broker
     bashio::log.info "Attempting to auto-detect MQTT broker via Supervisor..."
+    bashio::log.debug "Checking if MQTT service is available..."
 
     if bashio::services.available "mqtt"; then
+        bashio::log.debug "MQTT service is available, fetching credentials..."
         export MQTT_HOST=$(bashio::services "mqtt" "host")
         export MQTT_PORT=$(bashio::services "mqtt" "port")
         export MQTT_USER=$(bashio::services "mqtt" "username")
@@ -46,17 +60,21 @@ if ! bashio::config.has_value 'mqtt_host'; then
         bashio::log.info "MQTT Host: ${MQTT_HOST}:${MQTT_PORT}"
         bashio::log.info "MQTT User: ${MQTT_USER}"
     else
-        bashio::log.fatal "No MQTT service available!"
-        bashio::log.fatal "Please install Mosquitto broker addon or configure MQTT manually."
+        bashio::log.warning "MQTT auto-detection failed!"
+        bashio::log.warning "The Supervisor MQTT service is not available."
+        bashio::log.warning ""
+        bashio::log.warning "Note: Auto-detection only works with the Mosquitto broker addon."
+        bashio::log.warning "If using an external MQTT broker or the MQTT integration,"
+        bashio::log.warning "you must configure MQTT manually in the addon settings."
+        bashio::log.warning ""
+        bashio::log.warning "Required settings for manual configuration:"
+        bashio::log.warning "  - mqtt_host: your MQTT broker hostname/IP"
+        bashio::log.warning "  - mqtt_port: MQTT port (default: 1883)"
+        bashio::log.warning "  - mqtt_user: MQTT username (if required)"
+        bashio::log.warning "  - mqtt_password: MQTT password (if required)"
+        bashio::log.fatal "Cannot start without MQTT configuration."
         exit 1
     fi
-else
-    # Use user-provided MQTT configuration
-    bashio::log.info "Using external MQTT broker from configuration"
-    export MQTT_HOST=$(bashio::config 'mqtt_host')
-    export MQTT_PORT=$(bashio::config 'mqtt_port')
-    export MQTT_USER=$(bashio::config 'mqtt_user')
-    export MQTT_PASSWORD=$(bashio::config 'mqtt_password')
 fi
 
 bashio::log.info "Device: ${DEVICE_NAME} (${DEVICE_ID})"
