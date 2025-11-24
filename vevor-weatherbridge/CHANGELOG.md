@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.9](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-v0.1.8...vevor-weatherbridge-v0.1.9) (2025-11-24)
+
+
+### Bug Fixes
+
+* **mqtt:** improve MQTT configuration detection and error messages ([ff2494a](https://github.com/lenucksi/VevorWeatherbridge/commit/ff2494a084f9759ea16eaa5146b5fef12fb3fc64))
+* **security:** update AppArmor profiles for HAOS compatibility ([8860140](https://github.com/lenucksi/VevorWeatherbridge/commit/8860140cb733575e9269c9cfeb0f050b60fbcc6e))
+
 ## [0.1.8](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-v0.1.7...vevor-weatherbridge-v0.1.8) (2025-11-23)
 
 
