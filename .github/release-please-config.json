@@ -1,33 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "packages": {
-    "vevor-weatherbridge": {
-      "release-type": "simple",
-      "package-name": "vevor-weatherbridge",
-      "changelog-path": "CHANGELOG.md",
-      "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": true,
-      "extra-files": [
-        {
-          "type": "yaml",
-          "path": "config.yaml",
-          "jsonpath": "$.version"
-        }
-      ],
-      "changelog-sections": [
-        {"type": "feat", "section": "Features", "hidden": false},
-        {"type": "fix", "section": "Bug Fixes", "hidden": false},
-        {"type": "perf", "section": "Performance Improvements", "hidden": false},
-        {"type": "security", "section": "Security", "hidden": false},
-        {"type": "deps", "section": "Dependencies", "hidden": false},
-        {"type": "docs", "section": "Documentation", "hidden": true},
-        {"type": "test", "section": "Tests", "hidden": true},
-        {"type": "build", "section": "Build System", "hidden": true},
-        {"type": "ci", "section": "Continuous Integration", "hidden": true},
-        {"type": "chore", "section": "Miscellaneous", "hidden": true},
-        {"type": "refactor", "section": "Code Refactoring", "hidden": true}
-      ]
-    },
     "vevor-weatherbridge-go": {
       "release-type": "simple",
       "package-name": "vevor-weatherbridge-go",
