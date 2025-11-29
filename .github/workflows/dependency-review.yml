@@ -24,31 +24,29 @@ jobs:
           warn-on-severity: moderate
           comment-summary-in-pr: always
 
-  security-scan:
+  go-security-scan:
     runs-on: ubuntu-latest
     if: github.event.pull_request.user.login == 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'dependencies')
     steps:
       - name: Checkout repository
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
 
-      - name: Set up Python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
+      - name: Set up Go
+        uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
         with:
-          python-version: '3.14'
+          go-version-file: vevor-weatherbridge-go/go.mod
 
-      - name: Install dependencies
+      - name: Run govulncheck
+        working-directory: vevor-weatherbridge-go
         run: |
-          pip install --upgrade pip
-          pip install -r vevor-weatherbridge/requirements.txt
-          pip install pip-audit bandit
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          echo "## Go Dependency Vulnerability Scan" >> $GITHUB_STEP_SUMMARY
+          govulncheck ./... >> $GITHUB_STEP_SUMMARY || true
 
-      - name: Run pip-audit
+      - name: Run gosec security scan
+        working-directory: vevor-weatherbridge-go
         run: |
-          echo "## Dependency Vulnerability Scan" >> $GITHUB_STEP_SUMMARY
-          pip-audit --format markdown >> $GITHUB_STEP_SUMMARY || true
-
-      - name: Run bandit security scan
-        run: |
+          go install github.com/securego/gosec/v2/cmd/gosec@latest
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Code Security Scan" >> $GITHUB_STEP_SUMMARY
-          bandit -r vevor-weatherbridge/weatherstation.py -f txt || true
+          echo "## Go Code Security Scan" >> $GITHUB_STEP_SUMMARY
+          gosec -fmt text ./... >> $GITHUB_STEP_SUMMARY || true
