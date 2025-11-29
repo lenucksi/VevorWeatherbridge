@@ -1,28 +1,14 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
+# Go
+*.exe
+*.exe~
+*.dll
 *.so
-.Python
-env/
-venv/
-.venv/
-ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+vendor/
 
 # IDEs
 .vscode/
@@ -32,26 +18,8 @@ wheels/
 *~
 .DS_Store
 
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-
-# MyPy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Ruff
-.ruff_cache/
-
 # Claude Code
 #.claude/
-
-# Poetry
-poetry.lock
-.venv/
 
 # Environment
 .env

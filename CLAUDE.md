@@ -12,26 +12,26 @@ External setup required by the user:
 
 **Tech Stack:**
 
-- Python 3.12 (Flask, paho-mqtt, pytz, dnspython, requests)
-- Docker
+- Go 1.24+ (net/http, paho.mqtt.golang, log/slog)
+- Docker (multi-stage builds)
 - Home Assistant Addon Framework
 - MQTT protocol
 
 ## Code Quality Standards (2025)
 
-### Python (PEP 8 + Modern Best Practices)
+### Go
 
-- **Linter:** `ruff` (replaces flake8, isort, pyupgrade) - <https://docs.astral.sh/ruff/>
-- **Type Checker:** `mypy` with strict mode
-- **Formatter:** `ruff format` (Black-compatible)
-- **Security:** `bandit` for AST-based security checks + `semgrep` for pattern-based SAST
-- **Dependencies:** `pip-audit` for vulnerability scanning
+- **Linter:** `golangci-lint` with comprehensive linter suite
+- **Testing:** Standard `go test` with table-driven tests
+- **Formatting:** `go fmt` / `gofmt` (enforced by golangci-lint)
+- **Security:** `golangci-lint` includes gosec for security checks
+- **Dependencies:** `go mod` for dependency management
 
 ### Docker
 
 - **Linter:** `hadolint` for Dockerfile best practices - <https://github.com/hadolint/hadolint>
-- **Base Images:** Use official, minimal, pinned versions (python:3.12-slim)
-- **Security:** Multi-stage builds, non-root user, minimal layers
+- **Base Images:** golang:1.25-alpine for build, Home Assistant base for runtime
+- **Security:** Multi-stage builds, minimal layers, AppArmor profile
 
 ### Home Assistant Addon
 
@@ -41,36 +41,35 @@ External setup required by the user:
 
 ## Automation Rules
 
-### On Python File Edit (`*.py`)
+### On Go File Edit (`*.go`)
 
-**Trigger:** `on.edit_file:*.py` OR `on.write:*.py`
+**Trigger:** `on.edit_file:*.go` OR `on.write:*.go`
 **Actions:**
 
-1. Run `ruff check --fix .` for linting
-2. Run `ruff format .` for formatting
-3. Run `mypy weatherstation.py` for type checking
-4. Run `bandit -r . -ll` for security (low-level and above)
-5. Consider invoking `/skills run python-ci-skill`
+1. Run `go fmt` for formatting (automatic)
+2. Run `golangci-lint run` for linting and security
+3. Run `go test ./...` to ensure tests pass
+4. Run `go mod tidy` to keep dependencies clean
 
 ### On Dockerfile Edit
 
 **Trigger:** `on.edit_file:Dockerfile` OR `on.write:Dockerfile`
 **Actions:**
 
-1. Run `hadolint Dockerfile` for best practices
-2. Verify multi-stage build opportunities
+1. Run `hadolint vevor-weatherbridge-go/Dockerfile` for best practices
+2. Verify multi-stage build is optimal
 3. Check for security issues (exposed secrets, running as root)
 
-### On requirements.txt Edit
+### On go.mod/go.sum Edit
 
-**Trigger:** `on.edit_file:requirements.txt` OR `on.write:requirements.txt`
+**Trigger:** `on.edit_file:go.mod` OR `on.edit_file:go.sum`
 **Actions:**
 
-1. Run `pip-audit` for vulnerability scanning
-2. Check for version pinning (should use `==` for production)
-3. Consider invoking `/skills run security-scan-skill`
+1. Run `go mod verify` to verify dependencies
+2. Run `go mod tidy` to clean up
+3. Check for known vulnerabilities in dependencies
 
-### On Home Assistant Config Edit (`config.yaml`, `build.json`)
+### On Home Assistant Config Edit (`config.yaml`, `build.json`, `apparmor.txt`)
 
 **Trigger:** `on.edit_file:config.yaml` OR similar
 **Actions:**
@@ -90,23 +89,13 @@ External setup required by the user:
 
 ### CI/CD Expectations
 
-- All Python code must pass `ruff check` with zero errors
-- Type checking with `mypy` must pass
-- Security scans should have zero high/critical findings
+- All Go code must pass `golangci-lint` with zero errors
+- All tests must pass with `go test ./...`
+- Hadolint must pass for Dockerfile
 - Docker build must succeed
 - Addon config must validate against HA schema
 
 ## Skills Available
-
-### `/skills run python-ci-skill`
-
-Runs comprehensive Python quality checks:
-
-- Linting (ruff)
-- Formatting validation
-- Type checking (mypy)
-- Security scan (bandit)
-- Generates patch suggestions
 
 ### `/skills run ha-addon-skill`
 
