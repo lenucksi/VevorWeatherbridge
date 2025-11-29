@@ -5,6 +5,18 @@ All notable changes to the VEVOR Weather Station Bridge (Go) will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-go-v0.1.3...vevor-weatherbridge-go-v0.1.4) (2025-11-29)
+
+
+### Features
+
+* **security:** re-add AppArmor profile with Supervisor API support ([d1c7dd5](https://github.com/lenucksi/VevorWeatherbridge/commit/d1c7dd58ddd86c53c19e93688f0f694dddeed353))
+
+
+### Bug Fixes
+
+* **go:** normalize timestamps with single-digit time components ([d1c7dd5](https://github.com/lenucksi/VevorWeatherbridge/commit/d1c7dd58ddd86c53c19e93688f0f694dddeed353))
+
 ## [0.1.3](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-go-v0.1.2...vevor-weatherbridge-go-v0.1.3) (2025-11-24)
 
 
