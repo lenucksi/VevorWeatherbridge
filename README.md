@@ -3,7 +3,6 @@
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge?ref=badge_shield)
 
 [![CI](https://github.com/lenucksi/VevorWeatherbridge/actions/workflows/ci.yml/badge.svg)](https://github.com/lenucksi/VevorWeatherbridge/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A **Home Assistant Add-on** that intercepts weather data from VEVOR 7-in-1 Wi-Fi weather stations (or any station using Weather Underground format) and forwards it to Home Assistant via **MQTT Discovery**.
 
@@ -414,8 +413,6 @@ automation:
 
 
 ## License
-
-This project is licensed under the [MIT License](LICENSE).
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Flenucksi%2FVevorWeatherbridge?ref=badge_large)
 
