@@ -36,13 +36,13 @@ jobs:
           go-version-file: vevor-weatherbridge-go/go.mod
 
       - name: Run govulncheck
-        uses: golang/govulncheck-action@v1.0.4
+        uses: golang/govulncheck-action@b625fbe08f3bccbe446d94fbf87fcc875a4f50ee # v1.0.4
         with:
           go-version-file: vevor-weatherbridge-go/go.mod
           work-dir: vevor-weatherbridge-go
 
       - name: Run gosec security scan
-        uses: securego/gosec@v2.22.10
+        uses: securego/gosec@6be2b51fd78feca86af91f5186b7964d76cb1256 # v2.22.10
         with:
           args: '-no-fail -fmt sarif -out results.sarif ./...'
       - name: Upload SARIF file
