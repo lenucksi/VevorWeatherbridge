@@ -7,6 +7,14 @@
 
 A **Home Assistant Add-on** that intercepts weather data from VEVOR 7-in-1 Wi-Fi weather stations (or any station using Weather Underground format) and forwards it to Home Assistant via **MQTT Discovery**.
 
+## Important
+
+No support or guarantees for function, safety or security of any sorts. 
+Expect that this software will kill your dog and eat it. 
+
+It is explicitly forbidden to use it for any purpose that would be, direct or indirectly, be connected to anything that would be related to safety or security of building, entity, machinery, human life, etc. You have been warned.
+
+
 ## Features
 
 - **Home Assistant Add-on**: One-click installation from add-on repository
@@ -398,48 +406,12 @@ automation:
 
 ### Project Structure
 
-```text
-VevorWeatherbridge/
-├── vevor-weatherbridge/          # Home Assistant Add-on
-│   ├── config.yaml               # Add-on configuration
-│   ├── Dockerfile                # Multi-stage Docker build
-│   ├── weatherstation.py         # Main application
-│   ├── run.sh                    # Entry point (bashio)
-│   ├── tests/                    # Test suite (64 tests)
-│   ├── DOCS.md                   # Add-on documentation
-│   └── CHANGELOG.md              # Version history
-├── repository.yaml               # Add-on repository metadata
-├── pyproject.toml                # UV/PEP 621 project config
-├── uv.lock                       # Dependency lock file
-└── dev-docs/                     # Development documentation
-```
 
 ### Running Tests
 
-```bash
-# Install dependencies
-uv sync
-
-# Run tests
-uv run pytest vevor-weatherbridge/tests/ -v
-
-# Run with coverage
-uv run pytest vevor-weatherbridge/tests/ --cov=vevor-weatherbridge
-```
 
 ### Code Quality
 
-```bash
-# Linting
-uv run ruff check .
-uv run ruff format .
-
-# Type checking
-uv run mypy vevor-weatherbridge/weatherstation.py
-
-# Security scan
-uv run bandit -r vevor-weatherbridge/
-```
 
 ## License
 
