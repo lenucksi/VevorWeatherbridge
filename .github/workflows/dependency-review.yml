@@ -40,6 +40,8 @@ jobs:
         with:
           go-version-file: vevor-weatherbridge-go/go.mod
           work-dir: vevor-weatherbridge-go
+          repo-checkout: false #checkout the repository, default true
+          check-latest: true #check for the latest Go version, default false
 
       - name: Run gosec security scan
         uses: securego/gosec@6be2b51fd78feca86af91f5186b7964d76cb1256 # v2.22.10
