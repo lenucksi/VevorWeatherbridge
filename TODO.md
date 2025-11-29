@@ -2,7 +2,7 @@
 
 ## Open
 
-- Test new Go version live with AppArmor profile -> User needs to deploy and verify MQTT auto-detection works
+- Test MQTT auto-detection (without manual config) to fully validate AppArmor `network unix,` permission
 
 ## Completed - 2025-11-29
 
@@ -15,7 +15,8 @@
 - Added `network unix,` permission required for Home Assistant Supervisor API access
 - Enables MQTT auto-detection via bashio::services
 - Based on APPARMOR_RESEARCH.md findings
-- User needs to test deployment to confirm auto-detection works
+- ✅ Deployed and tested: Works with manual MQTT config, data processing confirmed
+- Auto-detection without manual config still needs testing
 
 ### Migrated from Python+Go to Go-only
 - Preserved Python implementation in `addon-python` branch
@@ -151,5 +152,11 @@ time=2025-11-28T19:59:21.569+01:00 level=INFO msg="Processed weather update" sen
 
 - [x] Consider Go rewrite for smaller Docker images (~5-10 MB vs ~150 MB)
   - See [dev-docs/go-rust-migration-analysis.md](dev-docs/go-rust-migration-analysis.md) for analysis
+
+- [x] Remediate CodeQL security findings
+  - Fixed token permissions in release-please.yml and build-addon.yml
+  - Replaced `go install @latest` with GitHub Actions for govulncheck and gosec
+  - Documented Dockerfile base image as accepted risk
+  - Full analysis in [dev-docs/security/CODEQL_FINDINGS_ANALYSIS.md](dev-docs/security/CODEQL_FINDINGS_ANALYSIS.md)
 
 ## Future Considerations
