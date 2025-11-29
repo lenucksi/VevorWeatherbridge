@@ -21,16 +21,11 @@ repos:
   hooks:
     - id: rumdl
       args: [--fix]
-- repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.14.6
-  hooks:
-    - id: ruff
-      args: [--fix]
-    - id: ruff-format
 - repo: https://github.com/AleksaC/hadolint-py
   rev: v2.14.0
   hooks:
     - id: hadolint
+      args: [vevor-weatherbridge-go/Dockerfile]
 
 minimum_pre_commit_version: 3.3.0
 default_install_hook_types: [pre-commit, commit-msg]

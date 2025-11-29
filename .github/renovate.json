@@ -2,6 +2,8 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
+    "docker:pinDigests",
+    "helpers:pinGitHubActionDigests",
     ":dependencyDashboard",
     ":semanticCommits",
     ":preserveSemverRanges"
@@ -22,29 +24,6 @@
         "docker"
       ],
       "enabled": true
-    },
-    {
-      "description": "Python dependencies - group minor and patch updates",
-      "matchManagers": [
-        "pip_requirements"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "groupName": "Python dependencies (non-major)",
-      "automerge": false
-    },
-    {
-      "description": "Python major updates - separate PRs",
-      "matchManagers": [
-        "pip_requirements"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "groupName": null,
-      "automerge": false
     },
     {
       "description": "Docker base images",
@@ -71,13 +50,20 @@
         "dependencies",
         "github-actions"
       ]
+    },
+    {
+      "description": "Go modules",
+      "matchManagers": [
+        "gomod"
+      ],
+      "enabled": true,
+      "automerge": false,
+      "labels": [
+        "dependencies",
+        "go"
+      ]
     }
   ],
-  "pip_requirements": {
-    "managerFilePatterns": [
-      "/(^|/)requirements\\.txt$/"
-    ]
-  },
   "vulnerabilityAlerts": {
     "labels": [
       "security"
