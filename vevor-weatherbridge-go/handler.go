@@ -5,9 +5,42 @@ import (
 	"log/slog"
 	"math"
 	"net/http"
+	"regexp"
 	"strconv"
 	"time"
 )
+
+// normalizeTimestamp pads single-digit time components to ensure proper parsing.
+// Handles formats like "2025-11-28 18:58:7" -> "2025-11-28 18:58:07"
+func normalizeTimestamp(timestamp string) string {
+	// Pattern matches: YYYY-MM-DD HH:MM:SS with optional single-digit components
+	// Captures groups: (date) (hour):(minute):(second)
+	re := regexp.MustCompile(`^(\d{4}-\d{2}-\d{2})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})$`)
+	matches := re.FindStringSubmatch(timestamp)
+
+	if matches == nil {
+		// Not a recognized format, return as-is
+		return timestamp
+	}
+
+	date := matches[1]
+	hour := matches[2]
+	minute := matches[3]
+	second := matches[4]
+
+	// Pad single-digit components with leading zeros
+	if len(hour) == 1 {
+		hour = "0" + hour
+	}
+	if len(minute) == 1 {
+		minute = "0" + minute
+	}
+	if len(second) == 1 {
+		second = "0" + second
+	}
+
+	return fmt.Sprintf("%s %s:%s:%s", date, hour, minute, second)
+}
 
 // WeatherHandler handles incoming weather station data.
 type WeatherHandler struct {
@@ -35,12 +68,14 @@ func (h *WeatherHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Parse timestamp
 	var measuredTime string
 	if dateutc := query.Get("dateutc"); dateutc != "" {
-		parsedTime, err := time.Parse("2006-01-02 15:04:05", dateutc)
+		// Normalize timestamp to handle single-digit time components
+		normalized := normalizeTimestamp(dateutc)
+		parsedTime, err := time.Parse("2006-01-02 15:04:05", normalized)
 		if err == nil {
 			localTime := parsedTime.In(h.cfg.Timezone)
 			measuredTime = localTime.Format(time.RFC3339)
 		} else {
-			slog.Warn("Failed to parse dateutc", "value", dateutc, "error", err)
+			slog.Warn("Failed to parse dateutc", "value", dateutc, "normalized", normalized, "error", err)
 			measuredTime = time.Now().In(h.cfg.Timezone).Format(time.RFC3339)
 		}
 	} else {
