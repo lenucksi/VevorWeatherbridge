@@ -5,41 +5,29 @@ import (
 	"log/slog"
 	"math"
 	"net/http"
-	"regexp"
 	"strconv"
 	"time"
 )
 
-// normalizeTimestamp pads single-digit time components to ensure proper parsing.
-// Handles formats like "2025-11-28 18:58:7" -> "2025-11-28 18:58:07"
-func normalizeTimestamp(timestamp string) string {
-	// Pattern matches: YYYY-MM-DD HH:MM:SS with optional single-digit components
-	// Captures groups: (date) (hour):(minute):(second)
-	re := regexp.MustCompile(`^(\d{4}-\d{2}-\d{2})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})$`)
-	matches := re.FindStringSubmatch(timestamp)
-
-	if matches == nil {
-		// Not a recognized format, return as-is
-		return timestamp
+// parseTimestamp parses timestamps with flexible format support.
+// Handles non-zero-padded dates (e.g., "2025-12-1 11:15:31") and standard formats.
+func parseTimestamp(timestamp string) (time.Time, error) {
+	// Try multiple layouts in order of likelihood
+	layouts := []string{
+		"2006-1-2 15:04:05",   // Non-padded month/day (e.g., "2025-12-1 11:15:31")
+		"2006-01-02 15:04:05", // Zero-padded standard format
+		"2006-1-2 15:4:5",     // All components non-padded
 	}
 
-	date := matches[1]
-	hour := matches[2]
-	minute := matches[3]
-	second := matches[4]
-
-	// Pad single-digit components with leading zeros
-	if len(hour) == 1 {
-		hour = "0" + hour
+	var lastErr error
+	for _, layout := range layouts {
+		if t, err := time.Parse(layout, timestamp); err == nil {
+			return t, nil
+		} else {
+			lastErr = err
+		}
 	}
-	if len(minute) == 1 {
-		minute = "0" + minute
-	}
-	if len(second) == 1 {
-		second = "0" + second
-	}
-
-	return fmt.Sprintf("%s %s:%s:%s", date, hour, minute, second)
+	return time.Time{}, lastErr
 }
 
 // WeatherHandler handles incoming weather station data.
@@ -68,14 +56,13 @@ func (h *WeatherHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Parse timestamp
 	var measuredTime string
 	if dateutc := query.Get("dateutc"); dateutc != "" {
-		// Normalize timestamp to handle single-digit time components
-		normalized := normalizeTimestamp(dateutc)
-		parsedTime, err := time.Parse("2006-01-02 15:04:05", normalized)
+		// Parse timestamp with flexible format support (handles non-zero-padded dates)
+		parsedTime, err := parseTimestamp(dateutc)
 		if err == nil {
 			localTime := parsedTime.In(h.cfg.Timezone)
 			measuredTime = localTime.Format(time.RFC3339)
 		} else {
-			slog.Warn("Failed to parse dateutc", "value", dateutc, "normalized", normalized, "error", err)
+			slog.Warn("Failed to parse dateutc", "value", dateutc, "error", err)
 			measuredTime = time.Now().In(h.cfg.Timezone).Format(time.RFC3339)
 		}
 	} else {
