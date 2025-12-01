@@ -5,6 +5,14 @@ All notable changes to the VEVOR Weather Station Bridge (Go) will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-go-v0.1.4...vevor-weatherbridge-go-v0.1.5) (2025-12-01)
+
+
+### Bug Fixes
+
+* add error handling for MQTT availability status publishing ([f57acbe](https://github.com/lenucksi/VevorWeatherbridge/commit/f57acbebe659af9cc01a3e4b4c7f3b1444c3e5b3))
+* handle non-zero-padded timestamps from weather station ([6765335](https://github.com/lenucksi/VevorWeatherbridge/commit/67653354aa65c0f1103904825a671469a63d1355))
+
 ## [0.1.4](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-go-v0.1.3...vevor-weatherbridge-go-v0.1.4) (2025-11-29)
 
 
