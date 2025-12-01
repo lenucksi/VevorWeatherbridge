@@ -106,8 +106,14 @@ func (m *MQTTClient) onConnect(client mqtt.Client) {
 	slog.Info("MQTT connected", "host", m.cfg.MQTTHost, "port", m.cfg.MQTTPort)
 
 	// Publish online status
-	token := client.Publish(m.AvailabilityTopic(), 1, true, "online")
+	availTopic := m.AvailabilityTopic()
+	token := client.Publish(availTopic, 1, true, "online")
 	token.Wait()
+	if token.Error() != nil {
+		slog.Error("Failed to publish availability status", "topic", availTopic, "error", token.Error())
+	} else {
+		slog.Debug("Published availability status", "topic", availTopic, "status", "online")
+	}
 }
 
 // onConnectionLost is called when the connection is lost.
@@ -233,8 +239,17 @@ func (m *MQTTClient) PublishSensorAttributes(sensorID string, attrs map[string]i
 // Close disconnects the MQTT client gracefully.
 func (m *MQTTClient) Close() {
 	// Publish offline status before disconnecting
-	token := m.client.Publish(m.AvailabilityTopic(), 1, true, "offline")
-	token.WaitTimeout(2 * time.Second)
+	availTopic := m.AvailabilityTopic()
+	token := m.client.Publish(availTopic, 1, true, "offline")
+	if token.WaitTimeout(2 * time.Second) {
+		if token.Error() != nil {
+			slog.Error("Failed to publish offline status", "topic", availTopic, "error", token.Error())
+		} else {
+			slog.Debug("Published availability status", "topic", availTopic, "status", "offline")
+		}
+	} else {
+		slog.Warn("Timeout publishing offline status", "topic", availTopic)
+	}
 
 	m.client.Disconnect(1000)
 	slog.Info("MQTT disconnected")
