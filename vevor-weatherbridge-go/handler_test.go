@@ -102,3 +102,33 @@ func TestParseTimestamp(t *testing.T) {
 		})
 	}
 }
+
+// FuzzParseTimestamp fuzzes the parseTimestamp function to find edge cases
+// in timestamp parsing from the weather station.
+func FuzzParseTimestamp(f *testing.F) {
+	// Seed corpus with known valid inputs from actual weather station
+	f.Add("2025-12-1 11:15:31")   // Non-zero-padded day (actual device format)
+	f.Add("2025-12-01 11:15:31")  // Zero-padded standard format
+	f.Add("2025-1-5 1:5:7")       // All components non-padded
+	f.Add("2025-11-28 18:58:7")   // Single-digit seconds
+	f.Add("2025-11-28 0:0:0")     // Midnight
+	f.Add("2025-12-31 23:59:59")  // End of year
+
+	f.Fuzz(func(t *testing.T, timestamp string) {
+		// Should not panic regardless of input
+		result, err := parseTimestamp(timestamp)
+
+		// If parsing succeeds, result should be valid (non-zero)
+		if err == nil && result.IsZero() {
+			t.Errorf("parseTimestamp(%q) returned zero time without error", timestamp)
+		}
+
+		// If parsing succeeds, we should be able to format it back
+		if err == nil {
+			formatted := result.Format("2006-01-02 15:04:05")
+			if formatted == "" {
+				t.Errorf("parseTimestamp(%q) succeeded but result cannot be formatted", timestamp)
+			}
+		}
+	})
+}

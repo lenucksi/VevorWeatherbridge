@@ -90,3 +90,56 @@ func TestDegreesToCardinalAllDirections(t *testing.T) {
 		}
 	}
 }
+
+// FuzzDegreesToCardinal fuzzes the degrees to cardinal direction conversion
+// to find edge cases with large numbers, negative values, and special floats.
+func FuzzDegreesToCardinal(f *testing.F) {
+	// Seed corpus with typical wind direction values
+	f.Add(0.0)   // North
+	f.Add(90.0)  // East
+	f.Add(180.0) // South
+	f.Add(270.0) // West
+	f.Add(45.0)  // Northeast
+	f.Add(22.5)  // North-northeast
+	f.Add(360.0) // Full circle
+	f.Add(-45.0) // Negative value
+
+	f.Fuzz(func(t *testing.T, degrees float64) {
+		// Should not panic regardless of input
+		result := DegreesToCardinal(degrees)
+
+		// NaN should return empty string
+		if math.IsNaN(degrees) && result != "" {
+			t.Errorf("DegreesToCardinal(NaN) = %q, expected empty string", result)
+		}
+
+		// Valid direction should be one of the 16 cardinal directions or empty (for NaN)
+		validDirections := map[string]bool{
+			"":    true, // Empty for NaN
+			"N":   true, "NNE": true, "NE": true, "ENE": true,
+			"E":   true, "ESE": true, "SE": true, "SSE": true,
+			"S":   true, "SSW": true, "SW": true, "WSW": true,
+			"W":   true, "WNW": true, "NW": true, "NNW": true,
+		}
+
+		if !validDirections[result] {
+			t.Errorf("DegreesToCardinal(%v) = %q, not a valid direction", degrees, result)
+		}
+
+		// For non-NaN, non-Inf values, verify normalization works
+		if !math.IsNaN(degrees) && !math.IsInf(degrees, 0) {
+			// Normalize degrees to 0-360 range manually
+			normalized := math.Mod(degrees, 360)
+			if normalized < 0 {
+				normalized += 360
+			}
+
+			// Result should be consistent with normalized value
+			resultFromNormalized := DegreesToCardinal(normalized)
+			if result != resultFromNormalized {
+				t.Errorf("DegreesToCardinal(%v) = %q, but normalized DegreesToCardinal(%v) = %q",
+					degrees, result, normalized, resultFromNormalized)
+			}
+		}
+	})
+}
