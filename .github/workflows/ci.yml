@@ -44,7 +44,17 @@ jobs:
 
       - name: Run Go tests
         working-directory: vevor-weatherbridge-go
-        run: go test -v ./...
+        run: go test -v -json ./... > test-report.out
+      
+      - name: Run Go coverage
+        working-directory: vevor-weatherbridge-go
+        run: go test -v -coverprofile=coverage.out ./...
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5.5.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
 
   # Summary job - require all checks to pass
   ci-summary:
