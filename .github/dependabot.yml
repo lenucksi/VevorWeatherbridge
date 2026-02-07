@@ -22,3 +22,18 @@ updates:
     directory: "/.devcontainer" # Location of package manifests
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /vevor-weatherbridge-go
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /vevor-weatherbridge-go
+    schedule:
+      interval: daily
