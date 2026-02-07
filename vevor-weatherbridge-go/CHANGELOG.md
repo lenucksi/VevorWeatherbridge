@@ -5,6 +5,13 @@ All notable changes to the VEVOR Weather Station Bridge (Go) will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-go-v0.1.5...vevor-weatherbridge-go-v0.1.6) (2026-02-07)
+
+
+### Features
+
+* add native Go fuzzing tests for input parsing and conversions ([20b4383](https://github.com/lenucksi/VevorWeatherbridge/commit/20b43835ccf7e0f94fdedfb48f180f87ede6766c))
+
 ## [0.1.5](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-go-v0.1.4...vevor-weatherbridge-go-v0.1.5) (2025-12-01)
 
 
