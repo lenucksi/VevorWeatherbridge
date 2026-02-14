@@ -54,7 +54,7 @@ jobs:
           check-latest: true #check for the latest Go version, default false
 
       - name: Run gosec security scan
-        uses: securego/gosec@424fc4cd9c82ea0fd6bee9cd49c2db2c3cc0c93f # v2.22.11
+        uses: securego/gosec@398ad549bbf1a51dc978fd966169f660c59774de # v2.23.0
         with:
           args: '-no-fail -fmt sarif -out results.sarif ./...'
       - name: Upload SARIF file
