@@ -26,9 +26,10 @@ import (
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
+// Version is the application version, injected at build time via -ldflags.
+var Version = "dev"
+
 const (
-	// Version is the application version for origin info.
-	Version = "0.1.0"
 	// SupportURL is the project URL for origin info.
 	SupportURL = "https://github.com/lenucksi/VevorWeatherbridge"
 )
