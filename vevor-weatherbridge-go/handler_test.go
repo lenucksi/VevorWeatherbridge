@@ -123,12 +123,12 @@ func TestParseTimestamp(t *testing.T) {
 // in timestamp parsing from the weather station.
 func FuzzParseTimestamp(f *testing.F) {
 	// Seed corpus with known valid inputs from actual weather station
-	f.Add("2025-12-1 11:15:31")   // Non-zero-padded day (actual device format)
-	f.Add("2025-12-01 11:15:31")  // Zero-padded standard format
-	f.Add("2025-1-5 1:5:7")       // All components non-padded
-	f.Add("2025-11-28 18:58:7")   // Single-digit seconds
-	f.Add("2025-11-28 0:0:0")     // Midnight
-	f.Add("2025-12-31 23:59:59")  // End of year
+	f.Add("2025-12-1 11:15:31")  // Non-zero-padded day (actual device format)
+	f.Add("2025-12-01 11:15:31") // Zero-padded standard format
+	f.Add("2025-1-5 1:5:7")      // All components non-padded
+	f.Add("2025-11-28 18:58:7")  // Single-digit seconds
+	f.Add("2025-11-28 0:0:0")    // Midnight
+	f.Add("2025-12-31 23:59:59") // End of year
 
 	f.Fuzz(func(t *testing.T, timestamp string) {
 		// Should not panic regardless of input

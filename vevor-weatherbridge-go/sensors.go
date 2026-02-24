@@ -26,6 +26,7 @@ type SensorDefinition struct {
 	ImperialUnit string  // Unit in imperial system
 	Icon         string  // Material Design Icon (mdi:xxx), empty if device_class provides one
 	Precision    int     // Suggested display precision (0 = not set)
+	StateClass   string  // Home Assistant state_class ("measurement", "total", "total_increasing")
 }
 
 // Helper to create a string pointer
@@ -42,6 +43,8 @@ var SensorDefinitions = []SensorDefinition{
 		DeviceClass:  strPtr("atmospheric_pressure"),
 		MetricUnit:   "hPa",
 		ImperialUnit: "inHg",
+		StateClass:   "measurement",
+		Precision:    1,
 	},
 	{
 		Name:         "Temperature",
@@ -50,6 +53,8 @@ var SensorDefinitions = []SensorDefinition{
 		DeviceClass:  strPtr("temperature"),
 		MetricUnit:   "°C",
 		ImperialUnit: "°F",
+		StateClass:   "measurement",
+		Precision:    1,
 	},
 	{
 		Name:         "Humidity",
@@ -58,6 +63,8 @@ var SensorDefinitions = []SensorDefinition{
 		DeviceClass:  strPtr("humidity"),
 		MetricUnit:   "%",
 		ImperialUnit: "%",
+		StateClass:   "measurement",
+		Precision:    0,
 	},
 	{
 		Name:         "Dew Point",
@@ -66,6 +73,8 @@ var SensorDefinitions = []SensorDefinition{
 		DeviceClass:  strPtr("temperature"),
 		MetricUnit:   "°C",
 		ImperialUnit: "°F",
+		StateClass:   "measurement",
+		Precision:    1,
 	},
 	{
 		Name:         "Rainfall",
@@ -74,6 +83,8 @@ var SensorDefinitions = []SensorDefinition{
 		DeviceClass:  strPtr("precipitation"),
 		MetricUnit:   "mm",
 		ImperialUnit: "in",
+		StateClass:   "measurement",
+		Precision:    1,
 	},
 	{
 		Name:         "Daily Rainfall",
@@ -82,6 +93,8 @@ var SensorDefinitions = []SensorDefinition{
 		DeviceClass:  strPtr("precipitation"),
 		MetricUnit:   "mm",
 		ImperialUnit: "in",
+		StateClass:   "total_increasing",
+		Precision:    1,
 	},
 	{
 		Name:         "Wind Direction",
@@ -91,6 +104,7 @@ var SensorDefinitions = []SensorDefinition{
 		MetricUnit:   "°",
 		ImperialUnit: "°",
 		Icon:         "mdi:compass-outline",
+		StateClass:   "measurement",
 		Precision:    0,
 	},
 	{
@@ -100,6 +114,8 @@ var SensorDefinitions = []SensorDefinition{
 		DeviceClass:  strPtr("wind_speed"),
 		MetricUnit:   "km/h",
 		ImperialUnit: "mph",
+		StateClass:   "measurement",
+		Precision:    1,
 	},
 	{
 		Name:         "Wind Gust Speed",
@@ -108,6 +124,8 @@ var SensorDefinitions = []SensorDefinition{
 		DeviceClass:  strPtr("wind_speed"),
 		MetricUnit:   "km/h",
 		ImperialUnit: "mph",
+		StateClass:   "measurement",
+		Precision:    1,
 	},
 	{
 		Name:         "UV Index",
@@ -116,6 +134,8 @@ var SensorDefinitions = []SensorDefinition{
 		DeviceClass:  nil,
 		MetricUnit:   "index",
 		ImperialUnit: "index",
+		StateClass:   "measurement",
+		Precision:    0,
 	},
 	{
 		Name:         "Solar Radiation",
@@ -124,6 +144,8 @@ var SensorDefinitions = []SensorDefinition{
 		DeviceClass:  strPtr("irradiance"),
 		MetricUnit:   "W/m²",
 		ImperialUnit: "W/m²",
+		StateClass:   "measurement",
+		Precision:    1,
 	},
 }
 
