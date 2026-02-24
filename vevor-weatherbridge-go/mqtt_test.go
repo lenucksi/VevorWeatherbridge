@@ -129,6 +129,87 @@ func TestDiscoveryPayloadOmitsEmptyFields(t *testing.T) {
 	}
 }
 
+func TestDiscoveryPayloadStateClass(t *testing.T) {
+	tests := []struct {
+		name       string
+		stateClass string
+		wantInJSON bool
+	}{
+		{"measurement sensor", "measurement", true},
+		{"total_increasing sensor", "total_increasing", true},
+		{"no state class", "", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			payload := DiscoveryPayload{
+				Name:              "Test Sensor",
+				StateTopic:        "homeassistant/sensor/test/state",
+				UniqueID:          "test_sensor",
+				UnitOfMeasurement: "°C",
+				AvailabilityTopic: "homeassistant/sensor/test/availability",
+				StateClass:        tt.stateClass,
+				Device:            DeviceInfo{Identifiers: []string{"test"}, Name: "Test"},
+			}
+
+			data, err := json.Marshal(payload)
+			if err != nil {
+				t.Fatalf("Failed to marshal payload: %v", err)
+			}
+
+			var result map[string]interface{}
+			if err := json.Unmarshal(data, &result); err != nil {
+				t.Fatalf("Failed to unmarshal result: %v", err)
+			}
+
+			got, present := result["state_class"]
+			if tt.wantInJSON && !present {
+				t.Errorf("state_class missing from JSON, want %q", tt.stateClass)
+			}
+			if !tt.wantInJSON && present {
+				t.Errorf("state_class should be omitted when empty, got %v", got)
+			}
+			if tt.wantInJSON && present && got != tt.stateClass {
+				t.Errorf("state_class = %v, want %q", got, tt.stateClass)
+			}
+		})
+	}
+}
+
+func TestAllSensorDefinitionsHaveStateClass(t *testing.T) {
+	validStateClasses := map[string]bool{
+		"measurement":      true,
+		"total":            true,
+		"total_increasing": true,
+	}
+
+	for _, sensor := range SensorDefinitions {
+		t.Run(sensor.ID, func(t *testing.T) {
+			if sensor.StateClass == "" {
+				t.Errorf("sensor %q has no state_class set — LTS will not work", sensor.ID)
+			} else if !validStateClasses[sensor.StateClass] {
+				t.Errorf("sensor %q has invalid state_class %q", sensor.ID, sensor.StateClass)
+			}
+		})
+	}
+}
+
+func TestDailyRainfallStateClass(t *testing.T) {
+	var dailyRainfall *SensorDefinition
+	for i := range SensorDefinitions {
+		if SensorDefinitions[i].ID == "daily_rainfall" {
+			dailyRainfall = &SensorDefinitions[i]
+			break
+		}
+	}
+	if dailyRainfall == nil {
+		t.Fatal("daily_rainfall sensor not found in SensorDefinitions")
+	}
+	if dailyRainfall.StateClass != "total_increasing" {
+		t.Errorf("daily_rainfall state_class = %q, want %q", dailyRainfall.StateClass, "total_increasing")
+	}
+}
+
 func TestMQTTClientTopics(t *testing.T) {
 	cfg := &Config{
 		MQTTPrefix: "homeassistant",

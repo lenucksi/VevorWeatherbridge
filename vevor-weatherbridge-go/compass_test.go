@@ -131,11 +131,11 @@ func FuzzDegreesToCardinal(f *testing.F) {
 
 		// Valid direction should be one of the 16 cardinal directions or empty (for NaN)
 		validDirections := map[string]bool{
-			"":    true, // Empty for NaN
-			"N":   true, "NNE": true, "NE": true, "ENE": true,
-			"E":   true, "ESE": true, "SE": true, "SSE": true,
-			"S":   true, "SSW": true, "SW": true, "WSW": true,
-			"W":   true, "WNW": true, "NW": true, "NNW": true,
+			"":  true, // Empty for NaN
+			"N": true, "NNE": true, "NE": true, "ENE": true,
+			"E": true, "ESE": true, "SE": true, "SSE": true,
+			"S": true, "SSW": true, "SW": true, "WSW": true,
+			"W": true, "WNW": true, "NW": true, "NNW": true,
 		}
 
 		if !validDirections[result] {

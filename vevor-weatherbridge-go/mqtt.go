@@ -195,6 +195,11 @@ func (m *MQTTClient) PublishSensorConfig(sensor *SensorDefinition) error {
 		payload.DeviceClass = *sensor.DeviceClass
 	}
 
+	// Set state class if defined
+	if sensor.StateClass != "" {
+		payload.StateClass = sensor.StateClass
+	}
+
 	// Set icon if defined (only for sensors without device_class)
 	if sensor.Icon != "" {
 		payload.Icon = sensor.Icon
