@@ -34,8 +34,9 @@ COPY *.go ./
 # Build the binary
 ARG TARGETARCH
 ARG TARGETVARIANT
+ARG VERSION=dev
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} GOARM=${TARGETVARIANT#v} \
-    go build -ldflags="-s -w" -o weatherbridge .
+    go build -ldflags="-s -w -X main.Version=${VERSION}" -o weatherbridge .
 
 # Stage 2: Runtime image using Home Assistant base
 # hadolint ignore=DL3006
