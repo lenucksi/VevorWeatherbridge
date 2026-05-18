@@ -34,7 +34,8 @@
         "docker"
       ],
       "enabled": true,
-      "automerge": false,
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
       "labels": [
         "dependencies",
         "docker"
@@ -45,7 +46,8 @@
       "matchManagers": [
         "github-actions"
       ],
-      "automerge": false,
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
       "labels": [
         "dependencies",
         "github-actions"
@@ -57,7 +59,8 @@
         "gomod"
       ],
       "enabled": true,
-      "automerge": false,
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
       "labels": [
         "dependencies",
         "go"
