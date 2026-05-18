@@ -1,0 +1,19 @@
+.github/renovate.json
+  s_8f46e03df89d6c::t_7660a5ed24e30a 82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "0765ccb6a805d25d376acd0fdb5b3fae92f2ef28",
+  "prompts": {},
+  "sessions": {
+    "s_8f46e03df89d6c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1c4f2f8a0ffem8sMFXWHNVJw2u",
+        "model": "big-pickle"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
