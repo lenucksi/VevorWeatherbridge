@@ -79,7 +79,7 @@
   "prConcurrentLimit": 5,
   "prCreation": "immediate",
   "prHourlyLimit": 0,
-  "platformAutomerge": false,
+  "platformAutomerge": true,
   "configMigration": true,
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Dependency Dashboard 🤖",
