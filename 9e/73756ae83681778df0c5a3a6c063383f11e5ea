@@ -1,0 +1,25 @@
+.github/workflows/security-supply-chain.yml
+  s_002e5ca712a28f::t_ed26c837882fe2 1-195
+.github/workflows/rebuild-nightly.yml
+  s_002e5ca712a28f::t_cfe7f665936278 1-147
+.github/workflows/build-addon.yml
+  s_002e5ca712a28f::t_f27657c468eb79 15,31,51,58-64,69-71,81,92,109
+.github/renovate.json
+  s_002e5ca712a28f::t_a17e83ea830f66 4,9,11-13,15-16,19,24-25,29,33,36,40,44,48-49,52-63,76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "9e73756ae83681778df0c5a3a6c063383f11e5ea",
+  "prompts": {},
+  "sessions": {
+    "s_002e5ca712a28f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1ba3c2162ffe41qK4o85kLDIV2",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
