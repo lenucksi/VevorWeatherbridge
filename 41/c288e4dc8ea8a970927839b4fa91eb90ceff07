@@ -1,0 +1,38 @@
+.github/workflows/ci.yml
+  s_002e5ca712a28f::t_1a77d82013b542 22
+  s_002e5ca712a28f::t_1ac761eb1acb83 85
+  s_002e5ca712a28f::t_4c5c9e79e362a3 100
+.github/workflows/rebuild-nightly.yml
+  s_002e5ca712a28f::t_3f4bae129b6791 32,39,83,90
+  s_002e5ca712a28f::t_dd8771ce8ba214 47
+  s_002e5ca712a28f::t_cd9114b7b60f4e 119
+.github/workflows/security-supply-chain.yml
+  s_002e5ca712a28f::t_fdf8423ab84399 68,75
+  s_002e5ca712a28f::t_a4db065f15ad2d 84
+  s_002e5ca712a28f::t_f5a1541044b91f 92,131
+  s_002e5ca712a28f::t_ef6f82a4146f6a 107
+  s_002e5ca712a28f::t_ddfe0f10c6efac 101,116
+  s_002e5ca712a28f::t_e12d3867da5e35 39,46
+  s_002e5ca712a28f::t_8f8da2010bff2b 53
+.github/workflows/build-addon.yml
+  s_002e5ca712a28f::t_5b26d5ffd6435c 52,59
+  s_002e5ca712a28f::t_62dceec580e7a2 104
+.github/workflows/release-please.yml
+  s_002e5ca712a28f::t_82d82630c41b8d 30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "41c288e4dc8ea8a970927839b4fa91eb90ceff07",
+  "prompts": {},
+  "sessions": {
+    "s_002e5ca712a28f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1ba3c2162ffe41qK4o85kLDIV2",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
