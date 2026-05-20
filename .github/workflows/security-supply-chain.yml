@@ -44,13 +44,13 @@ jobs:
 
       - name: Log in to Quay.io
         env:
-          QUAY_USER: ${{ vars.QUAY_USERNAME }}
+          QUAY_USER: ${{ secrets.QUAY_USERNAME }}
           QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
         if: env.QUAY_USER != '' && env.QUAY_PASS != ''
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: ${{ env.QUAY_REGISTRY }}
-          username: ${{ vars.QUAY_USERNAME }}
+          username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Build image
@@ -164,16 +164,16 @@ jobs:
 
       - name: Push image to Quay.io
         env:
-          QUAY_USER: ${{ vars.QUAY_USERNAME }}
+          QUAY_USER: ${{ secrets.QUAY_USERNAME }}
           QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
         if: env.QUAY_USER != '' && env.QUAY_PASS != ''
         run: |
           docker tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           docker tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-          docker push ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          docker push ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
 
       # ── ORAS: Attach SBOM to image ──
 
@@ -190,11 +190,11 @@ jobs:
 
       - name: Attach Syft SBOM to image (Quay)
         env:
-          QUAY_USER: ${{ vars.QUAY_USERNAME }}
+          QUAY_USER: ${{ secrets.QUAY_USERNAME }}
           QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
         if: env.QUAY_USER != '' && env.QUAY_PASS != ''
         run: |
-          oras attach ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+          oras attach ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
             --artifact-type application/vnd.cyclonedx+json \
             sbom-syft.cdx.json:application/vnd.cyclonedx+json || true
 

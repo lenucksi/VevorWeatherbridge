@@ -57,13 +57,13 @@ jobs:
 
       - name: Log in to Quay.io
         env:
-          QUAY_USER: ${{ vars.QUAY_USERNAME }}
+          QUAY_USER: ${{ secrets.QUAY_USERNAME }}
           QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
         if: env.QUAY_USER != '' && env.QUAY_PASS != ''
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: ${{ env.QUAY_REGISTRY }}
-          username: ${{ vars.QUAY_USERNAME }}
+          username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Extract metadata
@@ -72,7 +72,7 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/vevor-weatherbridge-go-${{ matrix.arch }}
-            ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/vevor-weatherbridge-go-${{ matrix.arch }}
+            ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/vevor-weatherbridge-go-${{ matrix.arch }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
