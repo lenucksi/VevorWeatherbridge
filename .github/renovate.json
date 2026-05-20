@@ -1,85 +1,69 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
+    "config:best-practices",
     "docker:pinDigests",
     "helpers:pinGitHubActionDigests",
     ":dependencyDashboard",
     ":semanticCommits",
-    ":preserveSemverRanges"
+    "default:automergeDigest"
   ],
-  "labels": [
-    "dependencies"
-  ],
-  "assignees": [
-    "@lenucksi"
-  ],
-  "schedule": [
-    "0 4 * * *"
-  ],
+  "labels": ["dependencies"],
+  "assignees": ["@lenucksi"],
+  "schedule": ["0 4 * * *"],
   "timezone": "Europe/Berlin",
+  "minimumReleaseAge": "3 days",
+  "platformAutomerge": true,
   "packageRules": [
     {
-      "matchCategories": [
-        "docker"
-      ],
+      "matchCategories": ["docker"],
       "enabled": true
     },
     {
       "description": "Docker base images",
-      "matchManagers": [
-        "dockerfile"
-      ],
-      "matchDatasources": [
-        "docker"
-      ],
+      "matchManagers": ["dockerfile"],
+      "matchDatasources": ["docker"],
       "enabled": true,
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true,
-      "labels": [
-        "dependencies",
-        "docker"
-      ]
+      "labels": ["dependencies", "docker"]
     },
     {
       "description": "GitHub Actions",
-      "matchManagers": [
-        "github-actions"
-      ],
+      "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true,
-      "labels": [
-        "dependencies",
-        "github-actions"
-      ]
+      "labels": ["dependencies", "github-actions"]
     },
     {
       "description": "Go modules",
-      "matchManagers": [
-        "gomod"
-      ],
+      "matchManagers": ["gomod"],
       "enabled": true,
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true,
-      "labels": [
-        "dependencies",
-        "go"
-      ]
+      "labels": ["dependencies", "go"]
     }
   ],
   "vulnerabilityAlerts": {
-    "labels": [
-      "security"
-    ],
-    "assignees": [
-      "@lenucksi"
-    ],
+    "labels": ["security"],
+    "assignees": ["@lenucksi"],
     "automerge": false
   },
+  "customManagers": [
+    {
+      "description": "Update HA base images from workflow YAML build-args",
+      "customType": "regex",
+      "fileMatch": ["\\.github/workflows/build-addon\\.yml$"],
+      "matchStrings": [
+        "echo \"image=(?<depName>ghcr\\.io/home-assistant/[a-z0-9-]+-base):(?<currentValue>\\d+\\.\\d+)\""
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    }
+  ],
   "prConcurrentLimit": 5,
   "prCreation": "immediate",
   "prHourlyLimit": 0,
-  "platformAutomerge": true,
   "configMigration": true,
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Dependency Dashboard 🤖",
@@ -89,5 +73,5 @@
   "commitMessageAction": "update",
   "commitMessageTopic": "{{depName}}",
   "commitMessageExtra": "to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
-  "commitBody": "This PR contains the following updates:\n\n| Package | Update | Change |\n|---|---|---|\n{{#each upgrades as |upgrade|}}\n| {{upgrade.depName}} | {{upgrade.updateType}} | `{{upgrade.currentValue}}` -> `{{upgrade.newValue}}` |\n{{/each}}\n\n---\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>"
+  "commitBody": "This PR contains the following updates:\n\n| Package | Update | Change |\n|---|---|---|\n{{#each upgrades as |upgrade|}}\n| {{upgrade.depName}} | {{upgrade.updateType}} | `{{upgrade.currentValue}}` -> `{{upgrade.newValue}}` |\n{{/each}}"
 }
