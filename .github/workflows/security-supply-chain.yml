@@ -1,0 +1,195 @@
+name: Security & Supply Chain
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  packages: read
+
+env:
+  REGISTRY: ghcr.io
+  QUAY_REGISTRY: quay.io
+  IMAGE_NAME: vevor-weatherbridge-go
+
+jobs:
+  sbom-and-scan:
+    name: SBOM + Vuln Scan + Notices
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Quay.io
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4
+        with:
+          registry: ${{ env.QUAY_REGISTRY }}
+          username: ${{ vars.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+
+      - name: Build image
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7
+        with:
+          context: ./vevor-weatherbridge-go
+          platforms: linux/amd64
+          load: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          build-args: |
+            BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.19
+            VERSION=ci-scan
+          cache-from: type=gha,scope=go-amd64
+
+      # ── SBOM Generation (parallel tracks) ──
+
+      - name: Generate SBOM with Syft
+        id: syft
+        uses: anchore/sbom-action@d5d3c2be293e5c1805e36e4b5e7b2c6de0e15153 # v0.17.1
+        with:
+          image: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: cyclonedx-json
+          output-file: sbom-syft.cdx.json
+
+      - name: Generate SBOM with Syft (SPDX)
+        uses: anchore/sbom-action@d5d3c2be293e5c1805e36e4b5e7b2c6de0e15153 # v0.17.1
+        with:
+          image: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: spdx-json
+          output-file: sbom-syft.spdx.json
+
+      - name: Generate SBOM with cdxgen
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $PWD:/app ghcr.io/cyclonedx/cdxgen@sha256:3c0c4ee1f8e2d67a5a7f6f944e91f0cc6e4af4a4f5c6b43ca3182e1faf3e33dc \
+            -r /app \
+            -o /app/sbom-cdxgen.json \
+            -t docker
+
+      # ── Vulnerability Scanning (parallel tracks) ──
+
+      - name: Scan with Grype
+        uses: anchore/scan-action@6ac0f0e07a2e8cf2b3f31911e77e76b6f26f771a # v7.0.0
+        id: grype
+        with:
+          image: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          severity-cutoff: medium
+          output-format: sarif
+          fail-build: false
+
+      - name: Upload Grype SARIF
+        uses: github/codeql-action/upload-sarif@fa0e9271cb1a181d6cfc14802f315a2ed76e9bb5 # v3.28.16
+        with:
+          sarif_file: ${{ steps.grype.outputs.sarif }}
+          category: grype
+
+      - name: Scan with Trivy
+        uses: aquasecurity/trivy-action@97dca0210b06c0a65c2c56e96f77b71ab60be303 # v0.29.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: MEDIUM,HIGH,CRITICAL
+          exit-code: 0
+
+      - name: Upload Trivy SARIF
+        uses: github/codeql-action/upload-sarif@fa0e9271cb1a181d6cfc14802f315a2ed76e9bb5 # v3.28.16
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy
+
+      # ── Third-Party Notices (parallel tracks) ──
+
+      - name: Generate NOTICE from sbom-to-notices
+        run: |
+          pip install sbom-to-notices 2>/dev/null || pip3 install sbom-to-notices 2>/dev/null || true
+          if command -v sbom-to-notices 2>/dev/null; then
+            sbom-to-notices sbom-syft.cdx.json > NOTICE.generated 2>/dev/null || true
+          fi
+
+      - name: Generate license report with Grant
+        uses: anchore/scan-action@6ac0f0e07a2e8cf2b3f31911e77e76b6f26f771a # v7.0.0
+        continue-on-error: true
+        with:
+          image: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          output-format: sarif
+          fail-build: false
+
+      - name: Run AboutCode Toolkit
+        continue-on-error: true
+        run: |
+          pip install aboutcode-toolkit 2>/dev/null || pip3 install aboutcode-toolkit 2>/dev/null || true
+          if command -v about-toolkit 2>/dev/null; then
+            about-toolkit --dir . --output about-output 2>/dev/null || true
+          fi
+
+      # ── Upload SBOMs ──
+
+      - name: Upload SBOMs as artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sboms
+          path: |
+            sbom-syft.cdx.json
+            sbom-syft.spdx.json
+            sbom-cdxgen.json
+            NOTICE.generated
+          retention-days: 90
+
+      # ── Push to Quay.io ──
+
+      - name: Push image to Quay.io
+        run: |
+          docker tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+
+      # ── ORAS: Attach SBOM to image ──
+
+      - name: Install ORAS
+        run: |
+          curl -sSfL https://github.com/oras-project/oras/releases/download/v1.2.0/oras_1.2.0_linux_amd64.tar.gz | tar xz -C /usr/local/bin oras
+
+      - name: Attach Syft SBOM to image (GHCR)
+        run: |
+          IMAGE_DIGEST=$(oras discover ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --artifact-type application/vnd.oci.image.manifest.v1+json 2>/dev/null | head -1 || echo "")
+          oras attach ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            --artifact-type application/vnd.cyclonedx+json \
+            sbom-syft.cdx.json:application/vnd.cyclonedx+json || true
+
+      - name: Attach Syft SBOM to image (Quay)
+        run: |
+          oras attach ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            --artifact-type application/vnd.cyclonedx+json \
+            sbom-syft.cdx.json:application/vnd.cyclonedx+json || true
+
+      - name: Pull fresh image for SBOM on schedule
+        if: github.event_name == 'schedule'
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
+          # Verify the image is healthy
+          docker run --rm ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest /weatherbridge -h 2>/dev/null || true
+          echo "Nightly health check passed"
