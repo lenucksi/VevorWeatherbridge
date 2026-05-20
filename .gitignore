@@ -9,6 +9,7 @@
 go.work
 go.work.sum
 vendor/
+vevor-weatherbridge-go/vevor-weatherbridge-go
 
 # IDEs
 .vscode/
@@ -33,3 +34,6 @@ dev-docs/
 
 # rumdl
 .rumdl_cache
+
+# Local backups / temp
+tmp/

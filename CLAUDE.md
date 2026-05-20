@@ -5,6 +5,8 @@
 This is a Home Assistant add-on that intercepts VEVOR weather station data and forwards it to Home Assistant via MQTT.
 The add-on runs as a containerized service within Home Assistant OS, with automatic MQTT broker detection and sensor auto-discovery.
 
+Project management via Backlog.md CLI (`backlog`). See `backlog board` for kanban, `backlog search` for tasks/docs/decisions.
+
 External setup required by the user:
 
 - DNS redirect from Weather Underground domains (rtupdate.wunderground.com) to Home Assistant IP
