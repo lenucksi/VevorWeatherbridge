@@ -1,0 +1,105 @@
+"backlog/tasks/task-2 - Add-icon.png-for-HA-add-on-store.md"
+  s_002e5ca712a28f::t_dfabda97852efd 1-21
+"backlog/tasks/task-12 - Implement-native-Go-fuzz-tests.md"
+  s_002e5ca712a28f::t_ae5d156ac3adf9 1-20
+"backlog/decisions/decision-3 - License-CC0-root-GPL-3.0-or-later-Go-EPL-2.0-EDL-1.0-paho.md"
+  s_002e5ca712a28f::t_7ca376b82cd4d1 1-8,10-12,14-15,18
+  s_002e5ca712a28f::t_4c1a50ef22df4b 9,13,16-17
+"backlog/tasks/task-9 - Migrate-from-PythonGo-to-Go-only.md"
+  s_002e5ca712a28f::t_1264c7edfd247b 1-22
+"backlog/tasks/task-15 - Fix-Go-warnings-with-golangci-lint.md"
+  s_002e5ca712a28f::t_270039f1bc7436 1-18
+"backlog/tasks/task-11 - Re-add-AppArmor-profile-with-Supervisor-API-support.md"
+  s_002e5ca712a28f::t_230bc0abaec608 1-21
+"backlog/decisions/decision-6 - VS-Code-extensions-recommendations-only-via-extensions.json.md"
+  s_002e5ca712a28f::t_aa33c8171d7c56 9,13,16-17
+  s_002e5ca712a28f::t_7ca376b82cd4d1 1-8,10-12,14-15,18
+backlog/config.yml
+  s_002e5ca712a28f::t_2727b1611b01af 1-15
+Backlog.md
+  s_002e5ca712a28f::t_617494b38f6fc1 1,3-20
+  s_002e5ca712a28f::t_96556dc1431ddb 2
+"backlog/decisions/decision-7 - pyproject.toml-kept-at-root.md"
+  s_002e5ca712a28f::t_15c8c6eb4fbd23 9,13,16-17
+  s_002e5ca712a28f::t_7ca376b82cd4d1 1-8,10-12,14-15,18
+"backlog/docs/guides/doc-2 - Release-Automation.md"
+  s_002e5ca712a28f::t_1cbe69f16f4700 6,8,10-25
+  s_002e5ca712a28f::t_bde7fafc15efee 1-5,7,9
+"backlog/docs/guides/doc-1 - Testing-Guide.md"
+  s_002e5ca712a28f::t_bde7fafc15efee 1-5,7,9
+  s_002e5ca712a28f::t_1cbe69f16f4700 6,8,10-22
+"backlog/docs/ci/doc-5 - GitHub-Actions-Workflows.md"
+  s_002e5ca712a28f::t_3d0c2691cabff6 1-5,7,9
+  s_002e5ca712a28f::t_1cbe69f16f4700 6,8,10-18
+"backlog/docs/guides/doc-3 - Dependency-Management.md"
+  s_002e5ca712a28f::t_1cbe69f16f4700 6,8,10-25
+  s_002e5ca712a28f::t_bde7fafc15efee 1-5,7,9
+"backlog/decisions/decision-10 - FFmpeg-licensing-NOT-applicable.md"
+  s_002e5ca712a28f::t_a542fbfd220285 9,13,16-17
+  s_002e5ca712a28f::t_7ca376b82cd4d1 1-8,10-12,14-15,18
+"backlog/tasks/task-19 - Add-SPDX-license-headers-to-Go-source-files.md"
+  s_002e5ca712a28f::t_4d39613b19ea62 1-20
+"backlog/tasks/task-8 - Archive-dev-docs-prompts-or-remove-them.md"
+  s_002e5ca712a28f::t_33ef5447a607ab 1-19
+"backlog/tasks/task-7 - Remove-unused-Python-CI-references-from-harness.md"
+  s_002e5ca712a28f::t_915129745c3e86 1-19
+"backlog/decisions/decision-9 - Release-please-over-manual-releases.md"
+  s_002e5ca712a28f::t_05dc7e5059cb67 9,13,16-17
+  s_002e5ca712a28f::t_7ca376b82cd4d1 1-8,10-12,14-15,18
+"backlog/decisions/decision-8 - pre-commit-action-not-needed-as-GitHub-Action.md"
+  s_002e5ca712a28f::t_0047a870ebc122 9,13,16-17
+  s_002e5ca712a28f::t_7ca376b82cd4d1 1-8,10-12,14-15,18
+"backlog/docs/security/doc-4 - AppArmor-Profile-Reference.md"
+  s_002e5ca712a28f::t_1cbe69f16f4700 6,8,10-24
+  s_002e5ca712a28f::t_3d0c2691cabff6 1-5,7,9
+"backlog/tasks/task-16 - Add-Go-tests-to-CI-workflow.md"
+  s_002e5ca712a28f::t_68b5963387b166 1-18
+"backlog/tasks/task-22 - Reorganize-dev-docs-into-structured-subdirectories.md"
+  s_002e5ca712a28f::t_1aa7ddf83e424b 1-20
+"backlog/tasks/task-13 - Add-state_class-to-all-MQTT-Discovery-sensors.md"
+  s_002e5ca712a28f::t_1f77b49729b136 1-19
+.gitignore
+  s_002e5ca712a28f::t_f21b0e770bfde6 12
+"backlog/tasks/task-18 - Remediate-CodeQL-security-findings.md"
+  s_002e5ca712a28f::t_a17493b4a7f1d1 1-20
+"backlog/decisions/decision-1 - Go-over-Rust-for-migration.md"
+  s_002e5ca712a28f::t_7ca376b82cd4d1 1-8,10-12,14-15,18
+  s_002e5ca712a28f::t_ac1e3fe49e9d2c 9,13,16-17
+"backlog/tasks/task-6 - Migrate-architecture-docs-from-.claude-into-dev-docs.md"
+  s_002e5ca712a28f::t_6dd16274be18d9 1-20
+"backlog/tasks/task-20 - Convert-standalone-Docker-container-to-HA-Add-on.md"
+  s_002e5ca712a28f::t_a5d73cdaaa2691 1-20
+"backlog/decisions/decision-2 - Add-on-approach-over-native-HA-integration.md"
+  s_002e5ca712a28f::t_fe3f9be59daa06 9,13,16-17
+  s_002e5ca712a28f::t_7ca376b82cd4d1 1-8,10-12,14-15,18
+"backlog/decisions/decision-5 - Release-notes-keep-custom-changelog-over-auto-contributors.md"
+  s_002e5ca712a28f::t_9c52f23d27046a 9,13,16-17
+  s_002e5ca712a28f::t_7ca376b82cd4d1 1-8,10-12,14-15,18
+"backlog/decisions/decision-4 - Docker-base-image-unpinned-tag-accepted-risk.md"
+  s_002e5ca712a28f::t_7ca376b82cd4d1 1-8,10-12,14-15,18
+  s_002e5ca712a28f::t_ee1e76d45db011 9,13,16-17
+CLAUDE.md
+  s_002e5ca712a28f::t_607596b779406a 8-9
+"backlog/tasks/task-4 - Add-SPDX-header-verification-to-CI.md"
+  s_002e5ca712a28f::t_41101a347aff2f 1-21
+"backlog/tasks/task-17 - Clean-up-RELEASE_NOTES-files-from-.github.md"
+  s_002e5ca712a28f::t_4cca693fa3786a 1-18
+"backlog/tasks/task-5 - Revisit-Dockerfile-base-image-pinning.md"
+  s_002e5ca712a28f::t_7cecd43812ed4d 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "36a3962d36932bd3f9f965f3724dd6c28107c03a",
+  "prompts": {},
+  "sessions": {
+    "s_002e5ca712a28f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1ba3c2162ffe41qK4o85kLDIV2",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
