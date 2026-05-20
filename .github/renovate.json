@@ -15,7 +15,7 @@
     "@lenucksi"
   ],
   "schedule": [
-    "every weekend"
+    "after 10pm and before 6am every day"
   ],
   "timezone": "Europe/Berlin",
   "packageRules": [
@@ -84,7 +84,7 @@
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Dependency Dashboard 🤖",
   "dependencyDashboardHeader": "This dashboard tracks pending dependency updates and provides an overview of the repository's dependency status.",
-  "dependencyDashboardFooter": "Managed by Renovate Bot. Updates are checked every weekend.",
+  "dependencyDashboardFooter": "Managed by Renovate Bot. Updates are checked nightly (after 10pm CET).",
   "commitMessagePrefix": "chore(deps):",
   "commitMessageAction": "update",
   "commitMessageTopic": "{{depName}}",
