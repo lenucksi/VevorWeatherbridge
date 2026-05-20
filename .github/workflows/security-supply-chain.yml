@@ -43,6 +43,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to Quay.io
+        if: vars.QUAY_USERNAME != '' && secrets.QUAY_TOKEN != ''
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4
         with:
           registry: ${{ env.QUAY_REGISTRY }}
@@ -159,6 +160,7 @@ jobs:
       # ── Push to Quay.io ──
 
       - name: Push image to Quay.io
+        if: vars.QUAY_USERNAME != '' && secrets.QUAY_TOKEN != ''
         run: |
           docker tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
             ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
@@ -181,6 +183,7 @@ jobs:
             sbom-syft.cdx.json:application/vnd.cyclonedx+json || true
 
       - name: Attach Syft SBOM to image (Quay)
+        if: vars.QUAY_USERNAME != '' && secrets.QUAY_TOKEN != ''
         run: |
           oras attach ${{ env.QUAY_REGISTRY }}/${{ vars.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
             --artifact-type application/vnd.cyclonedx+json \
