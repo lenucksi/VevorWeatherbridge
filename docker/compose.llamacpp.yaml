@@ -52,7 +52,7 @@ services:
   # ── Agentmemory ──
   agentmemory:
     build:
-      context: .
+      context: ..
       dockerfile: docker/Dockerfile.agentmemory
     container_name: agentmemory
     depends_on:
