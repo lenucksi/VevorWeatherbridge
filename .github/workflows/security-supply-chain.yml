@@ -207,8 +207,7 @@ jobs:
 
       # ── Clair Vulnerability Report ──
 
-      - name: Get manifest digest and fetch Quay security report
-        id: quay_sec
+      - name: Fetch Quay security report (after push)
         continue-on-error: true
         env:
           QUAY_USER: ${{ secrets.QUAY_USERNAME }}
@@ -216,15 +215,6 @@ jobs:
         run: |
           MANIFEST_DIGEST=$(docker image inspect ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --format '{{(index .RepoDigests 0)}}' 2>/dev/null | sed 's/.*@//')
           echo "Manifest digest: $MANIFEST_DIGEST"
-          echo "digest=$MANIFEST_DIGEST" >> $GITHUB_OUTPUT
           python3 vevor-weatherbridge-go/scripts/clair-report.py \
-            ${{ github.repository_owner }}/${{ env.IMAGE_NAME }} $MANIFEST_DIGEST 2>&1 | tee quay-sec-report.txt
-
-      - name: Upload Quay security report
-        if: steps.quay_sec.outputs.digest != ''
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        continue-on-error: true
-        with:
-          name: quay-sec-report-${{ github.sha }}
-          path: quay-sec-report.txt
-          retention-days: 90
+            ${{ github.repository_owner }}/${{ env.IMAGE_NAME }} $MANIFEST_DIGEST 2>&1 > quay-sec-report.txt || \
+            echo "Quay report not available (403 — robot token lacks API scope)" > quay-sec-report.txt
