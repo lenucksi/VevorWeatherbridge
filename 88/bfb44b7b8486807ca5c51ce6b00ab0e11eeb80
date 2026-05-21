@@ -1,0 +1,19 @@
+docker/Dockerfile.agentmemory
+  s_f8ed16448e6b19::t_223909cdb632d5 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "88bfb44b7b8486807ca5c51ce6b00ab0e11eeb80",
+  "prompts": {},
+  "sessions": {
+    "s_f8ed16448e6b19": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b4787bdaffebETmN1xRWugQSs",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
