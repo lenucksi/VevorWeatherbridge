@@ -1,0 +1,29 @@
+docker/compose.llamacpp.yaml
+  s_f8ed16448e6b19::t_14edb6c625dd19 1-95
+docker/.gitignore
+  s_f8ed16448e6b19::t_ac4f287fc94feb 1
+docker/config/llama-swap.yaml
+  s_f8ed16448e6b19::t_428b1b9049cd72 1-8
+docker/compose.ollama.yaml
+  s_f8ed16448e6b19::t_7fab35ae4e46fe 1-51
+opencode.json
+  s_f8ed16448e6b19::t_b1df26d36f2b32 1-12
+docker/scripts/setup.sh
+  s_f8ed16448e6b19::t_ff1b87b0156ded 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "97b3944ff8f9d6a06d842d08ba0eae1eae035498",
+  "prompts": {},
+  "sessions": {
+    "s_f8ed16448e6b19": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b4787bdaffebETmN1xRWugQSs",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
