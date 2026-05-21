@@ -1,0 +1,20 @@
+docker/compose.llamacpp.yaml
+  s_f8ed16448e6b19::t_15d83c178c7968 8-13
+  s_f8ed16448e6b19::t_c0835fe7a8737e 31-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "84853925827f6b972827136b6b0a8872a39f90e8",
+  "prompts": {},
+  "sessions": {
+    "s_f8ed16448e6b19": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b4787bdaffebETmN1xRWugQSs",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
