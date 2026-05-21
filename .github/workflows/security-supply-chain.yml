@@ -202,6 +202,28 @@ jobs:
         if: github.event_name == 'schedule'
         run: |
           docker pull ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
-          # Verify the image is healthy
           docker run --rm ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest /weatherbridge -h 2>/dev/null || true
           echo "Nightly health check passed"
+
+      # ── Clair Vulnerability Report ──
+
+      - name: Get config digest and fetch Clair report
+        id: clair
+        continue-on-error: true
+        run: |
+          DIGEST=$(docker image inspect ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --format '{{.Id}}')
+          echo "Config digest: $DIGEST"
+          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
+          curl -sL "https://quay.io/matcher/api/v1/vulnerability_report/${DIGEST}" \
+            -H "Accept: application/vnd.clair.vulnerability_report.v1+json" \
+            -o clair-report.json -w "Clair HTTP %{http_code}\n" || true
+          python3 vevor-weatherbridge-go/scripts/clair-report.py clair-report.json
+
+      - name: Upload Clair report
+        if: steps.clair.outputs.digest != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        continue-on-error: true
+        with:
+          name: clair-report-${{ github.sha }}
+          path: clair-report.json
+          retention-days: 90
