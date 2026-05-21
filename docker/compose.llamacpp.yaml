@@ -1,7 +1,7 @@
 services:
   # ── Chat/Completion ──
   llamacpp-chat:
-    image: ghcr.io/ggml-org/llama.cpp:server
+    image: ghcr.io/ggml-org/llama.cpp:server-vulkan
     container_name: llamacpp-chat
     expose:
       - "8081"
@@ -12,12 +12,13 @@ services:
       - /dev/kfd:/dev/kfd
     command: >
       --hf-repo Qwen/Qwen3-8B-GGUF:Q4_K_M
-      --host 0.0.0.0 --port 8081 -c 8192 -ngl 99 -fa --no-webui
+      --host 0.0.0.0 --port 8081 -c 8192 -ngl 99
+      --flash-attn on
     restart: unless-stopped
 
   # ── Embeddings ──
   llamacpp-embed:
-    image: ghcr.io/ggml-org/llama.cpp:server
+    image: ghcr.io/ggml-org/llama.cpp:server-vulkan
     container_name: llamacpp-embed
     expose:
       - "8082"
@@ -26,8 +27,8 @@ services:
     command: >
       --hf-repo nomic-ai/nomic-embed-text-v2-moe-GGUF
       --hf-file nomic-embed-text-v2-moe.Q4_K_M.gguf
-      --embedding --pooling-type mean
-      --host 0.0.0.0 --port 8082 -c 8192 --no-webui
+      --embedding --pooling mean
+      --host 0.0.0.0 --port 8082 -c 8192
     restart: unless-stopped
 
   # ── Reverse Proxy (router) ──
@@ -37,7 +38,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./docker/config/llama-swap.yaml:/app/config.yaml:ro
+      - ./config/llama-swap.yaml:/app/config.yaml:ro
       - /mnt/llama-docker/llama-swap:/data
     command: -config /app/config.yaml -watch-config
     restart: unless-stopped
