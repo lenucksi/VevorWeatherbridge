@@ -1,0 +1,25 @@
+vevor-weatherbridge-go/Dockerfile
+  s_002e5ca712a28f::t_5d24115c14ec1c 18
+.github/workflows/build-addon.yml
+  s_002e5ca712a28f::t_e5c34c4afe9bc1 100-104
+.github/workflows/security-supply-chain.yml
+  s_002e5ca712a28f::t_e3b252c80fbf3c 64
+.github/workflows/rebuild-nightly.yml
+  s_002e5ca712a28f::t_e755f6a1aad0e5 53,119-123
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "1774a1c693f853269f31fe9d4cb5e3532990a39c",
+  "prompts": {},
+  "sessions": {
+    "s_002e5ca712a28f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1ba3c2162ffe41qK4o85kLDIV2",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
