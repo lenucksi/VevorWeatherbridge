@@ -61,7 +61,7 @@ jobs:
           load: true
           tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           build-args: |
-            BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.19
+            BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.21
             VERSION=ci-scan
           cache-from: type=gha,scope=go-amd64
 
