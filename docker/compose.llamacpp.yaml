@@ -35,9 +35,6 @@ services:
   llama-swap:
     image: ghcr.io/mostlygeek/llama-swap:cpu
     container_name: llama-swap
-    devices:
-      - /dev/dri:/dev/dri
-      - /dev/kfd:/dev/kfd
     ports:
       - "8080:8080"
     volumes:
