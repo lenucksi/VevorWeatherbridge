@@ -33,7 +33,7 @@ services:
 
   # ── Reverse Proxy (router) ──
   llama-swap:
-    image: ghcr.io/mostlygeek/llama-swap:rocm
+    image: ghcr.io/mostlygeek/llama-swap:cpu
     container_name: llama-swap
     devices:
       - /dev/dri:/dev/dri
@@ -41,14 +41,14 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./docker/config/llama-swap.yaml:/app/config.yaml:ro
+      - ./config/llama-swap.yaml:/app/config.yaml:ro
       - /mnt/llama-docker/llama-swap:/data
     command: -config /app/config.yaml -watch-config
     restart: unless-stopped
 
   # ── Agentmemory ──
   agentmemory:
-    image: node:22-alpine
+    image: node:current-alpine
     container_name: agentmemory
     depends_on:
       - llama-swap
@@ -67,7 +67,13 @@ services:
       - CONSOLIDATION_ENABLED=true
       - GRAPH_EXTRACTION_ENABLED=true
     working_dir: /data
-    command: sh -c "npx @agentmemory/agentmemory"
+    command: >
+      sh -c "
+      apk add --no-cache curl >/dev/null 2>&1 &&
+      curl -fsSL 'https://github.com/iii-hq/iii/releases/download/iii/v0.11.2/iii-x86_64-unknown-linux-gnu.tar.gz'
+        | tar -xz -C /usr/local/bin &&
+      npx @agentmemory/agentmemory
+      "
     restart: unless-stopped
 
   # ── Optional: llama.cpp Studio (GUI model manager) ──
