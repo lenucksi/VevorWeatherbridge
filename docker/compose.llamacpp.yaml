@@ -6,7 +6,7 @@ services:
     expose:
       - "8081"
     volumes:
-      - /mnt/llama-docker/models:/models
+      - /mnt/llama-docker/hf-cache:/root/.cache/huggingface
     devices:
       - /dev/dri:/dev/dri
       - /dev/kfd:/dev/kfd
@@ -23,7 +23,7 @@ services:
     expose:
       - "8082"
     volumes:
-      - /mnt/llama-docker/models:/models
+      - /mnt/llama-docker/hf-cache:/root/.cache/huggingface
     devices:
       - /dev/dri:/dev/dri
       - /dev/kfd:/dev/kfd

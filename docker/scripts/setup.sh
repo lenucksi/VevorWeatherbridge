@@ -4,7 +4,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 echo "=== Creating data directories ==="
-mkdir -p /mnt/llama-docker/{models,agentmemory,llama-swap,llamacpp-cache}
+mkdir -p /mnt/llama-docker/{hf-cache,agentmemory,llama-swap,llamacpp-cache}
 
 echo "=== Starting llama.cpp stack ==="
 docker compose -f compose.llamacpp.yaml up -d
