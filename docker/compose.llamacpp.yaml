@@ -55,10 +55,13 @@ services:
     volumes:
       - ./config/llama-swap.yaml:/app/config.yaml:ro
       - /mnt/llama-docker/llama-swap:/data
-    devices:
-      - /dev/dri:/dev/dri
-      - /dev/kfd:/dev/kfd
     command: -config /app/config.yaml -watch-config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
     restart: unless-stopped
 
   # ── Agentmemory ──
