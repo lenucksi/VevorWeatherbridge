@@ -1,0 +1,20 @@
+docker/config/llama-swap.yaml
+  s_f8ed16448e6b19::t_be02d7f3c73b9b 3,9
+  s_f8ed16448e6b19::t_e51de3ca51ee50 1-2,4-6,8,10-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "599ccd40df14e5b5ca5bfa9416e2d2d2ec9c451a",
+  "prompts": {},
+  "sessions": {
+    "s_f8ed16448e6b19": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b4787bdaffebETmN1xRWugQSs",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
