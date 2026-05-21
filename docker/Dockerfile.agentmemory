@@ -1,0 +1,9 @@
+FROM node:current-alpine
+RUN apk add --no-cache curl && \
+    curl -fsSL -o /tmp/iii.tar.gz "https://github.com/iii-hq/iii/releases/download/iii/v0.11.2/iii-x86_64-unknown-linux-gnu.tar.gz" && \
+    tar -xzf /tmp/iii.tar.gz -C /usr/local/bin && \
+    rm /tmp/iii.tar.gz && \
+    chmod +x /usr/local/bin/iii && \
+    npm install -g @agentmemory/agentmemory@latest
+EXPOSE 3111 3113
+CMD ["agentmemory"]

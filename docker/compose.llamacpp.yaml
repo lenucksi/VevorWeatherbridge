@@ -24,6 +24,9 @@ services:
       - "8082"
     volumes:
       - /mnt/llama-docker/models:/models
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/kfd:/dev/kfd
     command: >
       --hf-repo nomic-ai/nomic-embed-text-v2-moe-GGUF
       --hf-file nomic-embed-text-v2-moe.Q4_K_M.gguf
@@ -40,12 +43,17 @@ services:
     volumes:
       - ./config/llama-swap.yaml:/app/config.yaml:ro
       - /mnt/llama-docker/llama-swap:/data
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/kfd:/dev/kfd
     command: -config /app/config.yaml -watch-config
     restart: unless-stopped
 
   # ── Agentmemory ──
   agentmemory:
-    image: node:current-alpine
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.agentmemory
     container_name: agentmemory
     depends_on:
       - llama-swap
@@ -64,12 +72,6 @@ services:
       - CONSOLIDATION_ENABLED=true
       - GRAPH_EXTRACTION_ENABLED=true
     working_dir: /data
-    command: |
-      sh -c '
-      apk add --no-cache curl &&
-      rm -f /data/iii.pid /data/engine-state.json 2>/dev/null &&
-      npx @agentmemory/agentmemory
-      '
     restart: unless-stopped
 
   # ── Optional: llama.cpp Studio (GUI model manager) ──
