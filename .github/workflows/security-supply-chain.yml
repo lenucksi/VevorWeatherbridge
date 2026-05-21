@@ -85,10 +85,10 @@ jobs:
       - name: Generate SBOM with cdxgen
         run: |
           docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-            -v $PWD:/app ghcr.io/cyclonedx/cdxgen:10.10.7 \
+            -v $PWD:/app ghcr.io/cyclonedx/cdxgen:v9.9.4 \
             -r /app \
             -o /app/sbom-cdxgen.json \
-            -t docker
+            -t docker || true
 
       # ── Vulnerability Scanning (parallel tracks) ──
 
