@@ -12,7 +12,7 @@ services:
       - /dev/kfd:/dev/kfd
     command: >
       --hf-repo Qwen/Qwen3-8B-GGUF:Q4_K_M
-      --host 0.0.0.0 --port 8081 -c 8192 -ngl 99
+      --port 8081 -c 8192 -ngl 99
       --flash-attn on
     restart: unless-stopped
 
@@ -28,17 +28,20 @@ services:
       --hf-repo nomic-ai/nomic-embed-text-v2-moe-GGUF
       --hf-file nomic-embed-text-v2-moe.Q4_K_M.gguf
       --embedding --pooling mean
-      --host 0.0.0.0 --port 8082 -c 8192
+      --port 8082 -c 8192
     restart: unless-stopped
 
   # ── Reverse Proxy (router) ──
   llama-swap:
-    image: ghcr.io/mostlygeek/llama-swap:cpu
+    image: ghcr.io/mostlygeek/llama-swap:rocm
     container_name: llama-swap
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/kfd:/dev/kfd
     ports:
       - "8080:8080"
     volumes:
-      - ./config/llama-swap.yaml:/app/config.yaml:ro
+      - ./docker/config/llama-swap.yaml:/app/config.yaml:ro
       - /mnt/llama-docker/llama-swap:/data
     command: -config /app/config.yaml -watch-config
     restart: unless-stopped
