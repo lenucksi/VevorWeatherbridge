@@ -1,0 +1,60 @@
+"backlog/archive/tasks/task-41 - Add-JitPack-distribution.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-35 - Implement-Claude-Code-harness-with-agents.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-39 - Fix-TLS-trustmanager-removal.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-36 - Set-up-CI-CD-with-GitHub-Actions.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-20
+"backlog/archive/tasks/task-30 - Clean-up-merge-conflict-artifacts.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-18
+"backlog/archive/tasks/task-40 - Remove-JPMS-module-info.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-20
+"backlog/archive/tasks/task-33 - Upgrade-to-Java-21-LTS.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-23 - Fix-wildcard-hostname-support.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/tasks/task-24 - Fix-Quay.io-build-trigger-keeps-deactivating-should-only-fire-on-maintags.md"
+  s_002e5ca712a28f::t_6a07cdc6a1926b 1-6,8-22,54-60
+  s_002e5ca712a28f::t_7b0c92b5927b23 7,23-53
+"backlog/archive/tasks/task-29 - Improve-test-coverage.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-20
+"backlog/archive/tasks/task-37 - Implement-release-automation-with-release-please.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-25 - Fix-protocol-injection-vulnerability.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-34 - Implement-Jazzer-fuzz-testing.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-32 - Migrate-from-TestNG-to-JUnit-5.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-26 - Fix-SASL-credential-exposure.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-28 - Fix-unbounded-literal-parsing.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-27 - Fix-SSL-TLS-certificate-handling.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+"backlog/archive/tasks/task-31 - Create-NOTICE-file-for-third-party-attributions.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-20
+"backlog/archive/tasks/task-24 - Add-integration-tests-with-mock-server.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-20
+"backlog/tasks/task-23 - Evaluate-and-select-security-SBOM-notices-pipeline-tools.md"
+  s_002e5ca712a28f::t_4ec4b078e4ca6c 1-33
+"backlog/archive/tasks/task-38 - Add-OpenSSF-Scorecard-SLSA-provenance.md"
+  s_002e5ca712a28f::t_ae298eb12d4dd9 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "adeeba81852568f916f0c795c22dd0223412bdd5",
+  "prompts": {},
+  "sessions": {
+    "s_002e5ca712a28f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1ba3c2162ffe41qK4o85kLDIV2",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
