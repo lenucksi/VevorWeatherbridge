@@ -6,7 +6,7 @@ services:
     expose:
       - "8081"
     volumes:
-      - ./data/models:/models
+      - /mnt/llama-docker/models:/models
     devices:
       - /dev/dri:/dev/dri
       - /dev/kfd:/dev/kfd
@@ -22,7 +22,7 @@ services:
     expose:
       - "8082"
     volumes:
-      - ./data/models:/models
+      - /mnt/llama-docker/models:/models
     command: >
       --hf-repo nomic-ai/nomic-embed-text-v2-moe-GGUF
       --hf-file nomic-embed-text-v2-moe.Q4_K_M.gguf
@@ -38,7 +38,7 @@ services:
       - "8080:8080"
     volumes:
       - ./docker/config/llama-swap.yaml:/app/config.yaml:ro
-      - ./data/llama-swap:/data
+      - /mnt/llama-docker/llama-swap:/data
     command: -config /app/config.yaml -watch-config
     restart: unless-stopped
 
@@ -52,7 +52,7 @@ services:
       - "3111:3111"
       - "3113:3113"
     volumes:
-      - ./data/agentmemory:/data
+      - /mnt/llama-docker/agentmemory:/data
     environment:
       - EMBEDDING_PROVIDER=openai
       - OPENAI_BASE_URL=http://llama-swap:8080/v1
@@ -73,8 +73,8 @@ services:
   #   ports:
   #     - "8083:8080"
   #   volumes:
-  #     - ./data/llamacpp-studio:/app/data
-  #     - ./data/models:/models
+  #     - /mnt/llama-docker/llamacpp-studio:/app/data
+  #     - /mnt/llama-docker/models:/models
   #   environment:
   #     - HF_HUB_ENABLE_HF_TRANSFER=1
   #   restart: unless-stopped

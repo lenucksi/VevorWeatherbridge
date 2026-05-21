@@ -6,7 +6,7 @@ services:
     ports:
       - "11434:11434"
     volumes:
-      - ./data/ollama:/root/.ollama
+      - /mnt/llama-docker/ollama:/root/.ollama
     devices:
       - /dev/kfd:/dev/kfd
       - /dev/dri:/dev/dri
@@ -25,7 +25,7 @@ services:
       - "3111:3111"
       - "3113:3113"
     volumes:
-      - ./data/agentmemory:/data
+      - /mnt/llama-docker/agentmemory:/data
     environment:
       - EMBEDDING_PROVIDER=openai
       - OPENAI_BASE_URL=http://ollama:11434/v1
