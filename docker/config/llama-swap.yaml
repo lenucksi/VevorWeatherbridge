@@ -1,8 +1,12 @@
-upstreams:
-  - id: qwen3-8b
-    address: "http://llamacpp-chat:8081"
-    model_pattern: "qwen3"
+peers:
+  llamacpp-chat:
+    proxy: "http://llamacpp-chat:8081"
+    checkEndpoint: "none"
+    models:
+      - qwen3-8b-Q4_K_M
 
-  - id: nomic-embed
-    address: "http://llamacpp-embed:8082"
-    model_pattern: "nomic-embed"
+  llamacpp-embed:
+    proxy: "http://llamacpp-embed:8082"
+    checkEndpoint: "none"
+    models:
+      - nomic-embed-text-v2-moe
