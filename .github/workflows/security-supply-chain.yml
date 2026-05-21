@@ -207,23 +207,23 @@ jobs:
 
       # ── Clair Vulnerability Report ──
 
-      - name: Get config digest and fetch Clair report
-        id: clair
+      - name: Get manifest digest and fetch Quay security report
+        id: quay_sec
         continue-on-error: true
+        env:
+          QUAY_API_TOKEN: ${{ secrets.QUAY_TOKEN }}
         run: |
-          DIGEST=$(docker image inspect ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --format '{{.Id}}')
-          echo "Config digest: $DIGEST"
-          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
-          curl -sL "https://quay.io/matcher/api/v1/vulnerability_report/${DIGEST}" \
-            -H "Accept: application/vnd.clair.vulnerability_report.v1+json" \
-            -o clair-report.json -w "Clair HTTP %{http_code}\n" || true
-          python3 vevor-weatherbridge-go/scripts/clair-report.py clair-report.json
+          MANIFEST_DIGEST=$(docker image inspect ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --format '{{(index .RepoDigests 0)}}' 2>/dev/null | sed 's/.*@//')
+          echo "Manifest digest: $MANIFEST_DIGEST"
+          echo "digest=$MANIFEST_DIGEST" >> $GITHUB_OUTPUT
+          python3 vevor-weatherbridge-go/scripts/clair-report.py \
+            ${{ github.repository_owner }}/${{ env.IMAGE_NAME }} $MANIFEST_DIGEST 2>&1 | tee quay-sec-report.txt
 
-      - name: Upload Clair report
-        if: steps.clair.outputs.digest != ''
+      - name: Upload Quay security report
+        if: steps.quay_sec.outputs.digest != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         continue-on-error: true
         with:
-          name: clair-report-${{ github.sha }}
-          path: clair-report.json
+          name: quay-sec-report-${{ github.sha }}
+          path: quay-sec-report.txt
           retention-days: 90
