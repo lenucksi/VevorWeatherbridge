@@ -1,0 +1,51 @@
+services:
+  # ── Ollama (AMD ROCm) ──
+  ollama:
+    image: ollama/ollama:rocm
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./data/ollama:/root/.ollama
+    devices:
+      - /dev/kfd:/dev/kfd
+      - /dev/dri:/dev/dri
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - HSA_OVERRIDE_GFX_VERSION=10.3.0
+    restart: unless-stopped
+
+  # ── Agentmemory ──
+  agentmemory:
+    image: node:22-alpine
+    container_name: agentmemory
+    depends_on:
+      - ollama
+    ports:
+      - "3111:3111"
+      - "3113:3113"
+    volumes:
+      - ./data/agentmemory:/data
+    environment:
+      - EMBEDDING_PROVIDER=openai
+      - OPENAI_BASE_URL=http://ollama:11434/v1
+      - OPENAI_API_KEY=ollama
+      - OPENAI_MODEL=qwen3:8b
+      - AGENTMEMORY_EMBEDDING_MODEL=nomic-embed-text-v2-moe
+      - AUTO_COMPRESS=true
+      - CONSOLIDATION_ENABLED=true
+      - GRAPH_EXTRACTION_ENABLED=true
+    working_dir: /data
+    command: sh -c "npx @agentmemory/agentmemory"
+    restart: unless-stopped
+
+  # ── Optional: Big-AGI (modern chat UI) ──
+  # big-agi:
+  #   image: bigagi/big-agi:latest
+  #   container_name: big-agi
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - OPENAI_API_KEY=not-needed
+  #     - OPENAI_BASE_URL=http://ollama:11434/v1
+  #   restart: unless-stopped

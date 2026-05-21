@@ -1,0 +1,8 @@
+upstreams:
+  - id: qwen3-8b
+    address: "http://llamacpp-chat:8081"
+    model_pattern: "qwen3"
+
+  - id: nomic-embed
+    address: "http://llamacpp-embed:8082"
+    model_pattern: "nomic-embed"

@@ -1,0 +1,95 @@
+services:
+  # ── Chat/Completion ──
+  llamacpp-chat:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: llamacpp-chat
+    expose:
+      - "8081"
+    volumes:
+      - ./data/models:/models
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/kfd:/dev/kfd
+    command: >
+      --hf-repo Qwen/Qwen3-8B-GGUF:Q4_K_M
+      --host 0.0.0.0 --port 8081 -c 8192 -ngl 99 -fa --no-webui
+    restart: unless-stopped
+
+  # ── Embeddings ──
+  llamacpp-embed:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: llamacpp-embed
+    expose:
+      - "8082"
+    volumes:
+      - ./data/models:/models
+    command: >
+      --hf-repo nomic-ai/nomic-embed-text-v2-moe-GGUF
+      --hf-file nomic-embed-text-v2-moe.Q4_K_M.gguf
+      --embedding --pooling-type mean
+      --host 0.0.0.0 --port 8082 -c 8192 --no-webui
+    restart: unless-stopped
+
+  # ── Reverse Proxy (router) ──
+  llama-swap:
+    image: ghcr.io/mostlygeek/llama-swap:cpu
+    container_name: llama-swap
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docker/config/llama-swap.yaml:/app/config.yaml:ro
+      - ./data/llama-swap:/data
+    command: -config /app/config.yaml -watch-config
+    restart: unless-stopped
+
+  # ── Agentmemory ──
+  agentmemory:
+    image: node:22-alpine
+    container_name: agentmemory
+    depends_on:
+      - llama-swap
+    ports:
+      - "3111:3111"
+      - "3113:3113"
+    volumes:
+      - ./data/agentmemory:/data
+    environment:
+      - EMBEDDING_PROVIDER=openai
+      - OPENAI_BASE_URL=http://llama-swap:8080/v1
+      - OPENAI_API_KEY=not-needed
+      - OPENAI_MODEL=qwen3-8b-Q4_K_M
+      - AGENTMEMORY_EMBEDDING_MODEL=nomic-embed-text-v2-moe
+      - AUTO_COMPRESS=true
+      - CONSOLIDATION_ENABLED=true
+      - GRAPH_EXTRACTION_ENABLED=true
+    working_dir: /data
+    command: sh -c "npx @agentmemory/agentmemory"
+    restart: unless-stopped
+
+  # ── Optional: llama.cpp Studio (GUI model manager) ──
+  # llamacpp-studio:
+  #   image: lapy/llama-cpp-studio:latest
+  #   container_name: llamacpp-studio
+  #   ports:
+  #     - "8083:8080"
+  #   volumes:
+  #     - ./data/llamacpp-studio:/app/data
+  #     - ./data/models:/models
+  #   environment:
+  #     - HF_HUB_ENABLE_HF_TRANSFER=1
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - llama-swap
+
+  # ── Optional: Big-AGI (modern chat UI) ──
+  # big-agi:
+  #   image: bigagi/big-agi:latest
+  #   container_name: big-agi
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - OPENAI_API_KEY=not-needed
+  #     - OPENAI_BASE_URL=http://llama-swap:8080/v1
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - llama-swap
