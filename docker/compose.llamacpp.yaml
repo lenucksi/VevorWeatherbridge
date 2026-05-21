@@ -67,14 +67,14 @@ services:
       - CONSOLIDATION_ENABLED=true
       - GRAPH_EXTRACTION_ENABLED=true
     working_dir: /data
-    command: >
-      sh -c "
+    command: |
+      sh -c '
       apk add --no-cache curl >/dev/null 2>&1 &&
-      curl -fsSL -o /tmp/iii.tar.gz 'https://github.com/iii-hq/iii/releases/download/iii/v0.12.0/iii-x86_64-unknown-linux-gnu.tar.gz'
-        && tar -xzf /tmp/iii.tar.gz -C /usr/local/bin
-        && rm /tmp/iii.tar.gz &&
+      curl -fsSL -o /tmp/iii.tar.gz "https://github.com/iii-hq/iii/releases/download/iii/v0.12.0/iii-x86_64-unknown-linux-gnu.tar.gz" &&
+      tar -xzf /tmp/iii.tar.gz -C /usr/local/bin &&
+      rm /tmp/iii.tar.gz &&
       npx @agentmemory/agentmemory
-      "
+      '
     restart: unless-stopped
 
   # ── Optional: llama.cpp Studio (GUI model manager) ──
