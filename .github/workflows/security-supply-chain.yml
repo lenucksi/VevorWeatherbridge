@@ -12,7 +12,7 @@ on:
 permissions:
   contents: read
   security-events: write
-  packages: read
+  packages: write
 
 env:
   REGISTRY: ghcr.io
@@ -82,15 +82,6 @@ jobs:
           format: spdx-json
           output-file: sbom-syft.spdx.json
 
-      - name: Generate SBOM with cdxgen
-        run: |
-          # v9.9.4
-          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-            -v $PWD:/app ghcr.io/cyclonedx/cdxgen@sha256:d0cb9c92552b4806dd2fc52238b0bf262bc9ae9db44aa170ee1bd9bbd48b7c64 \
-            -r /app \
-            -o /app/sbom-cdxgen.json \
-            -t docker || true
-
       # ── Vulnerability Scanning (parallel tracks) ──
 
       - name: Scan with Grype
@@ -123,29 +114,83 @@ jobs:
           sarif_file: trivy-results.sarif
           category: trivy
 
-      # ── Third-Party Notices (parallel tracks) ──
+      # ── License & Notice Analysis (parallel tracks) ──
 
-      - name: Generate NOTICE from sbom-to-notices
+      - name: Install Grant CLI
         run: |
-          pip install sbom-to-notices 2>/dev/null || pip3 install sbom-to-notices 2>/dev/null || true
-          if command -v sbom-to-notices 2>/dev/null; then
-            sbom-to-notices sbom-syft.cdx.json > NOTICE.generated 2>/dev/null || true
+          curl -sSfL https://get.anchore.io/grant | sudo sh -s -- -b /usr/local/bin
+
+      - name: Grant license scan
+        continue-on-error: true
+        run: |
+          grant list sbom-syft.cdx.json --group-by risk
+          grant list sbom-syft.cdx.json --unlicensed || true
+          grant list sbom-syft.cdx.json -o json -f grant-license-report.json
+
+      - name: Grant license policy check (dry-run)
+        continue-on-error: true
+        run: |
+          grant check sbom-syft.cdx.json --dry-run || true
+
+      - name: Generate NOTICE with AboutCode Toolkit
+        continue-on-error: true
+        run: |
+          pip install aboutcode-toolkit 2>/dev/null || true
+          jq -r '
+            .components // [] | map({
+              name: .name // "",
+              version: .version // "",
+              license_expression: ([.licenses[].license.id] | join(" AND ")),
+              copyright: ""
+            })
+          ' sbom-syft.cdx.json > /tmp/about-inventory.json
+          if command -v about &>/dev/null; then
+            about attrib /tmp/about-inventory.json NOTICE.aboutcode.html 2>/dev/null || true
           fi
 
-      - name: Generate license report with Grant
-        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
-        continue-on-error: true
-        with:
-          image: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          output-format: sarif
-          fail-build: false
+      - name: Install ts-scan
+        run: pip install ts-scan
 
-      - name: Run AboutCode Toolkit
+      - name: Cache YARA rules
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        with:
+          path: /tmp/yara-rules
+          key: yara-rules-${{ github.sha }}
+          restore-keys: yara-rules-
+
+      - name: Download YARA rules
+        run: |
+          if [ ! -d /tmp/yara-rules/.git ]; then
+            git clone --depth 1 https://github.com/Yara-Rules/rules.git /tmp/yara-rules
+          fi
+
+      - name: ts-scan deep analysis (license, crypto, YARA)
         continue-on-error: true
         run: |
-          pip install aboutcode-toolkit 2>/dev/null || pip3 install aboutcode-toolkit 2>/dev/null || true
-          if command -v about-toolkit 2>/dev/null; then
-            about-toolkit --dir . --output about-output 2>/dev/null || true
+          ts-scan analyse \
+            -o ts-analysis.json \
+            --disable-scanoss \
+            --Xdeepscan enable_yara,True \
+            --Xdeepscan yara_rules,/tmp/yara-rules \
+            sbom-syft.cdx.json 2>/dev/null || \
+          ts-scan analyse \
+            -o ts-analysis.json \
+            --disable-scanoss \
+            sbom-syft.cdx.json 2>/dev/null || true
+
+      - name: ts-legalcheck (local license obligation check)
+        continue-on-error: true
+        run: |
+          pip install ts-legalcheck 2>/dev/null || true
+          if command -v ts-legalcheck &>/dev/null; then
+            # Check project licenses against typical proprietary use case
+            for lic in MIT Apache-2.0 BSD-3-Clause ISC; do
+              echo "--- $lic ---"
+              ts-legalcheck test \
+                -l "$lic" \
+                -d /usr/local/lib/python*/dist-packages/ts_legalcheck/data/LicenseConstraints_v5.0.toml \
+                2>/dev/null || true
+            done
           fi
 
       # ── Upload SBOMs ──
@@ -157,11 +202,33 @@ jobs:
           path: |
             sbom-syft.cdx.json
             sbom-syft.spdx.json
-            sbom-cdxgen.json
-            NOTICE.generated
           retention-days: 90
 
-      # ── Push to Quay.io ──
+      - name: Upload Grant license report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: grant-license-report
+          path: grant-license-report.json
+          retention-days: 90
+
+      - name: Upload NOTICE
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: aboutcode-notice
+          path: NOTICE.aboutcode.html
+          retention-days: 90
+
+      - name: Upload ts-scan analysis
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ts-scan-analysis
+          path: ts-analysis.json
+          retention-days: 90
+
+      # ── Push to Registries ──
 
       - name: Push image to Quay.io
         env:
@@ -175,6 +242,12 @@ jobs:
             ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
           docker push ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+
+      # ── Push to GHCR (for ORAS attach) ──
+
+      - name: Push image to GHCR
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       # ── ORAS: Attach SBOM to image ──
 
@@ -206,16 +279,5 @@ jobs:
           docker run --rm ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest /weatherbridge -h 2>/dev/null || true
           echo "Nightly health check passed"
 
-      # ── Clair Vulnerability Report ──
-
-      - name: Fetch Quay security report (after push)
-        continue-on-error: true
-        env:
-          QUAY_USER: ${{ secrets.QUAY_USERNAME }}
-          QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
-        run: |
-          MANIFEST_DIGEST=$(docker image inspect ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --format '{{(index .RepoDigests 0)}}' 2>/dev/null | sed 's/.*@//')
-          echo "Manifest digest: $MANIFEST_DIGEST"
-          python3 vevor-weatherbridge-go/scripts/clair-report.py \
-            ${{ github.repository_owner }}/${{ env.IMAGE_NAME }} $MANIFEST_DIGEST 2>&1 > quay-sec-report.txt || \
-            echo "Quay report not available (403 — robot token lacks API scope)" > quay-sec-report.txt
+      # ── Clair Vulnerability Report (removed: redundant with Trivy+Grype,
+      #      Quay robot token lacked API scope) ──
