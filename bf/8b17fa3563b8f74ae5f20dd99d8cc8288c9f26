@@ -1,0 +1,27 @@
+.github/workflows/security-supply-chain.yml
+  s_002e5ca712a28f::t_94daa6aeaa5d06 207-213,221-229
+  s_002e5ca712a28f::t_e4cab467b8568f 214-218
+  s_002e5ca712a28f::t_67fdc08d146501 219-220
+vevor-weatherbridge-go/go.mod
+  s_002e5ca712a28f::t_80c4e9208a479e 9
+vevor-weatherbridge-go/scripts/clair-report.py
+  s_002e5ca712a28f::t_0841371b0386bc 1-16
+vevor-weatherbridge-go/go.sum
+  ai_agent 5-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "bf8b17fa3563b8f74ae5f20dd99d8cc8288c9f26",
+  "prompts": {},
+  "sessions": {
+    "s_002e5ca712a28f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1ba3c2162ffe41qK4o85kLDIV2",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
