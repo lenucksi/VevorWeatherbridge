@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
-"""Fetch and analyze Quay.io/Clair vulnerability report for an image.
+"""Fetch and analyze Quay.io security report for an image.
 
-Usage:
-  QUAY_API_TOKEN=... python3 clair-report.py <repo> <manifest_digest>
-  python3 clair-report.py <clair-report.json>
+Usage (fetch from Quay API):
+  QUAY_USER=... QUAY_TOKEN=... python3 clair-report.py <namespace/repo> <manifest_digest>
 
-If called with repo+digest, fetches from Quay API.
-If called with a file path, reads local report.
+Usage (read local file):
+  python3 clair-report.py <report.json>
 """
-import json, sys, os, urllib.request
+import json, sys, os, urllib.request, base64
 
 HOST = "https://quay.io"
 
 def fetch(repo, digest):
-    token = os.environ.get("QUAY_API_TOKEN", "")
-    if not token:
-        print("ERROR: QUAY_API_TOKEN not set", file=sys.stderr)
+    user = os.environ.get("QUAY_USER", "")
+    token = os.environ.get("QUAY_TOKEN", "")
+    if not user or not token:
+        print("ERROR: QUAY_USER and QUAY_TOKEN env vars required", file=sys.stderr)
         sys.exit(1)
     url = f"{HOST}/api/v1/repository/{repo}/manifest/{digest}/security"
+    auth = base64.b64encode(f"{user}:{token}".encode()).decode()
     req = urllib.request.Request(url, headers={
-        "Authorization": f"Bearer {token}", "Accept": "application/json"
+        "Authorization": f"Basic {auth}", "Accept": "application/json"
     })
     with urllib.request.urlopen(req) as resp:
         return json.loads(resp.read())
@@ -28,16 +29,17 @@ def load(path):
     with open(path) as f:
         return json.load(f)
 
-def classify(pkg_name, ns_name):
-    """Classify a package as controllable by us or baked into base image."""
-    base_layers = {"golang:1.26-alpine", "ghcr.io/home-assistant/", "ha-base"}
-    if not ns_name or ns_name.startswith("alpine-"):
-        return "os_base"
-    if "stdlib" in pkg_name and ns_name == "osv/go":
-        return "go_stdlib_builder"
-    if "golang.org/x/crypto" in pkg_name and "v0.50" in pkg_name:
-        return "go_transitive_fixed"
-    if "golang.org/" in pkg_name or "go_" in ns_name:
+def classify(pname, ns, ver):
+    if not ns or ns.startswith("alpine-"):
+        return "os_alpine"
+    if "stdlib" in pname and ns == "osv/go":
+        # Check whether it's builder Go or HA base Go
+        return "go_stdlib_builder" if "1.26" in ver else "go_stdlib_base"
+    if "golang.org/" in pname:
+        fix_ver = ver.lstrip("v")
+        # x/crypto@v0.50.0 is already above all fix versions from the report
+        if pname == "golang.org/x/crypto" and fix_ver >= "0.50":
+            return "go_transitive_fixed"
         return "go_transitive"
     return "other"
 
@@ -45,8 +47,7 @@ def report(data):
     features = data.get("data", {}).get("Layer", {}).get("Features", [])
     total = 0
     by_sev = {}
-    buckets = {"go_stdlib_builder": [], "go_transitive": [],
-               "go_transitive_fixed": [], "os_base": [], "other": []}
+    buckets = {}
 
     for feat in features:
         pname = feat.get("Name", "")
@@ -57,7 +58,7 @@ def report(data):
             sev = v.get("Severity", "Unknown")
             if isinstance(sev, dict): sev = sev.get("Severity", "Unknown")
             by_sev[sev] = by_sev.get(sev, 0) + 1
-            c = classify(pname, ns)
+            c = classify(pname, ns, ver)
             buckets.setdefault(c, []).append({
                 "name": v.get("Name", ""), "severity": sev,
                 "pkg": f"{pname}@{ver}", "fix": v.get("FixedBy", "N/A"),
@@ -65,48 +66,49 @@ def report(data):
             })
 
     print(f"\n{'='*60}")
-    print(f"  VULNERABILITY REPORT")
+    print(f"  QUAY SECURITY REPORT")
     print(f"{'='*60}")
     print(f"\nTotal CVEs: {total}")
-    print(f"Severity:  {json.dumps(dict(sorted((k,v) for k,v in by_sev.items() if k != 'Unknown')))}")
-    print(f"Unknown:   {by_sev.get('Unknown', 0)} (no CVSS score assigned)")
+    sev_known = {k: v for k, v in sorted(by_sev.items()) if k != "Unknown"}
+    if sev_known:
+        print(f"Known severity: {json.dumps(sev_known)}")
+    print(f"Unknown severity: {by_sev.get('Unknown', 0)} (no CVSS score)")
     print()
 
     sections = [
-        ("GO BUILDER STDLIB (golang:1.26-alpine) — fixable via digest update",
-         buckets["go_stdlib_builder"], True),
-        ("GO TRANSITIVE DEPS (our code) — fixable via go get",
-         buckets["go_transitive"], True),
-        ("OS PACKAGES (Alpine base) — fixable via Alpine update",
-         buckets["os_base"], True),
-        ("GO TRANSITIVE (already at fixed version)",
-         buckets["go_transitive_fixed"], False),
+        ("GO BUILDER STDLIB (golang:1.26-alpine) — fix when Renovate updates SHA",
+         "go_stdlib_builder", True),
+        ("GO STDLIB IN HA BASE IMAGE — fix when HA rebuilds their base",
+         "go_stdlib_base", True),
+        ("GO TRANSITIVE DEPS (our go.mod) — fixable via go get",
+         "go_transitive", True),
+        ("ALPINE OS PACKAGES — fix via nightly rebuild with --pull",
+         "os_alpine", True),
+        ("ALREADY FIXED (version > fix)",
+         "go_transitive_fixed", False),
     ]
 
-    for title, items, show_table in sections:
+    for title, key, show_table in sections:
+        items = buckets.get(key, [])
         if not items:
             continue
-        print(f"\n--- {title} ({len(items)} CVEs) ---")
+        print(f"\n── {title} ({len(items)} CVEs) ──")
         if not show_table:
             continue
         for c in sorted(items, key=lambda x: x["severity"], reverse=True):
-            print(f"  {c['name']:25s} {c['severity']:8s} in {c['pkg'][:40]:40s} → fix {c['fix']}")
-            if c['desc']:
-                print(f"  {'':25s} {c['desc'][:70]}")
+            print(f"  {c['name']:30s} {c['severity']:8s} in {c['pkg'][:45]:45s} → fix {c['fix']}")
 
     print(f"\n{'='*60}")
-    print(f"  Actionable fixes:")
-    if buckets["go_transitive"]:
-        for c in buckets["go_transitive"]:
-            print(f"    go get {c['pkg'].split('@')[0]}@{c['fix']}")
-    if buckets["go_stdlib_builder"]:
+    print(f"  ACTIONABLE:")
+    for c in buckets.get("go_transitive", []):
+        print(f"    go get {c['pkg'].split('@')[0]}@{c['fix']}")
+    if buckets.get("go_stdlib_builder"):
         fixes = sorted(set(c['fix'] for c in buckets["go_stdlib_builder"]))
-        print(f"    Update Go builder (pinned SHA): needs golang/tags {' or '.join(fixes)}")
-        print(f"    Renovate will auto-update SHA pin when new Go patch is released")
-    if buckets["os_base"]:
-        fixes = sorted(set(c['fix'] for c in buckets["os_base"]))
-        print(f"    Alpine packages need: {' '.join(fixes)}")
-        print(f"    Nightly rebuild with --pull gets latest once Alpine releases fixes")
+        print(f"    Wait for Go {'/'.join(fixes)} release → Renovate updates SHA")
+    if buckets.get("os_alpine"):
+        print(f"    Nightly rebuild with --pull (when Alpine releases fixes)")
+    if not any(buckets.get(k) for k in ("go_stdlib_builder","go_transitive","os_alpine")):
+        print(f"    Nothing actionable — all CVEs are in HA base image")
 
 if __name__ == "__main__":
     if len(sys.argv) == 3:
@@ -115,6 +117,6 @@ if __name__ == "__main__":
     elif len(sys.argv) == 2:
         data = load(sys.argv[1])
     else:
-        print(f"Usage: {sys.argv[0]} <repo> <digest>  |  {sys.argv[0]} <file.json>")
+        print(f"Usage: {sys.argv[0]} <namespace/repo> <digest> | {sys.argv[0]} <file.json>")
         sys.exit(1)
     report(data)

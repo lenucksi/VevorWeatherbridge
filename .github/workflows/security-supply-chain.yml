@@ -211,7 +211,8 @@ jobs:
         id: quay_sec
         continue-on-error: true
         env:
-          QUAY_API_TOKEN: ${{ secrets.QUAY_TOKEN }}
+          QUAY_USER: ${{ secrets.QUAY_USERNAME }}
+          QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
         run: |
           MANIFEST_DIGEST=$(docker image inspect ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --format '{{(index .RepoDigests 0)}}' 2>/dev/null | sed 's/.*@//')
           echo "Manifest digest: $MANIFEST_DIGEST"
