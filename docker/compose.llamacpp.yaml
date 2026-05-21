@@ -67,11 +67,7 @@ services:
     command: |
       sh -c '
       apk add --no-cache curl &&
-      curl -fsSL -o /tmp/iii.tar.gz "https://github.com/iii-hq/iii/releases/download/iii/v0.12.0/iii-x86_64-unknown-linux-gnu.tar.gz" &&
-      tar -xzf /tmp/iii.tar.gz -C /usr/local/bin &&
-      rm /tmp/iii.tar.gz &&
-      chmod +x /usr/local/bin/iii &&
-      ls -la /usr/local/bin/iii &&
+      rm -f /data/iii.pid /data/engine-state.json 2>/dev/null &&
       npx @agentmemory/agentmemory
       '
     restart: unless-stopped
