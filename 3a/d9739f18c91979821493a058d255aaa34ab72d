@@ -1,0 +1,19 @@
+.gitignore
+  s_7de1a7ba7b24c0::t_35427d18a76463 24-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "3ad9739f18c91979821493a058d255aaa34ab72d",
+  "prompts": {},
+  "sessions": {
+    "s_7de1a7ba7b24c0": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b0fac368ffeAHPKs5sQ7EmqCx",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
