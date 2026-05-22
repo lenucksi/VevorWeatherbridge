@@ -1,9 +1,10 @@
 ---
 id: TASK-23
 title: Migrate von pre-commit zu prek (Rust-basiert)
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-05-22 13:15'
+updated_date: '2026-05-22 13:22'
 labels:
   - tooling
   - quality
