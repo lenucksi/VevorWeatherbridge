@@ -3,6 +3,13 @@ RUN wget -q -O /tmp/iii.tar.gz "https://github.com/iii-hq/iii/releases/download/
     tar -xzf /tmp/iii.tar.gz -C /usr/local/bin && \
     rm /tmp/iii.tar.gz && \
     chmod +x /usr/local/bin/iii && \
-    npm install -g @agentmemory/agentmemory@latest
+    npm install -g @agentmemory/agentmemory@latest && \
+    sed -i \
+      -e 's/host: 127.0.0.1/host: 0.0.0.0/g' \
+      -e 's|http://localhost:3111|http://0.0.0.0:3111|g' \
+      -e 's|http://localhost:3113|http://0.0.0.0:3113|g' \
+      -e 's|http://127.0.0.1:3111|http://0.0.0.0:3111|g' \
+      -e 's|http://127.0.0.1:3113|http://0.0.0.0:3113|g' \
+      /usr/local/lib/node_modules/@agentmemory/agentmemory/dist/iii-config.yaml
 EXPOSE 3111 3113
 CMD ["agentmemory"]
