@@ -5,6 +5,22 @@ All notable changes to the VEVOR Weather Station Bridge (Go) will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.9](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-go-v0.1.8...vevor-weatherbridge-go-v0.1.9) (2026-05-22)
+
+
+### Features
+
+* initialize Backlog.md project management ([36a3962](https://github.com/lenucksi/VevorWeatherbridge/commit/36a3962d36932bd3f9f965f3724dd6c28107c03a))
+* upgrade HA base image from Alpine 3.19 to 3.21 ([1774a1c](https://github.com/lenucksi/VevorWeatherbridge/commit/1774a1c693f853269f31fe9d4cb5e3532990a39c))
+
+
+### Bug Fixes
+
+* add default BUILD_FROM for Quay.io builds (amd64) ([6502c38](https://github.com/lenucksi/VevorWeatherbridge/commit/6502c38fac2e9d9a92e820789a82c034ce051d0b))
+* update Go builder to 1.26.3, fix Clair report script ([9d4e699](https://github.com/lenucksi/VevorWeatherbridge/commit/9d4e69949460493157d2973baf85921016c2db57))
+* update Go deps (x/net v0.53.0), add Clair API report to CI ([bf8b17f](https://github.com/lenucksi/VevorWeatherbridge/commit/bf8b17fa3563b8f74ae5f20dd99d8cc8288c9f26))
+* use Basic auth for Quay API (robot password, not OAuth token) ([641c2c4](https://github.com/lenucksi/VevorWeatherbridge/commit/641c2c4ae96cb03443c6db1b19e9ef4321366859))
+
 ## [0.1.8](https://github.com/lenucksi/VevorWeatherbridge/compare/vevor-weatherbridge-go-v0.1.7...vevor-weatherbridge-go-v0.1.8) (2026-02-24)
 
 
