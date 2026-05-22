@@ -76,7 +76,7 @@ jobs:
       - name: Run Go tests
         working-directory: vevor-weatherbridge-go
         run: go test -v -json ./... > test-report.out
-      
+
       - name: Run Go coverage
         working-directory: vevor-weatherbridge-go
         run: go test -v -coverprofile=coverage.out ./...

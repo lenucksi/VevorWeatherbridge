@@ -21,6 +21,11 @@ vevor-weatherbridge-go/vevor-weatherbridge-go
 
 # Claude Code
 #.claude/
+.claude/settings.local.json
+
+# Workspace / IDE clutter
+*.code-workspace
+*.code-workspace.json
 
 # Environment
 .env

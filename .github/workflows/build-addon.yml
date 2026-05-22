@@ -118,4 +118,3 @@ jobs:
             VERSION=${{ steps.version.outputs.version }}
           cache-from: type=gha,scope=go-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=go-${{ matrix.arch }}
-

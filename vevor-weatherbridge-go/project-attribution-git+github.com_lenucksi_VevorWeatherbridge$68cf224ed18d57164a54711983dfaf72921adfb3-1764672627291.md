@@ -13,18 +13,15 @@ Date generated | Revision ID
 
 ---
 
-
-
 ## First Party Licenses
 
 **License**: GNU General Public License v3.0 only
-
 
 **File Count**: 2
 
 **License Text**:
 
-```
+```text
 GNU GENERAL PUBLIC LICENSE
 Version 3, 29 June 2007
 Copyright © 2007 Free Software Foundation, Inc. <http s ://fsf.org/>
@@ -153,24 +150,15 @@ You should also get your employer (if you work as a programmer) or school, if an
 The GNU General Public License does not permit incorporating your program into proprietary programs. If your program is a subroutine library, you may consider it more useful to permit linking proprietary applications with the library. If this is what you want to do, use the GNU Lesser General Public License instead of this License. But first, please read <http s ://www.gnu.org/philosophy/why-not-lgpl.html>.
 ```
 
-
-
-
-
-
 ## Dependencies
-
-
-
 
 ### [net (9a296438e54dff851a45667aa645a97003b44db5)](https://go.googlesource.com/net)
 
-
 #### Declared Licenses
+
 BSD-3-Clause
 
-
-```
+```text
 Copyright 2009 The Go Authors.
 
 Redistribution and use in source and binary forms, with or without
@@ -201,16 +189,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ```
 
-
-
-
-
-
 #### Other Licenses
+
 BSD-2-Clause
 
-
-```
+```text
 Copyright (c) 2009 Apple Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -236,40 +219,21 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-
-
-
-
-
-
-
-
-
 ### Package Info
-
 
 **Authors**:  [antonio.ojea.garcia@gmail.com](antonio.ojea.garcia@gmail.com) [dneil@google.com](dneil@google.com) [tklauser@distanz.ch](tklauser@distanz.ch) [michal@axiom.co](michal@axiom.co) [alexander.yastrebov@zalando.de](alexander.yastrebov@zalando.de) [michael.fraenkel@gmail.com](michael.fraenkel@gmail.com) [bradfitz@golang.org](bradfitz@golang.org) [steven.hartland@multiplay.co.uk](steven.hartland@multiplay.co.uk) [filippo@golang.org](filippo@golang.org) [roberto@golang.org](roberto@golang.org) [johan.brandhorst@gmail.com](johan.brandhorst@gmail.com) [ab.listsubs@gmail.com](ab.listsubs@gmail.com) [dmitshur@golang.org](dmitshur@golang.org) [katie@golang.org](katie@golang.org) [julie@golang.org](julie@golang.org) [namusyaka@gmail.com](namusyaka@gmail.com) [mpvl@golang.org](mpvl@golang.org) [billo@ca.ibm.com](billo@ca.ibm.com) [tamird@google.com](tamird@google.com) [bynovhack@gmail.com](bynovhack@gmail.com) [radek.simko@gmail.com](radek.simko@gmail.com) [cherryyz@google.com](cherryyz@google.com) [paschalistsilias@gmail.com](paschalistsilias@gmail.com) [dr.volker.dobler@gmail.com](dr.volker.dobler@gmail.com) [rsc@golang.org](rsc@golang.org) [miller.research@gmail.com](miller.research@gmail.com) [xuchao@google.com](xuchao@google.com) [iant@golang.org](iant@golang.org) [jzhan@uber.com](jzhan@uber.com) [ali.farooq0@pm.me](ali.farooq0@pm.me) [contact@yannic-bonenberger.com](contact@yannic-bonenberger.com) [rs@rhapsodyk.net](rs@rhapsodyk.net) [chuainian@gmail.com](chuainian@gmail.com) [nigeltao@golang.org](nigeltao@golang.org) [wu.purewhite@gmail.com](wu.purewhite@gmail.com) [matthias.frei@inf.ethz.ch](matthias.frei@inf.ethz.ch) [bcmills@google.com](bcmills@google.com) [timothygu99@gmail.com](timothygu99@gmail.com) [ben.hutchings@essensium.com](ben.hutchings@essensium.com) [dblack@atlassian.com](dblack@atlassian.com) [martenseemann@gmail.com](martenseemann@gmail.com) [dmcardle@google.com](dmcardle@google.com) [lukeshu@datawire.io](lukeshu@datawire.io) [heschi@google.com](heschi@google.com) [frank@frankchiarulli.com](frank@frankchiarulli.com) [tpeczenyj@weborama.com](tpeczenyj@weborama.com) [roland@golang.org](roland@golang.org) [yastrebov.alex@gmail.com](yastrebov.alex@gmail.com) [renthraysk@gmail.com](renthraysk@gmail.com) [mattn.jp@gmail.com](mattn.jp@gmail.com) [hi@filippo.io](hi@filippo.io) [kevin@dunglas.fr](kevin@dunglas.fr) [lvzecai@gmail.com](lvzecai@gmail.com) [jorropo.pgm@gmail.com](jorropo.pgm@gmail.com) [moshe@squareup.com](moshe@squareup.com) [wzshiming@foxmail.com](wzshiming@foxmail.com) [thenagapraneeth@gmail.com](thenagapraneeth@gmail.com) [chenguoqi@loongson.cn](chenguoqi@loongson.cn) [mauri870@gmail.com](mauri870@gmail.com) [gobot@golang.org](gobot@golang.org) [rengels@ix.netcom.com](rengels@ix.netcom.com) [eli@siliconsprawl.com](eli@siliconsprawl.com) [jokicnikola07@gmail.com](jokicnikola07@gmail.com) [tjomek.jezierski@gmail.com](tjomek.jezierski@gmail.com) [mr.lizhisheng@gmail.com](mr.lizhisheng@gmail.com) [joel@sing.id.au](joel@sing.id.au) [kyle@agilicus.com](kyle@agilicus.com) [imcusg@gmail.com](imcusg@gmail.com) [hopehook@qq.com](hopehook@qq.com) [mpoliwczak34@gmail.com](mpoliwczak34@gmail.com) [weidi_deng@icloud.com](weidi_deng@icloud.com) [sean@liao.dev](sean@liao.dev) [drchase@google.com](drchase@google.com) [ronakjainc@gmail.com](ronakjainc@gmail.com) [mzh@golangcn.org](mzh@golangcn.org) [nek.dev@gmail.com](nek.dev@gmail.com) [leo.bloecher@gmail.com](leo.bloecher@gmail.com) [mdlayher@gmail.com](mdlayher@gmail.com) [figginsn@gmail.com](figginsn@gmail.com) [laurent@singulargarden.com](laurent@singulargarden.com) [admin@iseki.space](admin@iseki.space) [oleksandr.red+github@gmail.com](oleksandr.red+github@gmail.com) [cuong.manhle.vn@gmail.com](cuong.manhle.vn@gmail.com) [qmuntaldiaz@microsoft.com](qmuntaldiaz@microsoft.com) [davidfu13@gmail.com](davidfu13@gmail.com) [bracewell@google.com](bracewell@google.com) [i@andypan.me](i@andypan.me) [yuichi.watanabe.ja@gmail.com](yuichi.watanabe.ja@gmail.com) [engzerjun@gmail.com](engzerjun@gmail.com) [jub0bsinthecloud@gmail.com](jub0bsinthecloud@gmail.com) [zhangshengqiang@outlook.com](zhangshengqiang@outlook.com) [panjf2000@gmail.com](panjf2000@gmail.com) [emmanuel@orijtech.com](emmanuel@orijtech.com) [huww985@gmail.com](huww985@gmail.com) [dastbe@users.noreply.github.com](dastbe@users.noreply.github.com) [84328409@qq.com](84328409@qq.com) [alex.besogonov@gmail.com](alex.besogonov@gmail.com) [maciej@mionskowski.pl](maciej@mionskowski.pl) [19653795+mateusz834@users.noreply.github.com](19653795+mateusz834@users.noreply.github.com) [54848194+btwiuse@users.noreply.github.com](54848194+btwiuse@users.noreply.github.com) [sivukhin@sharechat.co](sivukhin@sharechat.co) [mknyszek@google.com](mknyszek@google.com) [jftucker@gmail.com](jftucker@gmail.com) [jf@giorgi.email](jf@giorgi.email) [mail@carlana.net](mail@carlana.net) [mafredri@gmail.com](mafredri@gmail.com) [carlos@hrndz.ca](carlos@hrndz.ca) [ghosind@gmail.com](ghosind@gmail.com) [millerresearch@gmail.com](millerresearch@gmail.com) [marcus.efraimsson@gmail.com](marcus.efraimsson@gmail.com) [nsh@golang.org](nsh@golang.org) [fortuna@users.noreply.github.com](fortuna@users.noreply.github.com) [rhys.hiltner@gmail.com](rhys.hiltner@gmail.com) [arjansbal@google.com](arjansbal@google.com) [adonovan@google.com](adonovan@google.com) [alb.donizetti@gmail.com](alb.donizetti@gmail.com) [chressie@golang.org](chressie@golang.org) [evan.jones@datadoghq.com](evan.jones@datadoghq.com) [egonelbre@gmail.com](egonelbre@gmail.com) [mail@olegzaytsev.com](mail@olegzaytsev.com) [volentie@gmail.com](volentie@gmail.com) [hubert.grochowski21@gmail.com](hubert.grochowski21@gmail.com) [kev@inburke.com](kev@inburke.com) [mikioh.mikioh@gmail.com](mikioh.mikioh@gmail.com) [tombergan@google.com](tombergan@google.com) [man.gregory@gmail.com](man.gregory@gmail.com) [rogpeppe@gmail.com](rogpeppe@gmail.com) [frederic.guillot@gmail.com](frederic.guillot@gmail.com) [anmol@aubble.com](anmol@aubble.com) [ben@benburkert.com](ben@benburkert.com) [francisco.rojas.gallegos@gmail.com](francisco.rojas.gallegos@gmail.com) [xunianzu@gmail.com](xunianzu@gmail.com) [anand@mistry.ninja](anand@mistry.ninja) [t@avelino.xxx](t@avelino.xxx) [hnakamur@gmail.com](hnakamur@gmail.com) [mike@app.leby.org](mike@app.leby.org) [rs@netflix.com](rs@netflix.com) [igudger@google.com](igudger@google.com) [daniela.petruzalek@gmail.com](daniela.petruzalek@gmail.com) [rhys@justin.tv](rhys@justin.tv) [shihanng@gmail.com](shihanng@gmail.com) [shurcooL@gmail.com](shurcooL@gmail.com) [jbd@google.com](jbd@google.com) [lucas.bremgartner@gmail.com](lucas.bremgartner@gmail.com) [lazard@golang.org](lazard@golang.org) [elessar@dropbox.com](elessar@dropbox.com) [deklerk@google.com](deklerk@google.com) [mr.williamchang@gmail.com](mr.williamchang@gmail.com) [gauthier.jolly@gmail.com](gauthier.jolly@gmail.com) [nick@craig-wood.com](nick@craig-wood.com) [wingyminus@gmail.com](wingyminus@gmail.com) [mail@richard-musiol.de](mail@richard-musiol.de) [meirfischer@gmail.com](meirfischer@gmail.com) [nototon@gmail.com](nototon@gmail.com) [david@urld.io](david@urld.io) [andybons@golang.org](andybons@golang.org) [dhowden@gmail.com](dhowden@gmail.com) [lmb@cloudflare.com](lmb@cloudflare.com) [mikioh.public.networking@gmail.com](mikioh.public.networking@gmail.com) [crvv.mail@gmail.com](crvv.mail@gmail.com) [mrostecki@suse.de](mrostecki@suse.de) [keithr@alum.mit.edu](keithr@alum.mit.edu) [stapelberg@google.com](stapelberg@google.com) [uhei@users.noreply.github.com](uhei@users.noreply.github.com) [igor.zhilianin@gmail.com](igor.zhilianin@gmail.com) [clement.chigot@atos.net](clement.chigot@atos.net) [arthur@arthurfabre.com](arthur@arthurfabre.com) [jmkim@pukyong.ac.kr](jmkim@pukyong.ac.kr) [kunpei@google.com](kunpei@google.com) [pascal@pascaldierich.com](pascal@pascaldierich.com) [dweomer5@gmail.com](dweomer5@gmail.com) [afabre@cloudflare.com](afabre@cloudflare.com) [mikhail@lesyk.org](mikhail@lesyk.org) [me@carlosedp.com](me@carlosedp.com) [git@tomanthony.co.uk](git@tomanthony.co.uk) [marius@grailbio.com](marius@grailbio.com) [paulzhol@gmail.com](paulzhol@gmail.com) [matloob@golang.org](matloob@golang.org) [mickael.kerjean@gmail.com](mickael.kerjean@gmail.com) [sergey.dobrodey@synesis.ru](sergey.dobrodey@synesis.ru) [santhosh.tekuri@gmail.com](santhosh.tekuri@gmail.com) [zoncoen@gmail.com](zoncoen@gmail.com) [lars.lehtonen@gmail.com](lars.lehtonen@gmail.com) [khr@google.com](khr@google.com) [taralx@gmail.com](taralx@gmail.com) [songjiayang1@gmail.com](songjiayang1@gmail.com) [dgoutnik@gmail.com](dgoutnik@gmail.com) [moritz@fain.io](moritz@fain.io) [piombo.dario@gmail.com](piombo.dario@gmail.com) [tuxillo@quantumachine.net](tuxillo@quantumachine.net) [hi@nhooyr.io](hi@nhooyr.io) [the729@gmail.com](the729@gmail.com) [gugl.zadolbal@gmail.com](gugl.zadolbal@gmail.com) [aofei@aofeisheng.com](aofei@aofeisheng.com) [ricardospadilha@gmail.com](ricardospadilha@gmail.com) [alex.brainman@gmail.com](alex.brainman@gmail.com) [tshprecher@gmail.com](tshprecher@gmail.com) [blake.mizerany@gmail.com](blake.mizerany@gmail.com) [andy@balholm.com](andy@balholm.com) [djd@golang.org](djd@golang.org) [tamird@gmail.com](tamird@gmail.com) [jra@nella.org](jra@nella.org) [dsymonds@golang.org](dsymonds@golang.org) [ai@uber.com](ai@uber.com) [cbro@golang.org](cbro@golang.org) [jonathan@titanous.com](jonathan@titanous.com) [michael.hudson@canonical.com](michael.hudson@canonical.com) [gyuhox@gmail.com](gyuhox@gmail.com) [adg@golang.org](adg@golang.org) [dave@cheney.net](dave@cheney.net) [igungor@gmail.com](igungor@gmail.com) [ayanamist@gmail.com](ayanamist@gmail.com) [danderson@google.com](danderson@google.com) [notcarl@google.com](notcarl@google.com) [nic.day@me.com](nic.day@me.com) [dpiddy@gmail.com](dpiddy@gmail.com) [sam@samwhited.com](sam@samwhited.com) [rolandshoemaker@gmail.com](rolandshoemaker@gmail.com) [voutasaurus@gmail.com](voutasaurus@gmail.com) [kale@lemnisys.com](kale@lemnisys.com) [joetsai@digital-static.net](joetsai@digital-static.net) [tormodlea@gmail.com](tormodlea@gmail.com) [kardianos@gmail.com](kardianos@gmail.com) [tr00.g33k@gmail.com](tr00.g33k@gmail.com) [artyom.pervukhin@gmail.com](artyom.pervukhin@gmail.com) [radu@cockroachlabs.com](radu@cockroachlabs.com)
 
-
-
-
-**Package Download URL**: https://go.googlesource.com/net
-
-
-
-
-
+**Package Download URL**: <https://go.googlesource.com/net>
 
 ---
 
 ### [paho.mqtt.golang (b30523793968e6b7a7b1f76338a58c4fe9755299)](https://github.com/eclipse/paho.mqtt.golang)
 
-
 #### Declared Licenses
+
 EPL-2.0, BSD-3-Clause
 
-
-```
+```text
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
    1. DEFINITIONS
    "Contribution" means:
@@ -325,12 +289,7 @@ THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICE
    You may add additional accurate notices of copyright ownership.
 ```
 
-
-
-
-
-
-```
+```text
 Eclipse Public License - v 2.0 (EPL-2.0)
 
 This program and the accompanying materials
@@ -628,44 +587,23 @@ version(s), and exceptions or additional permissions here}."
 
 ```
 
-
-
-
-
-
 #### Other Licenses
-
-
-
-
-
-
 
 ### Package Info
 
-
 **Authors**:  [matt@chiot.tech](matt@chiot.tech) [matt@brittan.nz](matt@brittan.nz) [rangelspam@gmail.com](rangelspam@gmail.com) [geekeryy@gmail.com](geekeryy@gmail.com) [ales.pour@bonitoo.io](ales.pour@bonitoo.io) [jefferson.figueiredo@silvafreiretec.com](jefferson.figueiredo@silvafreiretec.com) [457965634@qq.com](457965634@qq.com) [daniele.vasselli@northvolt.com](daniele.vasselli@northvolt.com) [l.f.altenhof@gmail.com](l.f.altenhof@gmail.com) [vruge@users.noreply.github.com](vruge@users.noreply.github.com) [avm@unmatched.eu](avm@unmatched.eu) [52723919+MattBrittan@users.noreply.github.com](52723919+MattBrittan@users.noreply.github.com) [adrian.mares@thethingsindustries.com](adrian.mares@thethingsindustries.com) [banaoa7543@gmail.com](banaoa7543@gmail.com) [shivamkm07@gmail.com](shivamkm07@gmail.com) [ptsneves@gmail.com](ptsneves@gmail.com) [gil.adda@cyberark.com](gil.adda@cyberark.com) [gil.adda@hotmail.com](gil.adda@hotmail.com) [linus@wallgren.eu](linus@wallgren.eu) [cecile.thiebaut@gmail.com](cecile.thiebaut@gmail.com) [tvojacek@amp.energy](tvojacek@amp.energy) [asm@uk.ibm.com](asm@uk.ibm.com) [al@hronrad.eu](al@hronrad.eu) [andrew@vaelen.org](andrew@vaelen.org)
 
-
-
-
-**Package Download URL**: https://github.com/eclipse/paho.mqtt.golang/archive/b30523793968e6b7a7b1f76338a58c4fe9755299.zip
-
-
-
-
-
+**Package Download URL**: <https://github.com/eclipse/paho.mqtt.golang/archive/b30523793968e6b7a7b1f76338a58c4fe9755299.zip>
 
 ---
 
 ### [sync (1966f539bbd7664efd5bb7462ae94d9db67f4502)](https://go.googlesource.com/sync)
 
-
 #### Declared Licenses
+
 BSD-3-Clause
 
-
-```
+```text
 Copyright 2009 The Go Authors.
 
 Redistribution and use in source and binary forms, with or without
@@ -696,44 +634,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ```
 
-
-
-
-
-
 #### Other Licenses
-
-
-
-
-
-
 
 ### Package Info
 
-
 **Authors**:  [rsc@golang.org](rsc@golang.org) [julie@golang.org](julie@golang.org) [cuong.manhle.vn@gmail.com](cuong.manhle.vn@gmail.com) [bcmills@google.com](bcmills@google.com) [kirk91.han@gmail.com](kirk91.han@gmail.com) [choleraehyq@gmail.com](choleraehyq@gmail.com) [652732310@qq.com](652732310@qq.com) [erutherford@gmail.com](erutherford@gmail.com) [deklerk@google.com](deklerk@google.com) [matloob@golang.org](matloob@golang.org) [andybons@golang.org](andybons@golang.org) [kev@inburke.com](kev@inburke.com) [jba@google.com](jba@google.com) [josharian@gmail.com](josharian@gmail.com) [mdlayher@gmail.com](mdlayher@gmail.com) [brad@danga.com](brad@danga.com) [adg@golang.org](adg@golang.org) [hi@changkun.de](hi@changkun.de) [imcusg@gmail.com](imcusg@gmail.com) [me@andersonq.me](me@andersonq.me) [jon.johnson@chainguard.dev](jon.johnson@chainguard.dev) [sean@liao.dev](sean@liao.dev) [gobot@golang.org](gobot@golang.org) [adonovan@google.com](adonovan@google.com) [xieyuschen@gmail.com](xieyuschen@gmail.com) [68940374+12ya@users.noreply.github.com](68940374+12ya@users.noreply.github.com) [2645477756@qq.com](2645477756@qq.com) [iant@golang.org](iant@golang.org) [berbreik@gmail.com](berbreik@gmail.com) [m.ddotx.f@gmail.com](m.ddotx.f@gmail.com) [zephyrtronium@gmail.com](zephyrtronium@gmail.com) [olivier.mengue@gmail.com](olivier.mengue@gmail.com) [dmitshur@golang.org](dmitshur@golang.org) [eric.wohltman@gmail.com](eric.wohltman@gmail.com)
 
-
-
-
-**Package Download URL**: https://go.googlesource.com/sync
-
-
-
-
-
+**Package Download URL**: <https://go.googlesource.com/sync>
 
 ---
 
 ### [websocket (ce903f6d1d961af3a8602f2842c8b1c3fca58c4d)](https://github.com/gorilla/websocket)
 
-
 #### Declared Licenses
+
 BSD-2-Clause
 
-
-```
+```text
 Copyright (c) 2013 The Gorilla WebSocket Authors. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -759,16 +676,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ```
 
-
-
-
-
-
 #### Other Licenses
+
 BSD-3-Clause, MIT
 
-
-```
+```text
 Copyright (c) 2013 The Gorilla WebSocket Authors. All rights reserved. . All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -797,12 +709,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-
-
-
-
-
-```
+```text
 Copyright (c) 2013 The Gorilla WebSocket Authors. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -823,43 +730,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-
-
-
-
-
-
-
-
-
 ### Package Info
-
 
 **Authors**:  [cdaley@redhat.com](cdaley@redhat.com) [kfliuyang@gmail.com](kfliuyang@gmail.com) [matt@eatsleeprepeat.net](matt@eatsleeprepeat.net) [junnplus@gmail.com](junnplus@gmail.com) [ChannyClaus@users.noreply.github.com](ChannyClaus@users.noreply.github.com) [chankang@chankang17@gmail.com](chankang@chankang17@gmail.com) [thdwjddn123@gmail.com](thdwjddn123@gmail.com) [48427044+hirasawayuki@users.noreply.github.com](48427044+hirasawayuki@users.noreply.github.com) [lluis.campos@northern.tech](lluis.campos@northern.tech) [gary@beagledreams.com](gary@beagledreams.com) [gary.burd@gmail.com](gary.burd@gmail.com) [ayuemelin@avito.ru](ayuemelin@avito.ru) [35656609+thak1411@users.noreply.github.com](35656609+thak1411@users.noreply.github.com) [hellflamedly@qq.com](hellflamedly@qq.com) [ran@unusedvar.com](ran@unusedvar.com) [jongillham@users.noreply.github.com](jongillham@users.noreply.github.com) [vominyh@yandex.ru](vominyh@yandex.ru) [55989174+srybacki@users.noreply.github.com](55989174+srybacki@users.noreply.github.com) [elmas.ferhat@gmail.com](elmas.ferhat@gmail.com) [14269809+codenoid@users.noreply.github.com](14269809+codenoid@users.noreply.github.com) [john@johnjohnson.cc](john@johnjohnson.cc) [dbaker@redhat.com](dbaker@redhat.com) [thearyanahmed@gmail.com](thearyanahmed@gmail.com) [m18202787110@gmail.com](m18202787110@gmail.com) [juergen.etzlstorfer@dynatrace.com](juergen.etzlstorfer@dynatrace.com) [tariq181290@gmail.com](tariq181290@gmail.com) [42449819+stevenscott89@users.noreply.github.com](42449819+stevenscott89@users.noreply.github.com) [thedevsaddam@gmail.com](thedevsaddam@gmail.com) [ankur0493@gmail.com](ankur0493@gmail.com) [30459655+kanozec@users.noreply.github.com](30459655+kanozec@users.noreply.github.com) [jra@nella.org](jra@nella.org) [mafredri@gmail.com](mafredri@gmail.com) [julien.salleyron@gmail.com](julien.salleyron@gmail.com) [noop@example.com](noop@example.com) [adamkshannon@gmail.com](adamkshannon@gmail.com) [kamil@kamilkisiel.net](kamil@kamilkisiel.net) [38705838+dottyjones@users.noreply.github.com](38705838+dottyjones@users.noreply.github.com) [26906365+chebyrash@users.noreply.github.com](26906365+chebyrash@users.noreply.github.com) [pcarranza@gmail.com](pcarranza@gmail.com) [carter@carterjones.info](carter@carterjones.info) [geon0250@gmail.com](geon0250@gmail.com) [alexey.palazhchenko@gmail.com](alexey.palazhchenko@gmail.com) [36607057+claudia-jones@users.noreply.github.com](36607057+claudia-jones@users.noreply.github.com) [JordanP@users.noreply.github.com](JordanP@users.noreply.github.com) [fising@qq.com](fising@qq.com) [david@dollar.io](david@dollar.io) [seppo0010@users.noreply.github.com](seppo0010@users.noreply.github.com) [jerome.bernard@ercom.fr](jerome.bernard@ercom.fr) [xPushkin@users.noreply.github.com](xPushkin@users.noreply.github.com) [alain.gilbert.15@gmail.com](alain.gilbert.15@gmail.com) [johnrichardrinehart@gmail.com](johnrichardrinehart@gmail.com) [seans@google.com](seans@google.com) [greenwald@outlook.com](greenwald@outlook.com) [rfyiamcool@163.com](rfyiamcool@163.com) [viktor@szepe.net](viktor@szepe.net) [172609632+canelohill@users.noreply.github.com](172609632+canelohill@users.noreply.github.com) [171117698+tebuka@users.noreply.github.com](171117698+tebuka@users.noreply.github.com) [halo.arrow@example.com](halo.arrow@example.com) [massietom@outlook.com](massietom@outlook.com) [KSDaemon@gmail.com](KSDaemon@gmail.com) [mstmdev@gmail.com](mstmdev@gmail.com) [clamores.pro@gmail.com](clamores.pro@gmail.com) [daniel.holmes@djcentric.com](daniel.holmes@djcentric.com) [apoorvajagtap4@gmail.com](apoorvajagtap4@gmail.com) [unafraid89@gmail.com](unafraid89@gmail.com) [nakayamakenjiro@gmail.com](nakayamakenjiro@gmail.com) [xdpcsyy@gmail.com](xdpcsyy@gmail.com) [brendan.creane@corelight.com](brendan.creane@corelight.com) [henrik.hautakoski@gmail.com](henrik.hautakoski@gmail.com) [ckatrak@slack-corp.com](ckatrak@slack-corp.com)
 
-
-
-
-**Package Download URL**: https://github.com/gorilla/websocket/archive/ce903f6d1d961af3a8602f2842c8b1c3fca58c4d.zip
-
-
-
-
-
+**Package Download URL**: <https://github.com/gorilla/websocket/archive/ce903f6d1d961af3a8602f2842c8b1c3fca58c4d.zip>
 
 ---
-
-
-
 
 ---
 
 ## Licenses
 
-
 ### BSD-2-Clause
 
-```
+```text
 Copyright (c) &lt;year&gt; &lt;owner&gt;
 All rights reserved.
 
@@ -886,10 +771,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-
 ### BSD-3-Clause
 
-```
+```text
 Copyright (c) &lt;year&gt; &lt;owner&gt;
 All rights reserved.
 
@@ -919,10 +803,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-
 ### BSD-2-Clause
 
-```
+```text
 Copyright (c) 2013 The Gorilla WebSocket Authors. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -948,10 +831,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ```
 
-
 ### BSD-3-Clause
 
-```
+```text
 Copyright 2009 The Go Authors.
 
 Redistribution and use in source and binary forms, with or without
@@ -982,10 +864,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ```
 
-
 ### EPL-2.0
 
-```
+```text
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (&quot;AGREEMENT&quot;). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT&#39;S ACCEPTANCE OF THIS AGREEMENT.
    1. DEFINITIONS
@@ -1042,10 +923,9 @@ THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICE
    You may add additional accurate notices of copyright ownership.
 ```
 
-
 ### BSD-3-Clause
 
-```
+```text
 Eclipse Public License - v 2.0 (EPL-2.0)
 
 This program and the accompanying materials
@@ -1343,10 +1223,9 @@ version(s), and exceptions or additional permissions here}.&quot;
 
 ```
 
-
 ### GPL-3.0-only
 
-```
+```text
 GNU GENERAL PUBLIC LICENSE
 Version 3, 29 June 2007
 Copyright © 2007 Free Software Foundation, Inc. &lt;http s ://fsf.org/&gt;
@@ -1475,10 +1354,9 @@ You should also get your employer (if you work as a programmer) or school, if an
 The GNU General Public License does not permit incorporating your program into proprietary programs. If your program is a subroutine library, you may consider it more useful to permit linking proprietary applications with the library. If this is what you want to do, use the GNU Lesser General Public License instead of this License. But first, please read &lt;http s ://www.gnu.org/philosophy/why-not-lgpl.html&gt;.
 ```
 
-
 ### MIT
 
-```
+```text
 MIT License
 Copyright (c) &lt;year&gt; &lt;copyright holders&gt;
 
@@ -1501,11 +1379,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-
-
-
-
-
 ## Copyrights
 
 ### BSD 2-Clause &quot;Simplified&quot; License
@@ -1514,8 +1387,7 @@ Copyright (c) 2009 Apple Inc. All rights reserved.
 
 Copyright (c) 2013 The Gorilla WebSocket Authors. All rights reserved.
 
-
-```
+```text
 Copyright (c) &lt;year&gt; &lt;owner&gt;
 All rights reserved.
 
@@ -1542,12 +1414,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-
 ### BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License
 
 Copyright (c) 2013 The Gorilla WebSocket Authors. All rights reserved.
 
-Copyright (c) 2008-2009 Bjoern Hoehrmann &lt;bjoern@hoehrmann.de&gt;
+Copyright (c) 2008-2009 Bjoern Hoehrmann &lt;<bjoern@hoehrmann.de>&gt;
 
 Copyright (c) 2015 The Gorilla WebSocket Authors. All rights reserved.
 
@@ -1573,8 +1444,7 @@ Copyright (c) 2013 IBM Corp and others.
 
 Copyright (c) 2022 IBM Corp and others.
 
-
-```
+```text
 Copyright (c) &lt;year&gt; &lt;owner&gt;
 All rights reserved.
 
@@ -1604,7 +1474,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-
 ### Eclipse Public License 2.0
 
 Copyright (c) 2021 IBM Corp and others.
@@ -1615,8 +1484,7 @@ Copyright (c) 2018 TIBCO Software Inc.
 
 Copyright (c) 2022 IBM Corp and others.
 
-
-```
+```text
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (&quot;AGREEMENT&quot;). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT&#39;S ACCEPTANCE OF THIS AGREEMENT.
    1. DEFINITIONS
@@ -1673,13 +1541,11 @@ THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICE
    You may add additional accurate notices of copyright ownership.
 ```
 
-
 ### GNU General Public License v3.0 only
 
-Copyright (c) 2007 Free Software Foundation, Inc. &lt;https://fsf.org/&gt;
+Copyright (c) 2007 Free Software Foundation, Inc. &lt;<https://fsf.org/&gt>;
 
-
-```
+```text
 GNU GENERAL PUBLIC LICENSE
 Version 3, 29 June 2007
 Copyright © 2007 Free Software Foundation, Inc. &lt;http s ://fsf.org/&gt;
@@ -1808,15 +1674,13 @@ You should also get your employer (if you work as a programmer) or school, if an
 The GNU General Public License does not permit incorporating your program into proprietary programs. If your program is a subroutine library, you may consider it more useful to permit linking proprietary applications with the library. If this is what you want to do, use the GNU Lesser General Public License instead of this License. But first, please read &lt;http s ://www.gnu.org/philosophy/why-not-lgpl.html&gt;.
 ```
 
-
 ### MIT License
 
 Copyright (c) 2013 The Gorilla WebSocket Authors. All rights reserved.
 
-Copyright (c) 2008-2009 Bjoern Hoehrmann &lt;bjoern@hoehrmann.de&gt;
+Copyright (c) 2008-2009 Bjoern Hoehrmann &lt;<bjoern@hoehrmann.de>&gt;
 
-
-```
+```text
 MIT License
 Copyright (c) &lt;year&gt; &lt;copyright holders&gt;
 
@@ -1839,21 +1703,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-
 ### No Associated License
 
 Copyright (c) 2006, 2008 Junio C Hamano
 
 Copyright (c) 2025 The Go Authors. All rights reserved.
 
-
-
-
-
-
-
 [FOSSA]: # (Do not touch the comments below)
 
 [FOSSA]: # (==depsig=a7804cf40f5ee8969d7e28a55fcb4d45c1dad14f1015296ec8abc6e2259919d6==)
-
-

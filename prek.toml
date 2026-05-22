@@ -1,0 +1,55 @@
+default_install_hook_types = ["pre-commit", "commit-msg"]
+
+[[repos]]
+repo = "builtin"
+hooks = [
+  { id = "trailing-whitespace", exclude = "backlog/" },
+  { id = "end-of-file-fixer", exclude = "backlog/" },
+  { id = "check-yaml" },
+  { id = "check-json" },
+  { id = "check-toml" },
+  { id = "check-added-large-files" },
+  { id = "check-merge-conflict" },
+  { id = "detect-private-key" },
+  { id = "mixed-line-ending", args = ["--fix=lf"] },
+]
+
+[[repos]]
+repo = "https://github.com/gitleaks/gitleaks"
+rev = "v8.29.1"
+hooks = [
+  { id = "gitleaks" },
+]
+
+[[repos]]
+repo = "https://github.com/golangci/golangci-lint"
+rev = "v1.64.8"
+hooks = [
+  { id = "golangci-lint", args = ["run", "./vevor-weatherbridge-go/..."],
+    exclude = "backlog/", pass_filenames = false },
+]
+
+[[repos]]
+repo = "https://github.com/rvben/rumdl-pre-commit"
+rev = "v0.0.181"
+hooks = [
+  { id = "rumdl", args = ["--fix"],
+    exclude = "backlog/|project-attribution-" },
+]
+
+[[repos]]
+repo = "https://github.com/AleksaC/hadolint-py"
+rev = "v2.14.0"
+hooks = [
+  { id = "hadolint", args = ["vevor-weatherbridge-go/Dockerfile"] },
+]
+
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "cog-verify"
+name = "conventional commit"
+language = "system"
+entry = "bash -c 'if ! head -1 \"$1\" | grep -qE \"^Merge \"; then exec cog verify --file \"$1\"; fi' --"
+stages = ["commit-msg"]
