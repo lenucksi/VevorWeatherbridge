@@ -1,0 +1,19 @@
+"backlog/tasks/task-23 - Migrate-von-pre-commit-zu-prek-Rust-basiert.md"
+  s_7de1a7ba7b24c0::t_5cbbbfc39107b2 4,7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "c68b1a83726dcd81dfcb3df05970cc4f013d1d39",
+  "prompts": {},
+  "sessions": {
+    "s_7de1a7ba7b24c0": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b0fac368ffeAHPKs5sQ7EmqCx",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
