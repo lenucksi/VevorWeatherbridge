@@ -1,0 +1,38 @@
+.github/workflows/dependency-review.yml
+  s_7de1a7ba7b24c0::t_ce9c014279f4af 64
+.github/workflows/ci.yml
+  s_7de1a7ba7b24c0::t_ce9c014279f4af 79
+prek.toml
+  s_7de1a7ba7b24c0::t_6b5515cbeb8b9e 1-35,38-55
+  s_7de1a7ba7b24c0::t_d84a56d6b6330b 36-37
+"backlog/tasks/task-23 - Migrate-von-pre-commit-zu-prek-Rust-basiert.md"
+  s_7de1a7ba7b24c0::t_a4717991ca15cc 3,6,9-10,12-13,16-21,24-28
+.github/workflows/actionlint.yml
+  s_7de1a7ba7b24c0::t_ce9c014279f4af 24
+Backlog.md
+  s_7de1a7ba7b24c0::t_cca17b37b1a90a 8-16
+  s_7de1a7ba7b24c0::t_2331a33a9f4c9f 3
+  s_7de1a7ba7b24c0::t_fd51ecae34e25e 2
+vevor-weatherbridge-go/project-attribution-git+github.com_lenucksi_VevorWeatherbridge$68cf224ed18d57164a54711983dfaf72921adfb3-1764672627291.md
+  s_7de1a7ba7b24c0::t_fd51ecae34e25e 24,159,161,194,196,226,234,236,292,596,604,606,643,651,653,681,683,712,737,747,776,808,836,869,928,1228,1359,1390,1421,1447,1487,1546,1548,1681,1683
+README.md
+  s_7de1a7ba7b24c0::t_ce9c014279f4af 9-10
+.gitignore
+  ai_agent 24-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "c612a8f62266f8db917b5086d503b4c80e6c7e0e",
+  "prompts": {},
+  "sessions": {
+    "s_7de1a7ba7b24c0": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b0fac368ffeAHPKs5sQ7EmqCx",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
