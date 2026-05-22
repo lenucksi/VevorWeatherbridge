@@ -1,0 +1,25 @@
+docker/compose.ollama.yaml
+  s_f8ed16448e6b19::t_22ab1a60252c33 32
+  s_f8ed16448e6b19::t_785c0c950b4592 35
+  s_f8ed16448e6b19::t_dc563f378d718b 38
+docker/compose.llamacpp.yaml
+  s_f8ed16448e6b19::t_d41331082e2a62 83
+  s_f8ed16448e6b19::t_fdb7de6dccc802 87
+  s_f8ed16448e6b19::t_da3ef09c840135 90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "fa1208ef0750c9153837fef77d2f0ac950519ae6",
+  "prompts": {},
+  "sessions": {
+    "s_f8ed16448e6b19": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1b4787bdaffebETmN1xRWugQSs",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
