@@ -1,0 +1,21 @@
+scripts/gen-notice.py
+  s_3eead9736154b1::t_c79aa59d070abf 1-24
+.github/workflows/security-supply-chain.yml
+  s_3eead9736154b1::t_66a897f2969d57 140
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "a0e2b6ec7312651dafc459d62bdda7490da2ad53",
+  "prompts": {},
+  "sessions": {
+    "s_3eead9736154b1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_15dfca480ffePmY7QwCKufAP3G",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
