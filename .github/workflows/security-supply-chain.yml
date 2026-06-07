@@ -9,10 +9,7 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-  security-events: write
-  packages: write
+permissions: read-all
 
 env:
   REGISTRY: ghcr.io
@@ -23,6 +20,10 @@ jobs:
   sbom-and-scan:
     name: SBOM + Vuln Scan + Notices
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      packages: write
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
@@ -61,7 +62,7 @@ jobs:
           load: true
           tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           build-args: |
-            BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.21
+            BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.23
             VERSION=ci-scan
           cache-from: type=gha,scope=go-amd64
 
@@ -168,12 +169,14 @@ jobs:
         continue-on-error: true
         run: |
           ts-scan analyse \
+            -f cyclonedx-json \
             -o ts-analysis.json \
             --disable-scanoss \
             --Xdeepscan enable_yara,True \
             --Xdeepscan yara_rules,/tmp/yara-rules \
             sbom-syft.cdx.json 2>/dev/null || \
           ts-scan analyse \
+            -f cyclonedx-json \
             -o ts-analysis.json \
             --disable-scanoss \
             sbom-syft.cdx.json 2>/dev/null || true
@@ -213,7 +216,7 @@ jobs:
           retention-days: 90
 
       - name: Upload NOTICE
-        if: always()
+        if: always() && hashFiles('NOTICE.aboutcode.html') != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: aboutcode-notice
@@ -221,7 +224,7 @@ jobs:
           retention-days: 90
 
       - name: Upload ts-scan analysis
-        if: always()
+        if: always() && hashFiles('ts-analysis.json') != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ts-scan-analysis
@@ -247,7 +250,10 @@ jobs:
 
       - name: Push image to GHCR
         run: |
+          docker tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
           docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
 
       # ── ORAS: Attach SBOM to image ──
 

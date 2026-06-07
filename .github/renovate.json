@@ -3,14 +3,14 @@
   "extends": [
     "config:best-practices",
     "docker:pinDigests",
-    "helpers:pinGitHubActionDigests",
+    "helpers:pinGitHubActionsDigests",
     ":dependencyDashboard",
     ":semanticCommits",
-    "default:automergeDigest"
+    ":automergeDigest"
   ],
   "labels": ["dependencies"],
   "assignees": ["@lenucksi"],
-  "schedule": ["0 4 * * *"],
+  "schedule": ["before 5am"],
   "timezone": "Europe/Berlin",
   "minimumReleaseAge": "3 days",
   "platformAutomerge": true,
@@ -53,7 +53,7 @@
     {
       "description": "Update HA base images from workflow YAML build-args",
       "customType": "regex",
-      "fileMatch": ["\\.github/workflows/build-addon\\.yml$"],
+      "managerFilePatterns": ["/\\.github/workflows/build-addon\\.yml$/"],
       "matchStrings": [
         "echo \"image=(?<depName>ghcr\\.io/home-assistant/[a-z0-9-]+-base):(?<currentValue>\\d+\\.\\d+)\""
       ],

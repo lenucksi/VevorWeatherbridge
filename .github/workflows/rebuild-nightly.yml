@@ -9,14 +9,15 @@ env:
   REGISTRY: ghcr.io
   QUAY_REGISTRY: quay.io
 
-permissions:
-  contents: read
-  packages: write
+permissions: read-all
 
 jobs:
   check:
     name: Check base images
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     outputs:
       needs-updating: ${{ steps.check.outputs.needs-updating }}
     steps:
@@ -50,15 +51,66 @@ jobs:
         id: check
         uses: lucacome/docker-image-update-checker@3233adf42bb1dddf92f18cf024a8e202dbeaa9b3 # v3.1.0
         with:
-          base-image: ghcr.io/home-assistant/amd64-base:3.21
+          base-image: ghcr.io/home-assistant/amd64-base:3.23
           image: ${{ env.REGISTRY }}/${{ github.repository_owner }}/vevor-weatherbridge-go-amd64:latest
           platforms: linux/amd64
+
+  bump-version:
+    name: Bump HA base image version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      newer: ${{ steps.check-version.outputs.newer }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ab7a9404c0f3da075243ca237b5fac12c98deaa5 # v2.19.3
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Check for newer HA base version
+        id: check-version
+        run: ./scripts/check-ha-base-version.sh 3.23 >> "$GITHUB_OUTPUT"
+
+      - name: Update base image references
+        if: steps.check-version.outputs.newer == 'true'
+        run: |
+          NEW="${{ steps.check-version.outputs.version }}"
+          sed -i "s|\(home-assistant/[a-z]*-base:\)3\.[0-9]*|\1$NEW|g" \
+            .github/workflows/*.yml \
+            vevor-weatherbridge-go/Dockerfile
+
+      - name: Create/update PR
+        if: steps.check-version.outputs.newer == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: bump HA base image to ${{ steps.check-version.outputs.version }}"
+          branch: ha-base-version-bump
+          title: "chore(deps): bump HA base image to ${{ steps.check-version.outputs.version }}"
+          body: |
+            Automated by the [Nightly Rebuild](${{ github.server_url }}/${{ github.repository }}/actions/workflows/rebuild-nightly.yml) workflow.
+
+            Updates all HA base image references from `3.23` → `${{ steps.check-version.outputs.version }}` in:
+            - `.github/workflows/build-addon.yml`
+            - `.github/workflows/rebuild-nightly.yml`
+            - `.github/workflows/security-supply-chain.yml`
+            - `vevor-weatherbridge-go/Dockerfile`
+          labels: dependencies,automated
+          delete-branch-on-merge: true
 
   rebuild:
     name: Rebuild all architectures
     needs: [check]
     if: needs.check.outputs.needs-updating == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
       matrix:
         arch: [amd64, armv7, aarch64, armhf, i386]
@@ -116,11 +168,11 @@ jobs:
         id: base
         run: |
           case "${{ matrix.arch }}" in
-            amd64)   echo "image=ghcr.io/home-assistant/amd64-base:3.21" >> $GITHUB_OUTPUT ;;
-            armv7)   echo "image=ghcr.io/home-assistant/armv7-base:3.21" >> $GITHUB_OUTPUT ;;
-            aarch64) echo "image=ghcr.io/home-assistant/aarch64-base:3.21" >> $GITHUB_OUTPUT ;;
-            armhf)   echo "image=ghcr.io/home-assistant/armhf-base:3.21" >> $GITHUB_OUTPUT ;;
-            i386)    echo "image=ghcr.io/home-assistant/i386-base:3.21" >> $GITHUB_OUTPUT ;;
+            amd64)   echo "image=ghcr.io/home-assistant/amd64-base:3.23" >> $GITHUB_OUTPUT ;;
+            armv7)   echo "image=ghcr.io/home-assistant/armv7-base:3.23" >> $GITHUB_OUTPUT ;;
+            aarch64) echo "image=ghcr.io/home-assistant/aarch64-base:3.23" >> $GITHUB_OUTPUT ;;
+            armhf)   echo "image=ghcr.io/home-assistant/armhf-base:3.23" >> $GITHUB_OUTPUT ;;
+            i386)    echo "image=ghcr.io/home-assistant/i386-base:3.23" >> $GITHUB_OUTPUT ;;
           esac
 
       - name: Build and push to GHCR

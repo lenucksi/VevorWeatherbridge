@@ -5,13 +5,14 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-  pull-requests: write
+permissions: read-all
 
 jobs:
   dependency-review:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     if: github.event.pull_request.user.login == 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'dependencies')
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -30,6 +31,8 @@ jobs:
 
   go-security-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: github.event.pull_request.user.login == 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'dependencies')
     steps:
       - name: Harden the runner (Audit all outbound calls)

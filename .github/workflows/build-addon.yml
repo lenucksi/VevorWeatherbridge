@@ -97,11 +97,11 @@ jobs:
         id: base
         run: |
           case "${{ matrix.arch }}" in
-            amd64)   echo "image=ghcr.io/home-assistant/amd64-base:3.21" >> $GITHUB_OUTPUT ;;
-            armv7)   echo "image=ghcr.io/home-assistant/armv7-base:3.21" >> $GITHUB_OUTPUT ;;
-            aarch64) echo "image=ghcr.io/home-assistant/aarch64-base:3.21" >> $GITHUB_OUTPUT ;;
-            armhf)   echo "image=ghcr.io/home-assistant/armhf-base:3.21" >> $GITHUB_OUTPUT ;;
-            i386)    echo "image=ghcr.io/home-assistant/i386-base:3.21" >> $GITHUB_OUTPUT ;;
+            amd64)   echo "image=ghcr.io/home-assistant/amd64-base:3.23" >> $GITHUB_OUTPUT ;;
+            armv7)   echo "image=ghcr.io/home-assistant/armv7-base:3.23" >> $GITHUB_OUTPUT ;;
+            aarch64) echo "image=ghcr.io/home-assistant/aarch64-base:3.23" >> $GITHUB_OUTPUT ;;
+            armhf)   echo "image=ghcr.io/home-assistant/armhf-base:3.23" >> $GITHUB_OUTPUT ;;
+            i386)    echo "image=ghcr.io/home-assistant/i386-base:3.23" >> $GITHUB_OUTPUT ;;
           esac
 
       - name: Build and push Docker image

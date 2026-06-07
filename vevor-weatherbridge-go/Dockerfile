@@ -15,8 +15,8 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 # Stage 1: Build the Go binary
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.21
-FROM golang:1.26-alpine@sha256:91eda9776261207ea25fd06b5b7fed8d397dd2c0a283e77f2ab6e91bfa71079d AS builder
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.23
+FROM golang:1.26-alpine AS builder
 
 WORKDIR /build
 
@@ -41,10 +41,6 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} GOARM=${TARGETVARIANT#v} \
 # Stage 2: Runtime image using Home Assistant base
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
-
-# Install CA certificates
-# hadolint ignore=DL3018
-RUN apk add --no-cache ca-certificates tzdata
 
 # Copy the binary from builder
 COPY --from=builder /build/weatherbridge /weatherbridge
