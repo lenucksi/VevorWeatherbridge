@@ -137,14 +137,7 @@ jobs:
         continue-on-error: true
         run: |
           pip install aboutcode-toolkit 2>/dev/null || true
-          jq -r '
-            .components // [] | map({
-              name: .name // "",
-              version: .version // "",
-              license_expression: ([.licenses[].license.id] | join(" AND ")),
-              copyright: ""
-            })
-          ' sbom-syft.cdx.json > /tmp/about-inventory.json
+          python3 scripts/gen-notice.py
           if command -v about &>/dev/null; then
             about attrib /tmp/about-inventory.json NOTICE.aboutcode.html 2>/dev/null || true
           fi
