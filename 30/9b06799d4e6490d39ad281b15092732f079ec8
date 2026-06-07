@@ -1,0 +1,21 @@
+.github/workflows/rebuild-nightly.yml
+  s_3eead9736154b1::t_62ed9092d2a093 115,117
+vevor-weatherbridge-go/build.json
+  s_3eead9736154b1::t_e222ea46e63b78 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "309b06799d4e6490d39ad281b15092732f079ec8",
+  "prompts": {},
+  "sessions": {
+    "s_3eead9736154b1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_15dfca480ffePmY7QwCKufAP3G",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
