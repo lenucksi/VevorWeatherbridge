@@ -1,0 +1,51 @@
+vevor-weatherbridge-go/Dockerfile
+  s_3eead9736154b1::t_76cb656f01fcda 18
+  s_3eead9736154b1::t_d403942f3e3162 19
+.github/workflows/release-please.yml
+  s_3eead9736154b1::t_9f9f145ab312c8 8
+.github/workflows/security-supply-chain.yml
+  s_3eead9736154b1::t_c934fad07993c7 172,179
+  s_3eead9736154b1::t_0f038c2b5414f4 23-26
+  s_3eead9736154b1::t_335474c85e2f80 219,227
+  s_3eead9736154b1::t_5250ca294d4f6d 253-254,256
+  s_3eead9736154b1::t_3ab7c5c1d8ab97 65
+  s_3eead9736154b1::t_ec0f895acf8c19 12
+.github/workflows/build-addon.yml
+  s_3eead9736154b1::t_e4f7e8258831f9 100-104
+.github/workflows/dependency-review.yml
+  s_3eead9736154b1::t_f011cf8e555bcc 34-35
+  s_3eead9736154b1::t_7bbf967dc3e7f2 8,13-15
+scripts/check-ha-base-version.sh
+  s_3eead9736154b1::t_6d61a7d3472e98 1-34
+vevor-weatherbridge-go/go.mod
+  s_3eead9736154b1::t_ce40a126ad09e6 3
+vevor-weatherbridge-go/build.json
+  s_3eead9736154b1::t_1f824972efc785 3-7
+.github/renovate.json
+  s_3eead9736154b1::t_efedac19d4f6fa 13
+  s_3eead9736154b1::t_aed5d19f8fcfbf 56
+  s_3eead9736154b1::t_fd9ce8c7252c87 6
+.github/workflows/rebuild-nightly.yml
+  s_3eead9736154b1::t_4ab2c7c2904e1d 12,18-20
+  s_3eead9736154b1::t_5f935a3808f810 111-113
+  s_3eead9736154b1::t_33cc5bab144290 89
+  s_3eead9736154b1::t_2ce87b7314e2ce 54
+  s_3eead9736154b1::t_8823989caba9a3 58-88,90-105
+  s_3eead9736154b1::t_95f4b1656ce59a 171-175
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "d71ff0426ee03d693c3a7a8d5d0f981666ab660b",
+  "prompts": {},
+  "sessions": {
+    "s_3eead9736154b1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_15dfca480ffePmY7QwCKufAP3G",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
