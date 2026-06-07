@@ -1,10 +1,7 @@
 {
   "build_from": {
     "amd64": "golang:1.26-alpine",
-    "armv7": "golang:1.26-alpine",
-    "aarch64": "golang:1.26-alpine",
-    "armhf": "golang:1.26-alpine",
-    "i386": "golang:1.26-alpine"
+    "aarch64": "golang:1.26-alpine"
   },
   "args": {}
 }
