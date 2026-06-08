@@ -13,7 +13,7 @@ permissions: read-all
 
 env:
   REGISTRY: ghcr.io
-  QUAY_REGISTRY: quay.io
+  # QUAY_REGISTRY: quay.io  # temporarily disabled — Quay.io service issues
   IMAGE_NAME: vevor-weatherbridge-go
 
 jobs:
@@ -43,16 +43,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Log in to Quay.io
-        env:
-          QUAY_USER: ${{ secrets.QUAY_USERNAME }}
-          QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
-        if: env.QUAY_USER != '' && env.QUAY_PASS != ''
-        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
-        with:
-          registry: ${{ env.QUAY_REGISTRY }}
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
+      # Quay.io temporarily disabled — service issues
+      # - name: Log in to Quay.io
+      #   env:
+      #     QUAY_USER: ${{ secrets.QUAY_USERNAME }}
+      #     QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
+      #   if: env.QUAY_USER != '' && env.QUAY_PASS != ''
+      #   uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+      #   with:
+      #     registry: ${{ env.QUAY_REGISTRY }}
+      #     username: ${{ secrets.QUAY_USERNAME }}
+      #     password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Build image
         uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
@@ -232,18 +233,19 @@ jobs:
 
       # ── Push to Registries ──
 
-      - name: Push image to Quay.io
-        env:
-          QUAY_USER: ${{ secrets.QUAY_USERNAME }}
-          QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
-        if: env.QUAY_USER != '' && env.QUAY_PASS != ''
-        run: |
-          docker tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          docker tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-          docker push ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          docker push ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+      # Quay.io temporarily disabled — service issues
+      # - name: Push image to Quay.io
+      #   env:
+      #     QUAY_USER: ${{ secrets.QUAY_USERNAME }}
+      #     QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
+      #   if: env.QUAY_USER != '' && env.QUAY_PASS != ''
+      #   run: |
+      #     docker tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+      #       ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      #     docker tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+      #       ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+      #     docker push ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      #     docker push ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:latest
 
       # ── Push to GHCR (for ORAS attach) ──
 
@@ -267,15 +269,16 @@ jobs:
             --artifact-type application/vnd.cyclonedx+json \
             sbom-syft.cdx.json:application/vnd.cyclonedx+json || true
 
-      - name: Attach Syft SBOM to image (Quay)
-        env:
-          QUAY_USER: ${{ secrets.QUAY_USERNAME }}
-          QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
-        if: env.QUAY_USER != '' && env.QUAY_PASS != ''
-        run: |
-          oras attach ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            --artifact-type application/vnd.cyclonedx+json \
-            sbom-syft.cdx.json:application/vnd.cyclonedx+json || true
+      # Quay.io temporarily disabled — service issues
+      # - name: Attach Syft SBOM to image (Quay)
+      #   env:
+      #     QUAY_USER: ${{ secrets.QUAY_USERNAME }}
+      #     QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
+      #   if: env.QUAY_USER != '' && env.QUAY_PASS != ''
+      #   run: |
+      #     oras attach ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+      #       --artifact-type application/vnd.cyclonedx+json \
+      #       sbom-syft.cdx.json:application/vnd.cyclonedx+json || true
 
       - name: Pull fresh image for SBOM on schedule
         if: github.event_name == 'schedule'

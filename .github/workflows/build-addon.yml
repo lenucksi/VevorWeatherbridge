@@ -12,7 +12,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  QUAY_REGISTRY: quay.io
+  # QUAY_REGISTRY: quay.io  # temporarily disabled — Quay.io service issues
 
 permissions:
   contents: read
@@ -56,16 +56,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Log in to Quay.io
-        env:
-          QUAY_USER: ${{ secrets.QUAY_USERNAME }}
-          QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
-        if: env.QUAY_USER != '' && env.QUAY_PASS != ''
-        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
-        with:
-          registry: ${{ env.QUAY_REGISTRY }}
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
+      # Quay.io temporarily disabled — service issues
+      # - name: Log in to Quay.io
+      #   env:
+      #     QUAY_USER: ${{ secrets.QUAY_USERNAME }}
+      #     QUAY_PASS: ${{ secrets.QUAY_TOKEN }}
+      #   if: env.QUAY_USER != '' && env.QUAY_PASS != ''
+      #   uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+      #   with:
+      #     registry: ${{ env.QUAY_REGISTRY }}
+      #     username: ${{ secrets.QUAY_USERNAME }}
+      #     password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Extract metadata
         id: meta
@@ -73,7 +74,8 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/vevor-weatherbridge-go-${{ matrix.arch }}
-            ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/vevor-weatherbridge-go-${{ matrix.arch }}
+            # Quay.io temporarily disabled — service issues
+            # ${{ env.QUAY_REGISTRY }}/${{ secrets.QUAY_USERNAME }}/vevor-weatherbridge-go-${{ matrix.arch }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
