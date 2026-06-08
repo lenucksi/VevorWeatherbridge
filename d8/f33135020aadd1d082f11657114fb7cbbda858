@@ -1,0 +1,31 @@
+.github/workflows/rebuild-nightly.yml
+  s_3eead9736154b1::t_665e3af4e88c90 39-49
+  s_3eead9736154b1::t_48357c7404720d 155-165
+  s_3eead9736154b1::t_27ef138de02bea 10
+  s_3eead9736154b1::t_9ff249f3696681 201-217
+.github/workflows/security-supply-chain.yml
+  s_3eead9736154b1::t_d4469104590559 16
+  s_3eead9736154b1::t_d63b02dddd7f28 46-56
+  s_3eead9736154b1::t_afe610bb52a7e7 272-281
+  s_3eead9736154b1::t_76318f00d44bd8 236-248
+.github/workflows/build-addon.yml
+  s_3eead9736154b1::t_4ddf34294facca 77-78
+  s_3eead9736154b1::t_d4610a3251441b 59-69
+  s_3eead9736154b1::t_e1ff46aa0dc1ec 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "d8f33135020aadd1d082f11657114fb7cbbda858",
+  "prompts": {},
+  "sessions": {
+    "s_3eead9736154b1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_15dfca480ffePmY7QwCKufAP3G",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
