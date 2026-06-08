@@ -9,8 +9,18 @@ set -euo pipefail
 
 CURRENT="${1:-3.23}"
 
-LATEST=$(curl -s "https://ghcr.io/v2/home-assistant/base/tags/list" \
-  | jq -r '.tags[]' \
+RESPONSE=$(curl -s -w "\n%{http_code}" "https://ghcr.io/v2/home-assistant/base/tags/list")
+HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+BODY=$(echo "$RESPONSE" | sed '$d')
+
+if [ "$HTTP_CODE" != "200" ]; then
+  echo "Warning: GHCR API returned HTTP ${HTTP_CODE} (auth required?)" >&2
+  echo "newer=false"
+  echo "version=${CURRENT}"
+  exit 0
+fi
+
+LATEST=$(echo "$BODY" | jq -r '.tags // [] | .[]' \
   | grep -E '^3\.' \
   | sort -V \
   | tail -1)

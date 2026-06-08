@@ -137,9 +137,13 @@ jobs:
         continue-on-error: true
         run: |
           pip install aboutcode-toolkit 2>/dev/null || true
+          go install github.com/google/go-licenses@latest
+          export PATH="$HOME/go/bin:$PATH"
           python3 scripts/gen-notice.py
           if command -v about &>/dev/null; then
-            about attrib /tmp/about-inventory.json NOTICE.aboutcode.html 2>/dev/null || true
+            about attrib /tmp/about-inventory.json NOTICE.txt \
+              --template scripts/notice-template.jinja 2>/dev/null || true
+            about attrib /tmp/about-inventory.json NOTICE.html 2>/dev/null || true
           fi
 
       - name: Install ts-scan
@@ -209,11 +213,13 @@ jobs:
           retention-days: 90
 
       - name: Upload NOTICE
-        if: always() && hashFiles('NOTICE.aboutcode.html') != ''
+        if: always() && (hashFiles('NOTICE.txt') != '' || hashFiles('NOTICE.html') != '')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: aboutcode-notice
-          path: NOTICE.aboutcode.html
+          path: |
+            NOTICE.txt
+            NOTICE.html
           retention-days: 90
 
       - name: Upload ts-scan analysis

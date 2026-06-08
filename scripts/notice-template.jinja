@@ -1,0 +1,27 @@
+Open Source Software Information
+==================================
+
+This product contains open source software components. Licenses,
+acknowledgments and required copyright notices for each component
+are listed below.
+
+--------------------------------------------------------------------
+{% for component in components %}
+
+Component: {{ component.name }}
+Version: {{ component.version }}
+License: {{ component.license_expression }}
+{% if component.copyright %}
+Copyright: {{ component.copyright }}
+{% endif %}
+--------------------------------------------------------------------
+{% endfor %}
+
+This product bundles the following open source packages:
+
+{% for component in components %}
+  * {{ component.name }} {{ component.version }} — {{ component.license_expression }}
+{% endfor %}
+
+----
+END OF OPEN SOURCE SOFTWARE INFORMATION

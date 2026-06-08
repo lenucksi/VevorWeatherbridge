@@ -38,12 +38,19 @@ ARG VERSION=dev
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} GOARM=${TARGETVARIANT#v} \
     go build -ldflags="-s -w -X main.Version=${VERSION}" -o weatherbridge .
 
+# Save dependency license texts for FOSS compliance
+RUN go install github.com/google/go-licenses@v1.6.0 && \
+    go-licenses save ./... --save_path=/build/licenses
+
 # Stage 2: Runtime image using Home Assistant base
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 
 # Copy the binary from builder
 COPY --from=builder /build/weatherbridge /weatherbridge
+
+# Copy dependency license texts for FOSS compliance
+COPY --from=builder /build/licenses /usr/share/doc/weatherbridge/licenses/
 
 # Copy run script
 COPY run.sh /
