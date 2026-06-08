@@ -1,0 +1,19 @@
+vevor-weatherbridge-go/Dockerfile
+  s_3eead9736154b1::t_6f77750efb1804 46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "354523712e40ef12f8e4e039e789ac028f9d3e27",
+  "prompts": {},
+  "sessions": {
+    "s_3eead9736154b1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_15dfca480ffePmY7QwCKufAP3G",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
