@@ -43,7 +43,7 @@ COPY LICENSE ./
 
 # Save dependency license texts for FOSS compliance
 RUN go install github.com/google/go-licenses@v1.6.0 && \
-    go-licenses save ./... --save_path=/build/licenses
+    go-licenses save ./... --save_path=/build/licenses --ignore=github.com/lenucksi/vevor-weatherbridge-go
 
 # Stage 2: Runtime image using Home Assistant base
 # hadolint ignore=DL3006
