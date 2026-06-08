@@ -38,6 +38,9 @@ ARG VERSION=dev
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} GOARM=${TARGETVARIANT#v} \
     go build -ldflags="-s -w -X main.Version=${VERSION}" -o weatherbridge .
 
+# Copy project license for go-licenses (it requires a LICENSE file in the module root)
+COPY LICENSE ./
+
 # Save dependency license texts for FOSS compliance
 RUN go install github.com/google/go-licenses@v1.6.0 && \
     go-licenses save ./... --save_path=/build/licenses
