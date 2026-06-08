@@ -1,0 +1,54 @@
+.github/workflows/rebuild-nightly.yml
+  s_7f4fe013938a5f::t_d2c0c221bd85d3 63,76-81
+scripts/notice-template.jinja
+  s_3eead9736154b1::t_4b900df9e5eb57 1-27
+vevor-weatherbridge-go/Dockerfile
+  s_3eead9736154b1::t_b4d4fe94c559da 52-54
+  s_3eead9736154b1::t_91014a0c37380b 42
+  s_3eead9736154b1::t_c00ba147e03fe5 41,43-44
+scripts/check-ha-base-version.sh
+  s_7f4fe013938a5f::t_2c17d19854bfed 12-23
+scripts/gen-notice.py
+  s_3eead9736154b1::t_0d3f8afdf10ecc 165-167
+  s_3eead9736154b1::t_36c9c9384d14dd 97
+  s_3eead9736154b1::t_1f14433ed259e3 3-6,9-11,19-43,45-80,119-132,152-164,168-193,200-212,221-222,225-252
+  s_3eead9736154b1::t_3c394ebffb0ccb 100-104,117-118
+  s_3eead9736154b1::t_96e529427999d5 133-145,147-151
+  s_3eead9736154b1::t_2ef4e2b9aa8087 194
+  s_3eead9736154b1::t_0ac12744ebd716 195-199
+  s_3eead9736154b1::t_1b1aa97cc86aef 213-214
+  s_3eead9736154b1::t_d49ccdf42e37cd 14-15,18
+  s_3eead9736154b1::t_b03570cc6829ec 12
+  s_3eead9736154b1::t_5b3954a74e336c 17
+  s_3eead9736154b1::t_b84ac9f29c26a7 81-96,98-99,105-116
+  s_3eead9736154b1::t_702fe030b2a823 146
+  s_3eead9736154b1::t_f12d58e6eca01e 215-220,223-224
+.github/workflows/security-supply-chain.yml
+  s_3eead9736154b1::t_c824425308f4d8 141,144-146
+  s_3eead9736154b1::t_5d38bfd1079203 140
+  s_3eead9736154b1::t_ee4e9103e7c528 216,220-222
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "ce37166de498662aeabdf59acf0dabe7c1a6ae87",
+  "prompts": {},
+  "sessions": {
+    "s_3eead9736154b1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_15dfca480ffePmY7QwCKufAP3G",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    },
+    "s_7f4fe013938a5f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_1597f807effeUeTJ4r6qy7fBMM",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Lenucksi <lenucksi@users.noreply.github.com>"
+    }
+  }
+}
